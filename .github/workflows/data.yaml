@@ -8,7 +8,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  data-build:
     runs-on: ${{ matrix.os }}
 
     strategy:
