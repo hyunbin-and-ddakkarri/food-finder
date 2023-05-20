@@ -2,3 +2,6 @@
 .vscode/
 
 .DS_Store
+
+# don't track node dependencies
+**/node_modules
