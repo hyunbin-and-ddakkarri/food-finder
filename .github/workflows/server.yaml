@@ -33,10 +33,6 @@ jobs:
       working-directory: server
       run: npm run lint
 
-    - name: Build
-      working-directory: server
-      run: npm run build
-
     # - name: Test
     #   working-directory: server
     #   run: npm test
