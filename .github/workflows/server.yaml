@@ -1,0 +1,42 @@
+name: server
+
+on:
+  push:
+    branches: [ master ]
+  
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: server/package-lock.json
+      
+    - name: Install modules
+      working-directory: server
+      run: npm ci
+
+    - name: Lint
+      working-directory: server
+      run: npm run lint
+
+    - name: Build
+      working-directory: server
+      run: npm run build
+
+    # - name: Test
+    #   working-directory: server
+    #   run: npm test
