@@ -2,6 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useEffect } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,7 +13,7 @@ export default function AppLayout({ children } : {
     <html lang="en">
       <body className="noto-sans">
         <div className="flex h-screen bg-gray-50">
-          <div className="w-64 bg-white p-4 block">
+          <div className="block w-1/5 bg-white p-4">
             <Image
               src="/vercel.svg"
               alt="Logo"
@@ -28,7 +29,7 @@ export default function AppLayout({ children } : {
               <Link href="/restaurant" className='text-xl'>Restaurant Information</Link>            
             </div> 
           </div>
-          <div className="flex flex-grow">
+          <div className="grow shrink min-w-0">
             {children}
           </div>
         </div>

@@ -1,9 +1,25 @@
 "use client";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import EditableCellModal from './popup';
+
+interface ClickableCellProps {
+  onClick: () => void;
+}
 
 interface EditableCellProps {
   value: string;
   onValueChange: (value: string) => void;
+}
+
+const columnStyle = {
+  borderLeft: 'None',
+  borderRight: 'None'
+}
+
+const ClickableCell: React.FC<ClickableCellProps> = ({ onClick }) => {
+  return (
+    <td className="border px-1 py-2 cursor-pointer" style={columnStyle} onClick={onClick}>View</td>
+  )
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({ value, onValueChange }) => {
@@ -28,7 +44,7 @@ const EditableCell: React.FC<EditableCellProps> = ({ value, onValueChange }) => 
   };
 
   return isEditing ? (
-    <td>
+    <td style={columnStyle}>
       <input
         value={editedValue}
         onChange={handleChange}
@@ -38,12 +54,15 @@ const EditableCell: React.FC<EditableCellProps> = ({ value, onValueChange }) => 
       />
     </td>
   ) : (
-    <td className="border px-4 py-2" onClick={handleEdit}>{value}</td>
+    <td className="border px-1 py-2" style={columnStyle} onClick={handleEdit}>{value}</td>
   );
 }
 
 export default function RestaurantPage({ params }: { params: { region: string[] } }) {
-    const data = Array(6).fill(0).map(() => (
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState({ value: '', rowIndex: 0, columnIndex: 0 });
+  
+    const data = Array(60).fill(0).map(() => (
       {
         "name": "Asobu",
         "introduction": "A best place for KAIST students",
@@ -75,12 +94,24 @@ export default function RestaurantPage({ params }: { params: { region: string[] 
       }) 
     )
     const dataKeys = Object.keys(data[0]);
+    const detailKeys = new Array("address", "business_hour", "reviews");
     const [tableData, setTableData] = useState<{ [key: string]: any }[]>(data);
 
     const handleCellValueChange = (rowIndex: number, columnIndex: number, newValue: string) => {
       const updatedData = [...tableData];
       updatedData[rowIndex][dataKeys[columnIndex]] = newValue;
       setTableData(updatedData);
+    };
+
+    const handleModalValueChange = (newValue: string) => {
+      handleCellValueChange(modalData.rowIndex, modalData.columnIndex, newValue);
+      setIsModalOpen(false);
+    };
+
+    const handleCellClick = (value: string, rowIndex: number, columnIndex: number) => {
+      console.log("clicked")
+      setModalData({ value, rowIndex, columnIndex });
+      setIsModalOpen(true);
     };
 
     const renderTableCell = (key: string, value: any) => {
@@ -109,17 +140,17 @@ export default function RestaurantPage({ params }: { params: { region: string[] 
         }
         return value;
       };
-
+      
     return (
-        <div className="block w-full overflow-y-scroll justify-center items-center m-8">
+        <div className="block h-full w-full overflow-scroll justify-center items-center p-8">
             <div className="text-2xl font-bold mb-8">Restaurant Information</div>
-            <div>Showing results of {params.region[2]}, {params.region[1]}, {params.region[0]}</div>
+            <div className='mb-4'>Showing results of {params.region[2]}, {params.region[1]}, {params.region[0]}</div>
             <table className="text-xs border-collapse w-full">
                 <thead>
                 <tr>
                     {tableData.length > 0 &&
                     Object.keys(tableData[0]).map((key) => (
-                        <th key={key} className="border px-4 py-2">
+                        <th style={columnStyle} key={key} className="border px-1 py-2">
                         {key}
                         </th>
                     ))}
@@ -128,17 +159,32 @@ export default function RestaurantPage({ params }: { params: { region: string[] 
                 <tbody>
                 {tableData.map((row, rowIndex) => (
                   <tr key={rowIndex}>
-                    {Object.values(row).map((value, columnIndex) => (
-                      <EditableCell 
+                    {Object.values(row).map((value, columnIndex) => {
+                      return detailKeys.includes(dataKeys[columnIndex]) ? (
+                        <ClickableCell 
+                          key={`${rowIndex}-${columnIndex}`} 
+                          onClick={() => handleCellClick(renderTableCell(dataKeys[columnIndex], value), rowIndex, columnIndex)}
+                        />
+                      ) : (
+                        <EditableCell 
                         key={`${rowIndex}-${columnIndex}`} 
                         value={renderTableCell(dataKeys[columnIndex], value)} 
                         onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
                       />
-                    ))}
+                      ) 
+                    })}
                   </tr>
                 ))}
                 </tbody>
             </table>
+            {isModalOpen && (
+              <EditableCellModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                value={modalData.value} 
+                onValueChange={handleModalValueChange} 
+              />
+            )}
         </div>
     );
   }
