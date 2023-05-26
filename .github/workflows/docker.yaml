@@ -1,4 +1,4 @@
-name: Docker Build
+name: docker
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
     branches: [ main ]
 
 jobs:
-  docker-build:
+  docker-build-public:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +20,13 @@ jobs:
 
     - name: Build Public Dockerfile
       run: docker build -f public.Dockerfile .
+
+  docker-build-admin:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
     - name: Build Admin Dockerfile
       run: docker build -f admin.Dockerfile .
