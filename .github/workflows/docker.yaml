@@ -1,0 +1,25 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [ main ]
+
+  merge_group: 
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Build Public Dockerfile
+      run: docker build -f public.Dockerfile .
+
+    - name: Build Admin Dockerfile
+      run: docker build -f admin.Dockerfile .
