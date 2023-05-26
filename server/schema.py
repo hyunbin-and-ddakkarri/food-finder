@@ -2,7 +2,16 @@ from typing import List, Union
 import strawberry
 from strawberry.scalars import JSON
 
-# Restraunt data
+# Review data type
+@strawberry.type
+class Review:
+    username: str
+    rating: float
+    context: str
+    date: str
+
+
+# Restraunt data type
 @strawberry.type
 class Restraunt:
     id: strawberry.ID
@@ -18,18 +27,12 @@ class Restraunt:
     characteristics: List[str]
     images: List[str]
     menus: JSON
-    reviews: List["Review"]
+    reviews: List[Review]
     rating: float
 
-
-@strawberry.type
-class Review:
-    username: str
-    rating: float
-    context: str
-    date: str
 
 # TODO: connect to DB
+# restraunt resolver function
 def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, region: Union[None, str] = None, 
                    price: Union[None, int] = None, moods: Union[None, List[str]] = None, characteristics: Union[None, List[str]] = None,
                     rating: Union[None, float] = None, limit: Union[None, int] = None):
@@ -59,12 +62,14 @@ def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, r
     ]
 
 # TODO: setup authentication
+# Query
 @strawberry.type
 class Query:
     restraunts: List[Restraunt] = strawberry.field(resolver=get_restraunts)
 
 
 # TODO: setup mutation
+# Mutation for Restraunt data manipulation
 @strawberry.type
 class Mutation:
     pass
