@@ -2,10 +2,3 @@
 .vscode/
 
 .DS_Store
-
-# don't track dependencies and cache
-**/node_modules
-**/__pycache__
-
-# venv
-**/.venv
