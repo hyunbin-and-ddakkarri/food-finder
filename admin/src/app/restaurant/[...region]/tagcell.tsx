@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { columnStyle } from './style'
+import { faCircleXmark, faCirclePlus } from'@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface TagCellProps {
   value: string[];
   onValueChange: (value: string[]) => void;
-}
-
-const underline = {
-  border: 0,
-  borderBottom: 1 
 }
 
 const TagCell: React.FC<TagCellProps> = ({ value, onValueChange }) => {
@@ -34,12 +31,12 @@ const TagCell: React.FC<TagCellProps> = ({ value, onValueChange }) => {
       {value.map(tag => (
         <div className='flex justify-between bg-white hover:bg-gray-100 text-gray-800 rounded-full py-1 px-3 m-1 border border-gray-400 rounded shadow' key={tag}>
           <div className='mr-2'>{tag}</div>
-          <button className='' onClick={() => handleDelete(tag)}>X</button>
+          <button className='' onClick={() => handleDelete(tag)}><FontAwesomeIcon icon={faCircleXmark} /></button>
         </div>
       ))}
       <div className='flex bg-white hover:bg-gray-100 text-gray-800 rounded-full py-1 px-3 m-1 border border-gray-400 rounded shadow'>
         <input className='border-b-2 mr-2 w-0 flex-grow' value={newTag} onChange={handleInputChange} />
-        <button className='' onClick={handleAdd}>+</button>
+        <button className='' onClick={handleAdd}><FontAwesomeIcon icon={faCirclePlus} /></button>
       </div>
     </td>
   );

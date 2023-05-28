@@ -4,6 +4,7 @@ import EditableCellModal from "./popup";
 import { columnStyle } from "./style";
 import ClickableCell from "./clickcell";
 import TagCell from "./tagcell";
+import MenuCell from "./menucell";
 
 export default function RestaurantPage({
   params,
@@ -74,12 +75,13 @@ export default function RestaurantPage({
   const dataKeys = Object.keys(data[0]);
   const detailKeys = new Array("address", "business_hour", "reviews", "images");
   const tagKeys = new Array("moods", "characteristics");
+  const menuKeys = new Array("menus");
   const [tableData, setTableData] = useState<{ [key: string]: any }[]>(data);
 
   const handleCellValueChange = (
     rowIndex: number,
     columnIndex: number,
-    newValue: string | string[]
+    newValue: string | string[] | {[menu: string]: number}
   ) => {
     const updatedData = [...tableData];
     updatedData[rowIndex][dataKeys[columnIndex]] = newValue;
@@ -160,6 +162,13 @@ export default function RestaurantPage({
                     value={value} 
                     onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
                   /> );
+                } else if (menuKeys.includes(dataKeys[columnIndex])){
+                  return (
+                    <MenuCell 
+                      key={`${rowIndex}-${columnIndex}`} 
+                      value={value} 
+                      onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
+                    /> );
                 } else {
                   return (
                     <ClickableCell
