@@ -6,6 +6,11 @@ interface TagCellProps {
   onValueChange: (value: string[]) => void;
 }
 
+const underline = {
+  border: 0,
+  borderBottom: 1 
+}
+
 const TagCell: React.FC<TagCellProps> = ({ value, onValueChange }) => {
   const [newTag, setNewTag] = useState("");
 
@@ -25,15 +30,17 @@ const TagCell: React.FC<TagCellProps> = ({ value, onValueChange }) => {
   };
 
   return (
-    <td style={columnStyle}>
+    <td className="border px-1 py-2 cursor-pointer w-fit" style={columnStyle}>
       {value.map(tag => (
-        <div key={tag}>
-          {tag}
-          <button onClick={() => handleDelete(tag)}>x</button>
+        <div className='flex justify-between bg-white hover:bg-gray-100 text-gray-800 rounded-full py-1 px-3 m-1 border border-gray-400 rounded shadow' key={tag}>
+          <div className='mr-2'>{tag}</div>
+          <button className='' onClick={() => handleDelete(tag)}>X</button>
         </div>
       ))}
-      <input value={newTag} onChange={handleInputChange} />
-      <button onClick={handleAdd}>+</button>
+      <div className='flex bg-white hover:bg-gray-100 text-gray-800 rounded-full py-1 px-3 m-1 border border-gray-400 rounded shadow'>
+        <input className='border-b-2 mr-2 w-0 flex-grow' value={newTag} onChange={handleInputChange} />
+        <button className='' onClick={handleAdd}>+</button>
+      </div>
     </td>
   );
 };

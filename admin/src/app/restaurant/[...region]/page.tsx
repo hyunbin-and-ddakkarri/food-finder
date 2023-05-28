@@ -4,7 +4,6 @@ import EditableCellModal from "./popup";
 import { columnStyle } from "./style";
 import ClickableCell from "./clickcell";
 import TagCell from "./tagcell";
-import EditableCell from "./editcell";
 
 export default function RestaurantPage({
   params,
@@ -73,13 +72,14 @@ export default function RestaurantPage({
       rating: 4.6,
     }));
   const dataKeys = Object.keys(data[0]);
-  const detailKeys = new Array("address", "business_hour", "reviews");
+  const detailKeys = new Array("address", "business_hour", "reviews", "images");
+  const tagKeys = new Array("moods", "characteristics");
   const [tableData, setTableData] = useState<{ [key: string]: any }[]>(data);
 
   const handleCellValueChange = (
     rowIndex: number,
     columnIndex: number,
-    newValue: string
+    newValue: string | string[]
   ) => {
     const updatedData = [...tableData];
     updatedData[rowIndex][dataKeys[columnIndex]] = newValue;
@@ -102,7 +102,10 @@ export default function RestaurantPage({
   };
 
   const renderTableCell = (key: string, value: any) => {
-    if (Array.isArray(value) || typeof value === "object") {
+    if (tagKeys.includes(key)) {
+      return value;
+    }
+    else if (Array.isArray(value) || typeof value === "object") {
       // if (key === 'business_hour') {
       //   const weekdays = Object.keys(value);
       //   return weekdays.map((day) => {
@@ -150,26 +153,28 @@ export default function RestaurantPage({
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {Object.values(row).map((value, columnIndex) => {
-                return detailKeys.includes(dataKeys[columnIndex]) ? (
-                  <ClickableCell
-                    key={`${rowIndex}-${columnIndex}`}
-                    onClick={() =>
-                      handleCellClick(
-                        renderTableCell(dataKeys[columnIndex], value),
-                        rowIndex,
-                        columnIndex
-                      )
-                    }
-                  />
-                ) : (
-                  <EditableCell
-                    key={`${rowIndex}-${columnIndex}`}
-                    value={renderTableCell(dataKeys[columnIndex], value)}
-                    onValueChange={(newValue) =>
-                      handleCellValueChange(rowIndex, columnIndex, newValue)
-                    }
-                  />
-                );
+                if(tagKeys.includes(dataKeys[columnIndex])){
+                  return (
+                  <TagCell 
+                    key={`${rowIndex}-${columnIndex}`} 
+                    value={value} 
+                    onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
+                  /> );
+                } else {
+                  return (
+                    <ClickableCell
+                      key={`${rowIndex}-${columnIndex}`}
+                      onClick={() =>
+                        handleCellClick(
+                          renderTableCell(dataKeys[columnIndex], value),
+                          rowIndex,
+                          columnIndex
+                        )
+                      }
+                      value={detailKeys.includes(dataKeys[columnIndex]) ? 'View' : renderTableCell(dataKeys[columnIndex], value)}
+                    />
+                  )
+                }  
               })}
             </tr>
           ))}
