@@ -22,7 +22,7 @@ class Restaurant:
     region: str
     phone: str
     price: int
-    buisnessHours: JSON
+    businessHours: JSON
     moods: List[str]
     characteristics: List[str]
     images: List[str]
@@ -46,7 +46,7 @@ def get_restaurants(id: Union[None, int] = None, name: Union[None, str] = None, 
             region="Sinsa-dong",
             phone="042-XXX-XXXX",
             price=9500,
-            business_hour= {
+            businessHours= {
                 'Mon': [
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
                 0,
