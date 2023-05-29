@@ -50,7 +50,7 @@ export default function ScrollableListboxes() {
   };
 
   return (
-    <div className="block w-full justify-center items-center m-8">
+    <div className="block w-full justify-center items-center p-8 text-black">
       <div className="text-2xl font-bold mb-8">Restaurant Information</div>
       <div className="flex w-full">
         <div className="w-1/3 mr-4 overflow-y-scroll">
