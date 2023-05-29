@@ -1,5 +1,3 @@
-# pylint: disable = too-many-locals
-
 """
 Fetch module
 
@@ -98,15 +96,7 @@ class Fetch:
         """
         Fetch.init(
             [
-                (".*\\.auction\\.co\\.kr.*", 3),
-                (".*\\.coupang\\.com.*", 3),
-                (".*\\.ssg\\.com.*", 10),
-                (".*11st\\.co\\.kr.*", 22),
-                (".*\\.gmarket\\.co\\.kr.*", 3),
-                (".*\\.lotteon\\.com.*", 5),
-                (".*\\.tmon\\.co\\.kr.*api.*", 3),
-                (".*\\.tmon\\.co\\.kr.*", 500),
-                (".*\\.wemakeprice\\.com.*", 11),
+                (".*\\.naver\\.com.*", 11),
             ]
         )
 
