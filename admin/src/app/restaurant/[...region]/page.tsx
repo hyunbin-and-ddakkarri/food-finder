@@ -134,7 +134,7 @@ export default function RestaurantPage({
   };
 
   return (
-    <div className="block h-full w-full overflow-scroll justify-center items-center p-8">
+    <div className="block h-full w-full overflow-scroll justify-center items-center p-8 text-black">
       <div className="text-2xl font-bold mb-8">Restaurant Information</div>
       <div className="mb-4">
         Showing results of {params.region[2]}, {params.region[1]},{" "}

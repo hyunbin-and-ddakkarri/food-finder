@@ -1,6 +1,6 @@
 export default function CategoryPage() {
   return (
-    <div className="block w-full overflow-scroll justify-center items-center p-8">
+    <div className="block w-full overflow-scroll justify-center items-center p-8 text-black">
       <div className="flex w-full justify-between items-center mb-8">
         <div className="text-2xl font-bold">Category management</div>
         <div className="ml-auto">

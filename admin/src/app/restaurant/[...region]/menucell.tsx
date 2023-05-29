@@ -31,7 +31,8 @@ const MenuCell: React.FC<MenuCellProps> = ({ value, onValueChange }) => {
   const handleSave = (menu: string) => {
     const updatedValue = {...value};
     delete updatedValue[menu];
-    updatedValue[tempMenu.key] = Number(tempMenu.value);
+    const price = Number(tempMenu.value);
+    updatedValue[tempMenu.key] = !isNaN(price) ? price : value[menu];
     onValueChange(updatedValue);
     setEditMenu(null);
   };

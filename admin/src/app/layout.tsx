@@ -19,20 +19,23 @@ export default function AppLayout({ children } : {
     <html lang="en">
       <body className="noto-sans">
         <div className="flex h-screen bg-gray-50">
-          <div className="block w-1/5 bg-white p-4">
-            <Image
-              src="/vercel.svg"
-              alt="Logo"
-              className="dark:invert my-4"
-              width={150}
-              height={36}
-              priority
-            />
+          <div className="block w-1/6 bg-white p-4">
+            <div className='flex items-center mb-6'>
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                className="mr-4"
+                width={50}
+                height={50}
+                priority
+              />
+              <div className='text-2xl font-bold text-black'>Food Finder</div>
+            </div>
             <div className='mb-2'>
-              <Link href="/category" className='text-xl'>Category Management</Link>
+              <Link href="/category" className='text-md text-black'>Category Management</Link>
             </div>
             <div>
-              <Link href="/restaurant" className='text-xl'>Restaurant Information</Link>            
+              <Link href="/restaurant" className='text-md text-black'>Restaurant Information</Link>            
             </div> 
           </div>
           <div className="grow shrink min-w-0">
