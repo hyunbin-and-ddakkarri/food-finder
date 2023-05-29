@@ -11,9 +11,9 @@ class Review:
     date: str
 
 
-# Restraunt data type
+# Restaurant data type
 @strawberry.type
-class Restraunt:
+class Restaurant:
     id: strawberry.ID
     name: str
     introduction: str
@@ -32,32 +32,64 @@ class Restraunt:
 
 
 # TODO: connect to DB
-# restraunt resolver function
-def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, region: Union[None, str] = None, 
+# restaurant resolver function
+def get_restaurants(id: Union[None, int] = None, name: Union[None, str] = None, region: Union[None, str] = None, 
                    price: Union[None, int] = None, moods: Union[None, List[str]] = None, characteristics: Union[None, List[str]] = None,
                     rating: Union[None, float] = None, limit: Union[None, int] = None):
     return [
-        Restraunt(
+        Restaurant(
             id=strawberry.ID("test"),
-            name="test",
-            introduction="test",
-            address="test",
-            location=[1, 1],
-            region="test",
-            phone="test",
-            price=1,
-            buisnessHours={"test": [1, 1]},
-            moods=["test"],
-            characteristics=["test"],
-            images=["test"],
-            menus={"test": 1},
+            name="Asobu",
+            introduction="A best place for KAIST students",
+            address="14, Eoeun-ro 48beon-gil, Yuseong-gu, Daejeon-si",
+            location=[34.21, 66.55],
+            region="Sinsa-dong",
+            phone="042-XXX-XXXX",
+            price=9500,
+            business_hour= {
+                'Mon': [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                0,
+                ],
+                'Tue': [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                0,
+                ],
+                'Wed': [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                0,
+                ],
+                'Thu': [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                0,
+                ],
+                'Fri': [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                0,
+                ],
+                'Sat': [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                0,
+                ],
+                'Sun': [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                0,
+                ],
+            },
+            moods=["Cozy", "Affordable"],
+            characteristics= ["Sushi", "Donburi"],
+            images=["path/to/image1"],
+            menus= {
+                "menu A": 9500,
+                "menu B": 11000,
+            },
             reviews=[Review(
-                username="test",
+                username="minji",
                 rating=1.0,
-                context="test",
-                date="test"
+                context="Good",
+                date="2023-05-29"
             )],
-            rating=1.0
+            rating=4.6
         )
     ]
 
@@ -65,11 +97,11 @@ def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, r
 # Query
 @strawberry.type
 class Query:
-    restraunts: List[Restraunt] = strawberry.field(resolver=get_restraunts)
+    restaurants: List[Restaurant] = strawberry.field(resolver=get_restaurants)
 
 
 # TODO: setup mutation
-# Mutation for Restraunt data manipulation
+# Mutation for Restaurant data manipulation
 @strawberry.type
 class Mutation:
     pass
