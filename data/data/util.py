@@ -1,16 +1,23 @@
+# pylint: disable=invalid-name
+
+"""
+This file contains utility functions for the data module
+"""
+
 import json
 
-def parse_int(s: str) -> int:
+
+def parse_int(ipt: str) -> int:
     """
     This only encodes digits and converts to int
 
     :param s: The string to convert to int
     :return: The converted int
     """
-    return int("".join([i for i in s if i.isdigit()]))
+    return int("".join([i for i in ipt if i.isdigit()]))
 
 
-def parse_json_until(s: str) -> dict:
+def parse_json_until(ipt: str) -> dict:
     """
     This parses json until it is valid
 
@@ -18,10 +25,11 @@ def parse_json_until(s: str) -> dict:
     :return: The parsed json
     """
     cnt = 0
-    for i in range(len(s)):
-        if s[i] == "{" or s[i] == "[":
+    for i, c in enumerate(ipt):
+        if c in ('{', '['):
             cnt += 1
-        elif s[i] == "}" or s[i] == "]":
+        elif c in ('{', '['):
             cnt -= 1
         if cnt == 0:
-            return json.loads(s[:i + 1])
+            return json.loads(ipt[: i + 1])
+    return {}

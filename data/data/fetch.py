@@ -1,3 +1,5 @@
+# pylint: disable=too-many-locals
+
 """
 Fetch module
 
@@ -12,9 +14,10 @@ from enum import Enum
 from re import Pattern
 from typing import List, Tuple, Dict, Optional
 import json
+import random
+
 import aiohttp
 import requests
-import random
 
 
 class Method(Enum):

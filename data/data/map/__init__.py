@@ -1,31 +1,42 @@
+# pylint: disable=too-few-public-methods
+
+"""
+Map base module
+"""
+
 from server import schema
 
+
 class Restaurant:
+    """
+    Restaurant abstract class
+    """
+
     @property
-    def id(self) -> str:
-        pass
+    def _id(self) -> str:
+        """
+        :return: The id of the restaurant
+        """
 
     async def get(self) -> schema.Restraunt:
         """
         :return: The restaurant data
         """
-        pass
+
 
 class Map:
     """
     Map abstract class
     """
 
-    @classmethod
+    @staticmethod
     def name() -> str:
         """
         :return: The name of the map
         """
-        pass
 
-    @classmethod
-    async def getRestaurants():
+    @staticmethod
+    async def get_restaurants():
         """
         :yield: The restaurants in the map
         """
-        pass
