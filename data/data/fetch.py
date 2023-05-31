@@ -14,6 +14,7 @@ from typing import List, Tuple, Dict, Optional
 import json
 import aiohttp
 import requests
+import random
 
 
 class Method(Enum):
@@ -46,11 +47,11 @@ class Fetch:
     def init(cls, limit: List[Tuple[str, int]], max_workers=32):
         """
         This would initialize the Fetch class instance
-        If "*.gmarket.com" should be called at most once per 1 sec,
+        If "*.map.naver.com" should be called at most once per 1 sec,
         You can call:
 
         ```python
-        Fetch.init([(".*.gmarket.com.*", 1000)])
+        Fetch.init([(".*.map.naver.com.*", 1000)])
         ```
 
         :param limit: this is a list of url patterns (in regex) and limits (in milliseconds)
@@ -96,7 +97,7 @@ class Fetch:
         """
         Fetch.init(
             [
-                (".*\\.naver\\.com.*", 11),
+                (".*map\\.naver\\.com.*", 10),
             ]
         )
 
@@ -137,6 +138,7 @@ class Fetch:
                 cls.next_time[pat] = now + limit
 
             if wait_time > 0:
+                wait_time *= random.uniform(0.9, 1.1)
                 await asyncio.sleep(wait_time)
             break
 
