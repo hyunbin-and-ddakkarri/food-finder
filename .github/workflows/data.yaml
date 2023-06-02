@@ -31,7 +31,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry pylint mypy
         poetry --version
-        poetry config virtualenvs.in-project true
         poetry install -vv -C ./data -n
     
     - name: Black formatting check

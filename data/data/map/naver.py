@@ -364,8 +364,6 @@ class NaverMap(Map):
 # sample test code
 # pylint: disable=missing-function-docstring
 if __name__ == "__main__":
-    import asyncio
-
     Fetch.init(
         [
             # this needs to be waited a lot
