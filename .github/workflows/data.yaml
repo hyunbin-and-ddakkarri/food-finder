@@ -25,6 +25,7 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
+        cache: 'pip'
     
     - name: Install poetry & dependencies
       run: |
@@ -35,12 +36,13 @@ jobs:
     
     - name: Black formatting check
       run: |
-        poetry run black --check --verbose ./data
+        poetry run -C ./data black --check --verbose ./data
 
     - name: Pylint check
       run: |
-        poetry run pylint $(git ls-files './data/*.py')
+        poetry run -C ./data pylint $(git ls-files './data/*.py')
 
     - name: Mypy check
       run: |
-        MYPYPATH=./server poetry run mypy --strict ./data
+        MYPYPATH=./server yes | poetry run -C ./data mypy --install-types
+        MYPYPATH=./server poetry run -C ./data mypy --strict ./data
