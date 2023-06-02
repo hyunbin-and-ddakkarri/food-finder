@@ -46,5 +46,5 @@ jobs:
       env:
         MYPYPATH: ./server
       run: |
-        yes | poetry run -C ./data mypy --install-types ./data || true
+        echo y | poetry run -C ./data mypy --install-types ./data || true
         poetry run -C ./data mypy --strict ./data
