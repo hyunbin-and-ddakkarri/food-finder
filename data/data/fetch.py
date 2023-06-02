@@ -71,7 +71,7 @@ class Fetch:
         )
         cls.next_time = {}
 
-        for (pat, _) in cls.limit:
+        for pat, _ in cls.limit:
             cls.next_time[pat] = datetime.datetime.now()
 
         cls.pool = ThreadPoolExecutor(max_workers=max_workers)
@@ -125,7 +125,7 @@ class Fetch:
         [1](https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientSession)
         [2](https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientResponse)
         """
-        for (pat, limit) in cls.limit:
+        for pat, limit in cls.limit:
             if not re.match(pat, url):
                 continue
 

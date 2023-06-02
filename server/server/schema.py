@@ -9,6 +9,7 @@ from typing import List
 import strawberry
 from strawberry.scalars import JSON
 
+
 # Review data type
 @strawberry.type
 class Review:
@@ -37,11 +38,11 @@ class Restraunt:
     region: str
     phone: str
     price: int
-    buisnessHours: JSON  # type: ignore
+    buisnessHours: JSON
     moods: List[str]
     characteristics: List[str]
     images: List[str]
-    menus: JSON  # type: ignore
+    menus: JSON
     reviews: List[Review]
     rating: float
 
@@ -62,7 +63,7 @@ def get_restraunts(
     todo: write docstring
     """
     return [
-        Restraunt(  # type: ignore
+        Restraunt(
             _id=strawberry.ID("test"),
             name="test",
             introduction="test",

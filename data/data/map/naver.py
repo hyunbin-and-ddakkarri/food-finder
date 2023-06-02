@@ -11,6 +11,8 @@ import json
 from typing import AsyncGenerator, List, Dict, Any
 import re
 import base64
+import asyncio
+import strawberry
 
 from server import schema
 
@@ -145,9 +147,8 @@ class NaverRestaurant(Restaurant):
             "Connection": "keep-alive",
             "Host": "pcmap-api.place.naver.com",
             "Origin": "https://pcmap.place.naver.com",
-            "x-wtm-graphql": base64.b64encode(
-                json.dumps(data).encode()
-            ).decode(),  # this is a secret that i figured out
+            # this is a secret that i figured out
+            "x-wtm-graphql": base64.b64encode(json.dumps(data).encode()).decode(),
         }
 
     async def get_review(self) -> List[schema.Review]:
@@ -186,7 +187,7 @@ class NaverRestaurant(Restaurant):
             except json.JSONDecodeError:
                 return []
             return [
-                schema.Review(  # type: ignore
+                schema.Review(
                     username=review["author"]["nickname"],
                     context=review["body"],
                     rating=review["rating"]
@@ -215,8 +216,6 @@ class NaverRestaurant(Restaurant):
         """
         res = await Fetch.get(self.url)
         data = json.loads(res)
-
-        print(self._id)
 
         if data["menus"] is not None:
             price_sum = sum(parse_int(price["price"]) for price in data["menus"])
@@ -261,15 +260,15 @@ class NaverRestaurant(Restaurant):
         else:
             moods = []
 
-        return schema.Restraunt(  # type: ignore
-            _id=self._id,
+        return schema.Restraunt(
+            _id=strawberry.ID(self._id),
             name=data["name"],
             introduction=introduction,
             address=data["address"],
             location=[data["x"], data["y"]],
             region=data["addressAbbr"].split(" ")[0],
             phone=data["phone"],
-            price=price,
+            price=int(price),
             buisnessHours=biz_hour,
             moods=moods,
             characteristics=[],
@@ -312,9 +311,8 @@ class NaverMap(Map):
             "Connection": "keep-alive",
             "Host": "pcmap-api.place.naver.com",
             "Origin": "https://pcmap.place.naver.com",
-            "x-wtm-graphql": base64.b64encode(
-                json.dumps(data).encode()
-            ).decode(),  # this is a secret that i figured out
+            # this is a secret that i figured out
+            "x-wtm-graphql": base64.b64encode(json.dumps(data).encode()).decode(),
         }
 
     def graphql_variables(self, page: int) -> Dict[str, Dict[str, Any]]:
