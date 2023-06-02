@@ -1,3 +1,10 @@
+# pylint: disable = fixme, too-few-public-methods, too-many-arguments, unused-argument
+# todo: remove unused-argument
+
+"""
+todo: write docstring
+"""
+
 from typing import List
 import strawberry
 from strawberry.scalars import JSON
@@ -5,6 +12,10 @@ from strawberry.scalars import JSON
 # Review data type
 @strawberry.type
 class Review:
+    """
+    todo: write docstring
+    """
+
     username: str
     rating: float
     context: str
@@ -14,7 +25,11 @@ class Review:
 # Restraunt data type
 @strawberry.type
 class Restraunt:
-    id: strawberry.ID
+    """
+    todo: write docstring
+    """
+
+    _id: strawberry.ID
     name: str
     introduction: str
     address: str
@@ -34,7 +49,7 @@ class Restraunt:
 # TODO: connect to DB
 # restraunt resolver function
 def get_restraunts(
-    id: None | int = None,
+    _id: None | int = None,
     name: None | str = None,
     region: None | str = None,
     price: None | int = None,
@@ -43,9 +58,12 @@ def get_restraunts(
     rating: None | float = None,
     limit: None | int = None,
 ) -> List[Restraunt]:
+    """
+    todo: write docstring
+    """
     return [
         Restraunt(  # type: ignore
-            id=strawberry.ID("test"),
+            _id=strawberry.ID("test"),
             name="test",
             introduction="test",
             address="test",
@@ -68,6 +86,10 @@ def get_restraunts(
 # Query
 @strawberry.type
 class Query:
+    """
+    todo: write docstring
+    """
+
     restraunts: List[Restraunt] = strawberry.field(resolver=get_restraunts)
 
 
@@ -75,7 +97,9 @@ class Query:
 # Mutation for Restraunt data manipulation
 @strawberry.type
 class Mutation:
-    pass
+    """
+    todo: write docstring
+    """
 
 
 schema = strawberry.Schema(query=Query)

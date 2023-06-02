@@ -262,7 +262,7 @@ class NaverRestaurant(Restaurant):
             moods = []
 
         return schema.Restraunt(  # type: ignore
-            id=self._id,
+            _id=self._id,
             name=data["name"],
             introduction=introduction,
             address=data["address"],
