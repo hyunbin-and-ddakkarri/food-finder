@@ -29,20 +29,18 @@ jobs:
     - name: Install poetry & dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install poetry pylint mypy
+        pip install poetry
         poetry --version
         poetry install -vv -C ./data -n
     
     - name: Black formatting check
-      uses: psf/black@stable
-      with:
-        options: "--check --verbose"
-        src: "./data"
+      run: |
+        poetry run black --check --verbose ./data
 
     - name: Pylint check
       run: |
-        pylint $(git ls-files './data/*.py')
+        poetry run pylint $(git ls-files './data/*.py')
 
     - name: Mypy check
       run: |
-        MYPYPATH=./server mypy --strict ./data
+        MYPYPATH=./server poetry run mypy --strict ./data
