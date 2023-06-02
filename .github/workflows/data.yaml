@@ -44,5 +44,5 @@ jobs:
 
     - name: Mypy check
       run: |
-        MYPYPATH=./server yes | poetry run -C ./data mypy --install-types ./data
+        MYPYPATH=./server yes | poetry run -C ./data mypy --install-types ./data || true
         MYPYPATH=./server poetry run -C ./data mypy --strict ./data
