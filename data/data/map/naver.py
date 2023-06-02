@@ -1,3 +1,5 @@
+# pylint: disable = too-many-locals, too-many-branches
+
 """
 This is the module for Naver Map
 
@@ -6,15 +8,15 @@ The default language of this module is Korean
 
 import itertools
 import json
-from typing import List
+from typing import AsyncGenerator, List, Dict, Any
 import re
 import base64
 
 from server import schema
 
-from ..util import parse_int
-from ..fetch import Fetch
-from . import Map, Restaurant
+from data.util import parse_int
+from data.fetch import Fetch
+from data.map import Map, Restaurant
 
 
 # regex to find the json data in the html
@@ -107,7 +109,7 @@ class NaverRestaurant(Restaurant):
         """
         return f"https://pcmap.place.naver.com/restaurant/{self.place_id}/home"
 
-    def graphql_variables(self, page: int) -> dict:
+    def graphql_variables(self, page: int) -> Dict[str, Dict[str, Any]]:
         """
         This is the graphql variables for getting the review
         """
@@ -128,7 +130,7 @@ class NaverRestaurant(Restaurant):
             }
         }
 
-    def get_header(self) -> dict:
+    def get_header(self) -> Dict[str, str]:
         """
         This is the header for graphql
         """
@@ -184,7 +186,7 @@ class NaverRestaurant(Restaurant):
             except json.JSONDecodeError:
                 return []
             return [
-                schema.Review(
+                schema.Review(  # type: ignore
                     username=review["author"]["nickname"],
                     context=review["body"],
                     rating=review["rating"]
@@ -259,7 +261,7 @@ class NaverRestaurant(Restaurant):
         else:
             moods = []
 
-        return schema.Restraunt(
+        return schema.Restraunt(  # type: ignore
             id=self._id,
             name=data["name"],
             introduction=introduction,
@@ -295,7 +297,7 @@ class NaverMap(Map):
         """
         return "naver"
 
-    def get_header(self) -> dict:
+    def get_header(self) -> Dict[str, str]:
         """
         This is the header for graphql
         """
@@ -315,7 +317,11 @@ class NaverMap(Map):
             ).decode(),  # this is a secret that i figured out
         }
 
-    def graphql_variables(self, page: int) -> dict:
+    def graphql_variables(self, page: int) -> Dict[str, Dict[str, Any]]:
+        """
+        This is the graphql variables for the query
+        """
+
         return {
             "restaurantListInput": {
                 "deviceType": "pcmap",
@@ -328,12 +334,12 @@ class NaverMap(Map):
             }
         }
 
-    async def get_restaurants(self):
+    async def get_restaurants(self) -> AsyncGenerator[Restaurant, None]:  # type: ignore
         """
         :yield: The restaurants in the map
         """
 
-        async def get_page(page: int) -> dict:
+        async def get_page(page: int) -> Any:
             res = await Fetch.post(
                 GRAPHQL_URL,
                 json=[
@@ -371,10 +377,9 @@ if __name__ == "__main__":
         ]
     )
 
-    async def main():
+    async def main() -> None:
         naver = NaverMap("어은동 맛집")
         async for i in naver.get_restaurants():
             await i.get()
-            
 
     asyncio.run(main())

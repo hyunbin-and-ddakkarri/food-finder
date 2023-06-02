@@ -5,6 +5,7 @@ This file contains utility functions for the data module
 """
 
 import json
+from typing import Any
 
 
 def parse_int(ipt: str) -> int:
@@ -20,7 +21,7 @@ def parse_int(ipt: str) -> int:
         return 0
 
 
-def parse_json_until(ipt: str) -> dict:
+def parse_json_until(ipt: str) -> Any:
     """
     This parses json until it is valid
 
@@ -29,9 +30,9 @@ def parse_json_until(ipt: str) -> dict:
     """
     cnt = 0
     for i, c in enumerate(ipt):
-        if c in ('{', '['):
+        if c in ("{", "["):
             cnt += 1
-        elif c in ('{', '['):
+        elif c in ("{", "["):
             cnt -= 1
         if cnt == 0:
             return json.loads(ipt[: i + 1])

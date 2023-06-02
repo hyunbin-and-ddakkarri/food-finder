@@ -12,7 +12,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
 from re import Pattern
-from typing import List, Tuple, Dict, Optional
+from typing import List, Tuple, Dict, Optional, Any
 import json
 import random
 
@@ -41,13 +41,13 @@ class Fetch:
     This would wait to request the url
     """
 
-    limit: List[Tuple[Pattern, datetime.timedelta]]
-    next_time: Dict[Pattern, datetime.datetime]
+    limit: List[Tuple[Pattern[str], datetime.timedelta]]
+    next_time: Dict[Pattern[str], datetime.datetime]
     pool: ThreadPoolExecutor
     cookie_jar: Optional[aiohttp.CookieJar]
 
     @classmethod
-    def init(cls, limit: List[Tuple[str, int]], max_workers=32):
+    def init(cls, limit: List[Tuple[str, int]], max_workers: int = 32) -> None:
         """
         This would initialize the Fetch class instance
         If "*.map.naver.com" should be called at most once per 1 sec,
@@ -70,7 +70,6 @@ class Fetch:
             )
         )
         cls.next_time = {}
-        cls.mutex = {}
 
         for (pat, _) in cls.limit:
             cls.next_time[pat] = datetime.datetime.now()
@@ -79,7 +78,7 @@ class Fetch:
         cls.cookie_jar = None
 
     @classmethod
-    def init_from_file(cls, path: str):
+    def init_from_file(cls, path: str) -> None:
         """
         reads json file and initialize the Fetch
 
@@ -94,7 +93,7 @@ class Fetch:
             Fetch.init(limit)
 
     @classmethod
-    def init_default(cls):
+    def init_default(cls) -> None:
         """
         sets to default value
         """
@@ -111,7 +110,7 @@ class Fetch:
         url: str,
         use_requests: bool = False,
         use_cookie_jar: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> str:
         """
         request function with appropriate async delay
@@ -131,11 +130,11 @@ class Fetch:
                 continue
 
             next_time = cls.next_time[pat]
-            wait_time = 0
+            wait_time = 0.0
             now = datetime.datetime.now()
             if next_time > now:
-                wait_time = next_time - now
-                wait_time = wait_time.seconds + wait_time.microseconds / 1_000_000
+                delta = next_time - now
+                wait_time = delta.seconds + delta.microseconds / 1_000_000
                 cls.next_time[pat] = next_time + limit
             else:
                 cls.next_time[pat] = now + limit
@@ -149,10 +148,10 @@ class Fetch:
             loop = asyncio.get_event_loop()
 
             def wrap() -> str:
-                return requests.request(method.value, url, **kwargs).text
+                return requests.request(method.value, url, timeout=10, **kwargs).text
 
-            response = await loop.run_in_executor(cls.pool, wrap)
-            return response
+            requests_res = await loop.run_in_executor(cls.pool, wrap)
+            return requests_res
 
         cookie_jar = None
         if use_cookie_jar:
@@ -164,7 +163,7 @@ class Fetch:
                 return await response.text()
 
     @classmethod
-    async def get(cls, url: str, **kwargs) -> str:
+    async def get(cls, url: str, **kwargs: Any) -> str:
         """
         short version of Fetch.request(Method.GET, url, **kwargs)
         see Fetch.request for more information
@@ -176,7 +175,7 @@ class Fetch:
         return await Fetch.request(Method.GET, url, **kwargs)
 
     @classmethod
-    async def post(cls, url: str, **kwargs) -> str:
+    async def post(cls, url: str, **kwargs: Any) -> str:
         """
         short version of Fetch.request(Method.POST, url, **kwargs)
         see Fetch.request for more information

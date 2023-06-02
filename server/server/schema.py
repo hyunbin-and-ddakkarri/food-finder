@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 import strawberry
 from strawberry.scalars import JSON
 
@@ -22,22 +22,29 @@ class Restraunt:
     region: str
     phone: str
     price: int
-    buisnessHours: JSON
+    buisnessHours: JSON  # type: ignore
     moods: List[str]
     characteristics: List[str]
     images: List[str]
-    menus: JSON
+    menus: JSON  # type: ignore
     reviews: List[Review]
     rating: float
 
 
 # TODO: connect to DB
 # restraunt resolver function
-def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, region: Union[None, str] = None, 
-                   price: Union[None, int] = None, moods: Union[None, List[str]] = None, characteristics: Union[None, List[str]] = None,
-                    rating: Union[None, float] = None, limit: Union[None, int] = None):
+def get_restraunts(
+    id: None | int = None,
+    name: None | str = None,
+    region: None | str = None,
+    price: None | int = None,
+    moods: None | List[str] = None,
+    characteristics: None | List[str] = None,
+    rating: None | float = None,
+    limit: None | int = None,
+) -> List[Restraunt]:
     return [
-        Restraunt(
+        Restraunt(  # type: ignore
             id=strawberry.ID("test"),
             name="test",
             introduction="test",
@@ -51,15 +58,11 @@ def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, r
             characteristics=["test"],
             images=["test"],
             menus={"test": 1},
-            reviews=[Review(
-                username="test",
-                rating=1.0,
-                context="test",
-                date="test"
-            )],
-            rating=1.0
+            reviews=[Review(username="test", rating=1.0, context="test", date="test")],
+            rating=1.0,
         )
     ]
+
 
 # TODO: setup authentication
 # Query
@@ -76,4 +79,3 @@ class Mutation:
 
 
 schema = strawberry.Schema(query=Query)
-
