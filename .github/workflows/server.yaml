@@ -29,7 +29,7 @@ jobs:
     - name: Install poetry & dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install poetry
+        pip install poetry pylint mypy
         poetry --version
         poetry config virtualenvs.in-project true
         poetry install -vv -C ./server -n
