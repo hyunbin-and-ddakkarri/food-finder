@@ -43,6 +43,8 @@ jobs:
         poetry run -C ./data pylint $(git ls-files './data/*.py')
 
     - name: Mypy check
+      env:
+        MYPYPATH: ./server
       run: |
-        MYPYPATH=./server yes | poetry run -C ./data mypy --install-types ./data || true
-        MYPYPATH=./server poetry run -C ./data mypy --strict ./data
+        yes | poetry run -C ./data mypy --install-types ./data || true
+        poetry run -C ./data mypy --strict ./data
