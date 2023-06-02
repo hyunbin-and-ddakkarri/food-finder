@@ -14,7 +14,10 @@ def parse_int(ipt: str) -> int:
     :param s: The string to convert to int
     :return: The converted int
     """
-    return int("".join([i for i in ipt if i.isdigit()]))
+    try:
+        return int("".join([i for i in ipt if i.isdigit()]))
+    except ValueError:
+        return 0
 
 
 def parse_json_until(ipt: str) -> dict:

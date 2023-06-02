@@ -12,13 +12,13 @@ import base64
 
 from server import schema
 
-from ..util import parse_int, parse_json_until
+from ..util import parse_int
 from ..fetch import Fetch
 from . import Map, Restaurant
 
 
 # regex to find the json data in the html
-regex = re.compile("window.__APOLLO_STATE__ = ([\\s\\S]+)")
+regex = re.compile("window.__APOLLO_STATE__ = (.+);\n")
 
 # user agent to use in graphql
 USER_AGENT = (
@@ -53,8 +53,23 @@ query getVisitorReviewPhotosInVisitorReviewTab($input: VisitorReviewsInput) {
 }
 """
 
+GRAPHQL_SEARCH_QUERY = """
+query getRestaurants(
+  $restaurantListInput: RestaurantListInput
+) {
+    restaurants: restaurantList(input: $restaurantListInput) {
+        total
+        items {
+            id
+        }
+    }
+}
+"""
+
 # limit the max page to 10
-REVIEW_MAX_PAGE = 10
+REVIEW_MAX_PAGE = 1
+REVIEW_PER_PAGE = 10
+SEARCH_RESULT_PER_PAGE = 10
 
 
 class NaverRestaurant(Restaurant):
@@ -104,7 +119,7 @@ class NaverRestaurant(Restaurant):
                 "item": "0",
                 "bookingBusinessId": None,
                 "page": page,  # if this is 0, graphql returns error
-                "size": 10,
+                "size": REVIEW_PER_PAGE,
                 "isPhotoUsed": False,
                 "includeContent": True,
                 "getUserStats": True,
@@ -130,7 +145,7 @@ class NaverRestaurant(Restaurant):
             "Origin": "https://pcmap.place.naver.com",
             "x-wtm-graphql": base64.b64encode(
                 json.dumps(data).encode()
-            ).decode(),  # this is a secret that a figured out
+            ).decode(),  # this is a secret that i figured out
         }
 
     async def get_review(self) -> List[schema.Review]:
@@ -199,9 +214,17 @@ class NaverRestaurant(Restaurant):
         res = await Fetch.get(self.url)
         data = json.loads(res)
 
-        price_sum = sum(parse_int(price["price"]) for price in data["menus"])
+        print(self._id)
+
+        if data["menus"] is not None:
+            price_sum = sum(parse_int(price["price"]) for price in data["menus"])
+            menus = {menu["name"]: parse_int(menu["price"]) for menu in data["menus"]}
+        else:
+            price_sum = 0
+            menus = {}
+        price = price_sum / len(data["menus"]) if price_sum != 0 else 0
         detail_res = await Fetch.get(self.detail_url)
-        detail_data = parse_json_until(regex.findall(detail_res)[0])
+        detail_data = json.loads(regex.findall(detail_res)[0])
         for key, value in detail_data.items():
             if key.startswith("RestaurantBase"):
                 rest_base = value
@@ -212,6 +235,13 @@ class NaverRestaurant(Restaurant):
             if key.startswith("restaurant"):
                 rest_data = value
                 break
+
+        if rest_base["microReviews"] is not None:
+            introduction = rest_base["microReviews"][0]
+        elif rest_base["description"] is not None:
+            introduction = rest_base["description"]
+        else:
+            introduction = ""
 
         biz_hour = {}
         for i in rest_data["newBusinessHours"][0]["businessHours"]:
@@ -224,22 +254,25 @@ class NaverRestaurant(Restaurant):
             else:
                 biz_hour[i["day"]] = []
 
+        if rest_data["businessStats"]["contexts"] is not None:
+            moods = rest_data["businessStats"]["contexts"][0]["keywords"]
+        else:
+            moods = []
+
         return schema.Restraunt(
             id=self._id,
             name=data["name"],
-            introduction=rest_base["microReviews"][
-                0
-            ],  # this is a short introduction (not description)
+            introduction=introduction,
             address=data["address"],
             location=[data["x"], data["y"]],
             region=data["addressAbbr"].split(" ")[0],
             phone=data["phone"],
-            price=price_sum // len(data["menus"]),
+            price=price,
             buisnessHours=biz_hour,
-            moods=rest_data["businessStats"]["contexts"][0]["keywords"],
+            moods=moods,
             characteristics=[],
             images=[i["url"] for i in data["images"]],
-            menus={menu["name"]: parse_int(menu["price"]) for menu in data["menus"]},
+            menus=menus,
             reviews=await self.get_review(),
             rating=rest_base["visitorReviewsScore"],
         )
@@ -250,6 +283,11 @@ class NaverMap(Map):
     Naver Map class
     """
 
+    query: str
+
+    def __init__(self, query: str):
+        self.query = query
+
     @staticmethod
     def name() -> str:
         """
@@ -257,11 +295,66 @@ class NaverMap(Map):
         """
         return "naver"
 
-    @staticmethod
-    async def get_restaurants():
+    def get_header(self) -> dict:
+        """
+        This is the header for graphql
+        """
+
+        data = {"args": self.query, "type": "restaurant", "source": "place"}
+
+        return {
+            "User-Agent": USER_AGENT,
+            "Accept": "*/*",
+            "Accept-Language": "ko",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Host": "pcmap-api.place.naver.com",
+            "Origin": "https://pcmap.place.naver.com",
+            "x-wtm-graphql": base64.b64encode(
+                json.dumps(data).encode()
+            ).decode(),  # this is a secret that i figured out
+        }
+
+    def graphql_variables(self, page: int) -> dict:
+        return {
+            "restaurantListInput": {
+                "deviceType": "pcmap",
+                "display": SEARCH_RESULT_PER_PAGE,
+                "query": self.query,
+                "start": (page - 1) * SEARCH_RESULT_PER_PAGE + 1,
+                "isPcmap": True,
+                "x": "126.9698813",
+                "y": "37.566551",
+            }
+        }
+
+    async def get_restaurants(self):
         """
         :yield: The restaurants in the map
         """
+
+        async def get_page(page: int) -> dict:
+            res = await Fetch.post(
+                GRAPHQL_URL,
+                json=[
+                    {
+                        "variables": self.graphql_variables(page),
+                        "query": GRAPHQL_SEARCH_QUERY,
+                    }
+                ],
+                headers=self.get_header(),
+            )
+            data = json.loads(res)[0]["data"]["restaurants"]
+            return data
+
+        first_page = await get_page(1)
+        total = first_page["total"]
+        page_count = total // SEARCH_RESULT_PER_PAGE + 1
+
+        for i in range(1, page_count + 1):
+            data = await get_page(i)
+            for restaurant in data["items"]:
+                yield NaverRestaurant(restaurant["id"])
 
 
 # sample test code
@@ -271,16 +364,17 @@ if __name__ == "__main__":
 
     Fetch.init(
         [
-            (
-                ".*pcmap-api\\.place\\.naver\\.com.*",
-                1000,
-            ),  # this needs to be wait a lot
+            # this needs to be waited a lot
+            (".*pcmap-api\\.place\\.naver\\.com.*", 5000),
             (".*map\\.naver\\.com.*", 10),
             (".*pcmap\\.place\\.naver\\.com.*", 10),
         ]
     )
 
     async def main():
-        print(await NaverRestaurant("36175013").get())
+        naver = NaverMap("어은동 맛집")
+        async for i in naver.get_restaurants():
+            await i.get()
+            
 
     asyncio.run(main())

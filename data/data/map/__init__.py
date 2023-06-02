@@ -35,8 +35,7 @@ class Map:
         :return: The name of the map
         """
 
-    @staticmethod
-    async def get_restaurants():
+    async def get_restaurants(self):
         """
         :yield: The restaurants in the map
         """
