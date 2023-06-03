@@ -1,10 +1,22 @@
-from typing import List, Union
+# pylint: disable = fixme, too-few-public-methods, too-many-arguments, unused-argument
+# todo: remove unused-argument
+
+"""
+todo: write docstring
+"""
+
+from typing import List
 import strawberry
 from strawberry.scalars import JSON
+
 
 # Review data type
 @strawberry.type
 class Review:
+    """
+    todo: write docstring
+    """
+
     username: str
     rating: float
     context: str
@@ -14,7 +26,11 @@ class Review:
 # Restraunt data type
 @strawberry.type
 class Restraunt:
-    id: strawberry.ID
+    """
+    todo: write docstring
+    """
+
+    _id: strawberry.ID
     name: str
     introduction: str
     address: str
@@ -33,12 +49,22 @@ class Restraunt:
 
 # TODO: connect to DB
 # restraunt resolver function
-def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, region: Union[None, str] = None, 
-                   price: Union[None, int] = None, moods: Union[None, List[str]] = None, characteristics: Union[None, List[str]] = None,
-                    rating: Union[None, float] = None, limit: Union[None, int] = None):
+def get_restraunts(
+    _id: None | int = None,
+    name: None | str = None,
+    region: None | str = None,
+    price: None | int = None,
+    moods: None | List[str] = None,
+    characteristics: None | List[str] = None,
+    rating: None | float = None,
+    limit: None | int = None,
+) -> List[Restraunt]:
+    """
+    todo: write docstring
+    """
     return [
         Restraunt(
-            id=strawberry.ID("test"),
+            _id=strawberry.ID("test"),
             name="test",
             introduction="test",
             address="test",
@@ -51,20 +77,20 @@ def get_restraunts(id: Union[None, int] = None, name: Union[None, str] = None, r
             characteristics=["test"],
             images=["test"],
             menus={"test": 1},
-            reviews=[Review(
-                username="test",
-                rating=1.0,
-                context="test",
-                date="test"
-            )],
-            rating=1.0
+            reviews=[Review(username="test", rating=1.0, context="test", date="test")],
+            rating=1.0,
         )
     ]
+
 
 # TODO: setup authentication
 # Query
 @strawberry.type
 class Query:
+    """
+    todo: write docstring
+    """
+
     restraunts: List[Restraunt] = strawberry.field(resolver=get_restraunts)
 
 
@@ -72,8 +98,9 @@ class Query:
 # Mutation for Restraunt data manipulation
 @strawberry.type
 class Mutation:
-    pass
+    """
+    todo: write docstring
+    """
 
 
 schema = strawberry.Schema(query=Query)
-

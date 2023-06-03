@@ -25,15 +25,26 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-        cache: 'pip' 
-        cache-dependency-path: data/requirements.txt
+        cache: 'pip'
     
-    - name: Install dependencies
+    - name: Install poetry & dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r data/requirements.txt
+        pip install poetry
+        poetry --version
+        poetry install -vv -C ./data -n
     
-    - uses: psf/black@stable
-      with:
-        options: "--check --verbose"
-        src: "./data"
+    - name: Black formatting check
+      run: |
+        poetry run -C ./data black --check --verbose ./data
+
+    - name: Pylint check
+      run: |
+        poetry run -C ./data pylint $(git ls-files './data/*.py')
+
+    - name: Mypy check
+      env:
+        MYPYPATH: ./server
+      run: |
+        echo y | poetry run -C ./data mypy --install-types ./data || true
+        poetry run -C ./data mypy --strict ./data
