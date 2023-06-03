@@ -48,3 +48,7 @@ jobs:
       run: |
         echo y | poetry run -C ./data mypy --install-types ./data || true
         poetry run -C ./data mypy --strict ./data
+
+    - name: Pytest
+      run: |
+        poetry run -C ./data pytest ./data

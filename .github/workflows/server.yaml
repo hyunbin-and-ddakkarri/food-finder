@@ -48,3 +48,7 @@ jobs:
       run: |
         echo y | poetry run -C ./server mypy --install-types ./server || true
         poetry run -C ./server mypy --strict ./server
+
+    - name: Pytest
+      run: |
+        poetry run -C ./server pytest ./server
