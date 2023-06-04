@@ -23,7 +23,7 @@ class Restaurant(metaclass=ABCMeta):
         """
 
     @abstractmethod
-    async def get(self) -> schema.Restraunt:
+    async def get(self) -> schema.Restaurant:
         """
         :return: The restaurant data
         """

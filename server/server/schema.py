@@ -23,9 +23,9 @@ class Review:
     date: str
 
 
-# Restraunt data type
+# Restaurant data type
 @strawberry.type
-class Restraunt:
+class Restaurant:
     """
     todo: write docstring
     """
@@ -38,7 +38,7 @@ class Restraunt:
     region: str
     phone: str
     price: int
-    buisnessHours: JSON
+    businessHours: JSON
     moods: List[str]
     characteristics: List[str]
     images: List[str]
@@ -48,8 +48,8 @@ class Restraunt:
 
 
 # TODO: connect to DB
-# restraunt resolver function
-def get_restraunts(
+# restaurant resolver function
+def get_restaurants(
     rid: None | int = None,
     name: None | str = None,
     region: None | str = None,
@@ -58,12 +58,12 @@ def get_restraunts(
     characteristics: None | List[str] = None,
     rating: None | float = None,
     limit: None | int = None,
-) -> List[Restraunt]:
+) -> List[Restaurant]:
     """
     todo: write docstring
     """
     return [
-        Restraunt(
+        Restaurant(
             rid=strawberry.ID("test"),
             name="test",
             introduction="test",
@@ -72,7 +72,7 @@ def get_restraunts(
             region="test",
             phone="test",
             price=1,
-            buisnessHours={"test": [1, 1]},
+            businessHours={"test": [1, 1]},
             moods=["test"],
             characteristics=["test"],
             images=["test"],
@@ -91,11 +91,11 @@ class Query:
     todo: write docstring
     """
 
-    restraunts: List[Restraunt] = strawberry.field(resolver=get_restraunts)
+    restaurants: List[Restaurant] = strawberry.field(resolver=get_restaurants)
 
 
 # TODO: setup mutation
-# Mutation for Restraunt data manipulation
+# Mutation for Restaurant data manipulation
 @strawberry.type
 class Mutation:
     """
