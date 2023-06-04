@@ -261,7 +261,7 @@ class NaverRestaurant(Restaurant):
             moods = []
 
         return schema.Restraunt(
-            _id=strawberry.ID(self._id),
+            rid=strawberry.ID(self._id),
             name=data["name"],
             introduction=introduction,
             address=data["address"],

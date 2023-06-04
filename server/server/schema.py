@@ -30,7 +30,7 @@ class Restraunt:
     todo: write docstring
     """
 
-    _id: strawberry.ID
+    rid: strawberry.ID
     name: str
     introduction: str
     address: str
@@ -50,7 +50,7 @@ class Restraunt:
 # TODO: connect to DB
 # restraunt resolver function
 def get_restraunts(
-    _id: None | int = None,
+    rid: None | int = None,
     name: None | str = None,
     region: None | str = None,
     price: None | int = None,
@@ -64,7 +64,7 @@ def get_restraunts(
     """
     return [
         Restraunt(
-            _id=strawberry.ID("test"),
+            rid=strawberry.ID("test"),
             name="test",
             introduction="test",
             address="test",
