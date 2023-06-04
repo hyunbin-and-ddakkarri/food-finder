@@ -45,8 +45,8 @@ class Restaurant:
 
 # TODO: connect to DB
 # restaurant resolver function
-def get_restaurants(id: Union[None, int] = None, name: Union[None, str] = None, region: Union[None, str] = None, 
-                   price: Union[None, int] = None, moods: Union[None, List[str]] = None, characteristics: Union[None, List[str]] = None,
+def get_restaurants(id: Union[None, int] = None, name: Union[None, str] = None, region: Union[None, str] = None,
+                    price: Union[None, int] = None, moods: Union[None, List[str]] = None, characteristics: Union[None, List[str]] = None,
                     rating: Union[None, float] = None, limit: Union[None, int] = None):
     return [
         Restaurant(
@@ -58,40 +58,40 @@ def get_restaurants(id: Union[None, int] = None, name: Union[None, str] = None, 
             region="Sinsa-dong",
             phone="042-XXX-XXXX",
             price=9500,
-            businessHours= {
+            businessHours={
                 'Mon': [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-                0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0,
                 ],
                 'Tue': [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-                0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0,
                 ],
                 'Wed': [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-                0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0,
                 ],
                 'Thu': [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-                0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0,
                 ],
                 'Fri': [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-                0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0,
                 ],
                 'Sat': [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-                0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0,
                 ],
                 'Sun': [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-                0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+                    0,
                 ],
             },
             moods=["Cozy", "Affordable"],
-            characteristics= ["Sushi", "Donburi"],
+            characteristics=["Sushi", "Donburi"],
             images=["path/to/image1"],
-            menus= {
+            menus={
                 "menu A": 9500,
                 "menu B": 11000,
             },
