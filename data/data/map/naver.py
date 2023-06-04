@@ -210,7 +210,7 @@ class NaverRestaurant(Restaurant):
             )
         )
 
-    async def get(self) -> schema.Restraunt:
+    async def get(self) -> schema.Restaurant:
         """
         :return: The restaurant data
         """
@@ -260,7 +260,7 @@ class NaverRestaurant(Restaurant):
         else:
             moods = []
 
-        return schema.Restraunt(
+        return schema.Restaurant(
             rid=strawberry.ID(self._id),
             name=data["name"],
             introduction=introduction,
@@ -269,7 +269,7 @@ class NaverRestaurant(Restaurant):
             region=data["addressAbbr"].split(" ")[0],
             phone=data["phone"],
             price=int(price),
-            buisnessHours=biz_hour,
+            businessHours=biz_hour,
             moods=moods,
             characteristics=[],
             images=[i["url"] for i in data["images"]],
