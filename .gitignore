@@ -1,4 +1,7 @@
 .idea/
 .vscode/
-food/
+
 .DS_Store
+__pycache__/
+
+food/
