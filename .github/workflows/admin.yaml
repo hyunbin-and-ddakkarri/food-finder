@@ -40,6 +40,11 @@ jobs:
       working-directory: admin
       run: npm run build
 
-    # - name: Test
-    #   working-directory: admin
-    #   run: npm test
+    - name: Test
+      working-directory: public
+      run: npm test
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env: 
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
