@@ -5,7 +5,7 @@
 todo: write docstring
 """
 
-from typing import List
+from typing import List, Union
 import strawberry
 from strawberry.scalars import JSON
 
