@@ -5,7 +5,7 @@
 todo: write docstring
 """
 
-from typing import List, Union
+from typing import List
 import strawberry
 from strawberry.scalars import JSON
 
@@ -26,7 +26,11 @@ class Review:
 # Restaurant data type
 @strawberry.type
 class Restaurant:
-    id: strawberry.ID
+    """
+    todo: write docstring
+    """
+
+    rid: strawberry.ID
     name: str
     introduction: str
     address: str
@@ -46,220 +50,35 @@ class Restaurant:
 # TODO: connect to DB
 # restaurant resolver function
 def get_restaurants(
-    id: Union[None, int] = None,
-    name: Union[None, str] = None,
-    region: Union[None, str] = None,
-    price: Union[None, int] = None,
-    moods: Union[None, List[str]] = None,
-    characteristics: Union[None, List[str]] = None,
-    rating: Union[None, float] = None,
-    limit: Union[None, int] = None,
-):
+    rid: None | int = None,
+    name: None | str = None,
+    region: None | str = None,
+    price: None | int = None,
+    moods: None | List[str] = None,
+    characteristics: None | List[str] = None,
+    rating: None | float = None,
+    limit: None | int = None,
+) -> List[Restaurant]:
+    """
+    todo: write docstring
+    """
     return [
         Restaurant(
-            id=strawberry.ID("test"),
-            name="Asobu",
-            introduction="A best place for KAIST students",
-            address="14, Eoeun-ro 48beon-gil, Yuseong-gu, Daejeon-si",
-            location=[34.21, 66.55],
-            region="Sinsa-dong",
-            phone="042-XXX-XXXX",
-            price=9500,
-            businessHours={
-                "Mon": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    0,
-                    0,
-                    0,
-                ],
-                "Tue": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    0,
-                    0,
-                    0,
-                ],
-                "Wed": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    0,
-                    0,
-                    0,
-                ],
-                "Thu": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    0,
-                    0,
-                    0,
-                ],
-                "Fri": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    0,
-                    0,
-                    0,
-                ],
-                "Sat": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    0,
-                    0,
-                    0,
-                ],
-                "Sun": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    0,
-                    0,
-                    0,
-                ],
-            },
-            moods=["Cozy", "Affordable"],
-            characteristics=["Sushi", "Donburi"],
-            images=["path/to/image1"],
-            menus={
-                "menu A": 9500,
-                "menu B": 11000,
-            },
-            reviews=[
-                Review(username="minji", rating=1.0, context="Good", date="2023-05-29")
-            ],
-            rating=4.6,
+            rid=strawberry.ID("test"),
+            name="test",
+            introduction="test",
+            address="test",
+            location=[1, 1],
+            region="test",
+            phone="test",
+            price=1,
+            businessHours={"test": [1, 1]},
+            moods=["test"],
+            characteristics=["test"],
+            images=["test"],
+            menus={"test": 1},
+            reviews=[Review(username="test", rating=1.0, context="test", date="test")],
+            rating=1.0,
         )
     ]
 
@@ -268,6 +87,10 @@ def get_restaurants(
 # Query
 @strawberry.type
 class Query:
+    """
+    todo: write docstring
+    """
+
     restaurants: List[Restaurant] = strawberry.field(resolver=get_restaurants)
 
 

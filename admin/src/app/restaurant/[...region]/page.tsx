@@ -10,7 +10,7 @@ import { gql, useQuery } from "@apollo/client";
 
 const query = gql`query getData($region: String!) {
     restaurants(region: $region) {
-      id
+      rid
       name
       introduction
       address
