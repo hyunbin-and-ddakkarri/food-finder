@@ -42,7 +42,7 @@ jobs:
 
     - name: Test
       working-directory: admin
-      run: npm test
+      run: npm run test:ci
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
