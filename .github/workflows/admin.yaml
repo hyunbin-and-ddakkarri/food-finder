@@ -41,7 +41,7 @@ jobs:
       run: npm run build
 
     - name: Test
-      working-directory: public
+      working-directory: admin
       run: npm test
 
     - name: Upload coverage reports to Codecov
