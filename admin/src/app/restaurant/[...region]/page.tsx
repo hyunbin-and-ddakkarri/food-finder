@@ -5,8 +5,8 @@ import { columnStyle } from "./style";
 import ClickableCell from "./clickcell";
 import TagCell from "./tagcell";
 import MenuCell from "./menucell";
-import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
-import { gql } from "@apollo/client";
+// import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { gql, useQuery } from "@apollo/client";
 
 const query = gql`query getData($region: String!) {
     restaurants(region: $region) {
@@ -44,29 +44,37 @@ export default function RestaurantPage({
     columnIndex: 0,
   });
 
-  const { data } = useSuspenseQuery(query, {'variables': {region: params.region[2]}});
-  const dataT = data as {[restaurants: string]: Array<any>};
-  console.log(dataT.restaurants[0].name);
-  const dummyData = dataT.restaurants.map((d) => ({
-      name: d.name as string,
-      introduction: d.introduction as string,
-      address: d.address as string,
-      location: [d.location[0] as Number, d.location[1] as Number],
-      phone: d.phone as string,
-      price: d.price as Number,
-      businessHours: d.businessHours as {[key:string]:Array<Number>},
-      moods: d.moods as Array<String>,
-      characteristics: d.characteristics as Array<String>,
-      images: d.images as Array<String>,
-      menus: d.menus as {[key: string]:Number},
-      reviews: d.reviews as Array<{[key:string]:string}>,
-      rating: d.rating as Number,
-    }));
-  const dataKeys = Object.keys(dummyData[0]);
+  const { error, data } = useQuery(query, { variables: { "region": params.region[2] } });
+  const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
+  const [dataKeys, setDataKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const dataT = data as {[restaurants: string]: Array<any>};
+      const newData = dataT.restaurants.map((d) => ({
+        name: d.name as string,
+        introduction: d.introduction as string,
+        address: d.address as string,
+        location: [d.location[0] as Number, d.location[1] as Number],
+        phone: d.phone as string,
+        price: d.price as Number,
+        businessHours: d.businessHours as {[key:string]:Array<Number>},
+        moods: d.moods as Array<String>,
+        characteristics: d.characteristics as Array<String>,
+        images: d.images as Array<String>,
+        menus: d.menus as {[key: string]:Number},
+        reviews: d.reviews as Array<{[key:string]:string}>,
+        rating: d.rating as Number,
+      }));
+      setTableData(newData);
+      setDataKeys(Object.keys(newData[0]));
+    }
+  }, [data]);
+
   const detailKeys = new Array("address", "businessHours", "reviews", "images");
   const tagKeys = new Array("moods", "characteristics");
   const menuKeys = new Array("menus");
-  const [tableData, setTableData] = useState<{ [key: string]: any }[]>(dummyData);
+  
 
   const handleCellValueChange = (
     rowIndex: number,
