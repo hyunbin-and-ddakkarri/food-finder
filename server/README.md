@@ -17,7 +17,7 @@ pip install -r ./server/requirments.txt
 Running server on your local device is simple. Just run the following code!
 
 ```zsh
-strawberry server schema
+strawberry server server.schema
 ```
 
 This code will run an API server on your `localhost:8000`. You can access the GraphiQL page and try sending GraphQL queries. 

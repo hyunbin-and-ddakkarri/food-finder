@@ -1,10 +1,22 @@
-from typing import List, Union
+# pylint: disable = fixme, too-few-public-methods, too-many-arguments, unused-argument
+# todo: remove unused-argument
+
+"""
+todo: write docstring
+"""
+
+from typing import List
 import strawberry
 from strawberry.scalars import JSON
+
 
 # Review data type
 @strawberry.type
 class Review:
+    """
+    todo: write docstring
+    """
+
     username: str
     rating: float
     context: str
@@ -93,6 +105,7 @@ def get_restaurants(id: Union[None, int] = None, name: Union[None, str] = None, 
         )
     ]
 
+
 # TODO: setup authentication
 # Query
 @strawberry.type
@@ -104,8 +117,9 @@ class Query:
 # Mutation for Restaurant data manipulation
 @strawberry.type
 class Mutation:
-    pass
+    """
+    todo: write docstring
+    """
 
 
 schema = strawberry.Schema(query=Query)
-
