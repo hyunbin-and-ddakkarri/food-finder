@@ -76,6 +76,23 @@ REVIEW_PER_PAGE = 10
 SEARCH_RESULT_PER_PAGE = 10
 
 
+async def fetch_graphql(
+    variables: Dict[str, Any], query: str, header: Dict[str, str]
+) -> Any | None:
+    """
+    This is the function to fetch graphql
+    """
+    res = await Fetch.post(
+        GRAPHQL_URL, json=[{"variables": variables, "query": query}], headers=header
+    )
+    try:
+        return json.loads(res)
+    except json.JSONDecodeError:
+        # if decoding fails, it is probably because of the error
+        # most common error is 429 (too many requests)
+        return None
+
+
 class NaverRestaurant(Restaurant):
     """
     Naver Restaurant class
@@ -156,36 +173,23 @@ class NaverRestaurant(Restaurant):
         :return: The reviews of the restaurant
         """
 
-        res = await Fetch.post(
-            GRAPHQL_URL,
-            json=[
-                {
-                    "variables": self.graphql_variables(1),
-                    "query": GRAPHQL_REVIEW_COUNT_QUERY,
-                }
-            ],
-            headers=self.get_header(),
+        res = await fetch_graphql(
+            self.graphql_variables(1), GRAPHQL_REVIEW_COUNT_QUERY, self.get_header()
         )
-        total_review = json.loads(res)[0]["data"]["visitorReviews"]["total"]
+        if res is None:
+            return []
+        total_review = res[0]["data"]["visitorReviews"]["total"]
 
         if total_review == 0:
             return []
 
         async def get_page(page: int) -> List[schema.Review]:
-            res = await Fetch.post(
-                GRAPHQL_URL,
-                json=[
-                    {
-                        "variables": self.graphql_variables(page),
-                        "query": GRAPHQL_REVIEW_QUERY,
-                    }
-                ],
-                headers=self.get_header(),
+            res = await fetch_graphql(
+                self.graphql_variables(page), GRAPHQL_REVIEW_QUERY, self.get_header()
             )
-            try:
-                data = json.loads(res)[0]["data"]["visitorReviews"]["items"]
-            except json.JSONDecodeError:
+            if res is None:
                 return []
+            data = res[0]["data"]["visitorReviews"]["items"]
             return [
                 schema.Review(
                     username=review["author"]["nickname"],
@@ -337,26 +341,25 @@ class NaverMap(Map):
         :yield: The restaurants in the map
         """
 
-        async def get_page(page: int) -> Any:
-            res = await Fetch.post(
-                GRAPHQL_URL,
-                json=[
-                    {
-                        "variables": self.graphql_variables(page),
-                        "query": GRAPHQL_SEARCH_QUERY,
-                    }
-                ],
-                headers=self.get_header(),
+        async def get_page(page: int) -> Any | None:
+            res = await fetch_graphql(
+                self.graphql_variables(page), GRAPHQL_SEARCH_QUERY, self.get_header()
             )
-            data = json.loads(res)[0]["data"]["restaurants"]
+            if res is None:
+                return None
+            data = res[0]["data"]["restaurants"]
             return data
 
         first_page = await get_page(1)
+        if first_page is None:
+            return
         total = first_page["total"]
         page_count = total // SEARCH_RESULT_PER_PAGE + 1
 
         for i in range(1, page_count + 1):
             data = await get_page(i)
+            if data is None:
+                return
             for restaurant in data["items"]:
                 yield NaverRestaurant(restaurant["id"])
 
