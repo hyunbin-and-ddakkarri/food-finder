@@ -1,0 +1,122 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: poetry-install-data
+        name: poetry-install-data
+        language: system
+        entry: poetry install -C ./data -n
+        types: [python]
+        pass_filenames: false
+        always_run: true
+
+      - id: poetry-install-server
+        name: poetry-install-server
+        language: system
+        entry: poetry install -C ./server -n
+        types: [python]
+        pass_filenames: false
+        always_run: true
+
+      - id: poetry-lock-data
+        name: poetry-lock-data
+        language: system
+        entry: poetry lock -C ./data -n
+        types: [python]
+        pass_filenames: false
+        always_run: true
+
+      - id: poetry-lock-server
+        name: poetry-lock-server
+        language: system
+        entry: poetry lock -C ./server -n
+        types: [python]
+        pass_filenames: false
+        always_run: true
+
+      - id: black-data
+        name: black-data
+        language: python
+        types: [python]
+        entry: poetry run -C ./data black --check --verbose ./data
+        pass_filenames: false
+        always_run: true
+
+      - id: black-server
+        name: black-server
+        language: python
+        types: [python]
+        entry: poetry run -C ./server black --check --verbose ./server
+        pass_filenames: false
+        always_run: true
+
+      - id: pylint-data
+        name: pylint-data
+        language: python
+        types: [python]
+        entry: poetry run -C ./data pylint
+        files: ^data/.*\.py$
+
+      - id: pylint-server
+        name: pylint-server
+        language: python
+        types: [python]
+        entry: poetry run -C ./server pylint
+        files: ^server/.*\.py$
+
+      - id: mypy-data
+        name: mypy-data
+        language: python
+        types: [python]
+        entry: ./mypy-data.sh
+        pass_filenames: false
+        always_run: true
+
+      - id: mypy-server
+        name: mypy-server
+        language: python
+        types: [python]
+        entry: poetry run -C ./server mypy --strict ./server
+        pass_filenames: false
+        always_run: true
+
+      - id: npm-install-admin
+        name: npm-install-admin
+        language: system
+        types: [javascript]
+        entry: npm install --prefix ./admin
+        pass_filenames: false
+        always_run: true
+
+      - id: npm-install-public
+        name: npm-install-public
+        language: system
+        types: [javascript]
+        entry: npm install --prefix ./public
+        pass_filenames: false
+        always_run: true
+
+      - id: npm-lint-admin
+        name: npm-lint-admin
+        language: system
+        types: [javascript]
+        entry: npm run --prefix ./admin lint
+        pass_filenames: false
+        always_run: true
+
+      - id: npm-lint-public
+        name: npm-lint-public
+        language: system
+        types: [javascript]
+        entry: npm run --prefix ./public lint
+        pass_filenames: false
+        always_run: true

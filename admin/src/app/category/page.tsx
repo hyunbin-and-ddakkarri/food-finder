@@ -33,7 +33,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr> 
+              </tr>
               <tr>
                 <td className="pr-4">
                   <div className="flex">
@@ -51,7 +51,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr>        
+              </tr>
             </tbody>
           </table>
           <button className="mt-2 px-2 py-1 bg-blue-500 text-white rounded-md">Add new sub-category</button>
@@ -84,7 +84,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr> 
+              </tr>
               <tr>
                 <td className="pr-4">
                   <div className="flex">
@@ -102,7 +102,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr>        
+              </tr>
             </tbody>
           </table>
           <button className="mt-2 px-2 py-1 bg-blue-500 text-white rounded-md">Add new sub-category</button>
@@ -135,7 +135,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr> 
+              </tr>
               <tr>
                 <td className="pr-4">
                   <div className="flex">
@@ -153,7 +153,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr>        
+              </tr>
             </tbody>
           </table>
           <button className="mt-2 px-2 py-1 bg-blue-500 text-white rounded-md">Add new sub-category</button>
