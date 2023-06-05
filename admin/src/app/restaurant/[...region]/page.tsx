@@ -74,7 +74,7 @@ export default function RestaurantPage({
   const detailKeys = new Array("address", "businessHours", "reviews", "images");
   const tagKeys = new Array("moods", "characteristics");
   const menuKeys = new Array("menus");
-  
+
 
   const handleCellValueChange = (
     rowIndex: number,
@@ -155,17 +155,17 @@ export default function RestaurantPage({
               {Object.values(row).map((value, columnIndex) => {
                 if(tagKeys.includes(dataKeys[columnIndex])){
                   return (
-                  <TagCell 
-                    key={`${rowIndex}-${columnIndex}`} 
-                    value={value} 
-                    onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
+                  <TagCell
+                    key={`${rowIndex}-${columnIndex}`}
+                    value={value}
+                    onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)}
                   /> );
                 } else if (menuKeys.includes(dataKeys[columnIndex])){
                   return (
-                    <MenuCell 
-                      key={`${rowIndex}-${columnIndex}`} 
-                      value={value} 
-                      onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
+                    <MenuCell
+                      key={`${rowIndex}-${columnIndex}`}
+                      value={value}
+                      onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)}
                     /> );
                 } else {
                   return (
@@ -181,7 +181,7 @@ export default function RestaurantPage({
                       value={detailKeys.includes(dataKeys[columnIndex]) ? 'View' : renderTableCell(dataKeys[columnIndex], value)}
                     />
                   )
-                }  
+                }
               })}
             </tr>
           ))}

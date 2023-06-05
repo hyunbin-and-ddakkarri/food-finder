@@ -78,7 +78,7 @@ const MenuCell: React.FC<MenuCellProps> = ({ value, onValueChange }) => {
             <input
               value={tempMenu.value}
               size={6}
-              onChange={(e) => handleTempChange(tempMenu.key, e.target.value)}  
+              onChange={(e) => handleTempChange(tempMenu.key, e.target.value)}
             />
           ) : (
             <input

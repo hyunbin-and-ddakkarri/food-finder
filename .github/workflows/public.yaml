@@ -3,13 +3,13 @@ name: public
 on:
   push:
     branches: [ main ]
-  
+
   pull_request:
     branches: [ main ]
 
   merge_group:
       branches: [ main ]
-  
+
 jobs:
   public-build:
     runs-on: ${{ matrix.os }}
@@ -27,7 +27,7 @@ jobs:
         node-version: '18'
         cache: 'npm'
         cache-dependency-path: public/package-lock.json
-      
+
     - name: Install modules
       working-directory: public
       run: npm ci
@@ -46,5 +46,5 @@ jobs:
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
-      env: 
+      env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

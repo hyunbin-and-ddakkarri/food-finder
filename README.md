@@ -5,8 +5,8 @@
 <a href="https://github.com/hyunbin-and-ddakkarri/food-finder/actions/workflows/docker.yaml"><img src="https://img.shields.io/github/actions/workflow/status/hyunbin-and-ddakkarri/food-finder/docker.yaml?label=docker-build&logo=github&style=flat-square"/></a>
 <a href="https://github.com/hyunbin-and-ddakkarri/food-finder/actions/workflows/public.yaml"><img src="https://img.shields.io/github/actions/workflow/status/hyunbin-and-ddakkarri/food-finder/public.yaml?label=public-build&logo=github&style=flat-square"/></a>
 <a href="https://github.com/hyunbin-and-ddakkarri/food-finder/actions/workflows/server.yaml"><img src="https://img.shields.io/github/actions/workflow/status/hyunbin-and-ddakkarri/food-finder/server.yaml?label=server-build&logo=github&style=flat-square"/></a>
-<a href="https://codecov.io/gh/hyunbin-and-ddakkarri/food-finder" > 
- <img src="https://img.shields.io/codecov/c/gh/hyunbin-and-ddakkarri/food-finder?logo=codecov&style=flat-square&token=8IYUSRMWHU"/> 
+<a href="https://codecov.io/gh/hyunbin-and-ddakkarri/food-finder" >
+ <img src="https://img.shields.io/codecov/c/gh/hyunbin-and-ddakkarri/food-finder?logo=codecov&style=flat-square&token=8IYUSRMWHU"/>
  </a>
 
  <p>This is a app for finding restaurants nearby</p>
