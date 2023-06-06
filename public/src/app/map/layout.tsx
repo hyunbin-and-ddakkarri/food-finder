@@ -1,37 +1,23 @@
-"use client";
+import Link from "next/link"
 
-import React from 'react';
-
-type LayoutProps = {
-  children: React.ReactNode;
-};
-
-const Layout = ({ children }: LayoutProps) => {
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Handle search functionality here
-  };
-
-  const handleFilter = (filter: string) => {
-    // Handle filter functionality here
-  };
-
-  return (
-    <html lang="en">
-        <body>
-            <div className="layout" style={{position: "relative"}}>
-            <div className="search-bar" style={{display: "flex", margin: "15px 15px 5px 15px"}}>
-                <input type="text" placeholder="Search" onChange={handleSearch} style={{width:"100%", height:"30px"}}/>
+export default function AppLayout({ children } : {children: React.ReactNode}) {
+    return (
+        <div className='h-full'>
+            <div className="flex items-center m-2 mb-4">
+                <label htmlFor="simple-search" className="sr-only">Search</label>
+                <div className="relative w-full">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path></svg>
+                </div>
+                <p className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Daejeon Yuseong-gu Eoeun-dong</p>
+                </div>
+        
             </div>
-            <div className="filter-buttons">
-                <button onClick={() => handleFilter('filter1')}>Filter 1</button>
-                <button onClick={() => handleFilter('filter2')}>Filter 2</button>
-                <button onClick={() => handleFilter('filter3')}>Filter 3</button>
+            <div className="w-full h-full">
+                <Link href='/listview'>
+                {children}
+                </Link>
             </div>
-            <div className="content" >{children}</div>
-            </div>
-        </body>
-    </html>
-  );
-};
-
-export default Layout;
+        </div>
+    );
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 declare global {
     interface Window {
@@ -21,18 +21,25 @@ function Map() {
                 window.kakao.maps.load(() => {
                     const mapContainer = document.getElementById("map");
                     const mapOption = {
-                        center: new window.kakao.maps.LatLng(36.37306, 127.36056),
-                        level: 3,
+                        center: new window.kakao.maps.LatLng(36.3629, 127.3568),
+                        level: 2,
                     };
-                    new window.kakao.maps.Map(mapContainer, mapOption);
+                    var map = new window.kakao.maps.Map(mapContainer, mapOption);
+                    var markerPosition = new window.kakao.maps.LatLng(36.363169, 127.357197); 
+                    var marker = new window.kakao.maps.Marker({
+                        position: markerPosition,
+                        clickable: true
+                    });
+                    marker.setMap(map);
+
                 });
           };
           mapScript.addEventListener("load", onLoadKakaoMap);
     }, []);
 
     return (
-        <div className="Map">
-            <div id="map" style={{ position: "absolute", width: "100%", height: "100vh", marginTop: "-75px", zIndex: "-1"}}></div>
+        <div className="Map h-screen relative">
+            <div id="map" style={{ position: "absolute", width: "100%", height: "105vh", marginTop: "-75px", zIndex: "-1"}}></div>
         </div>
     );
 };

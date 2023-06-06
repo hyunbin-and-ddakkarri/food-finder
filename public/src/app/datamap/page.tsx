@@ -113,7 +113,7 @@ const Datamap2 = () => {
         for(const [index, restaurant] of restaurants.entries()){
             let [x, y, name] = coords[index+1]
             restaurantButtons.push(
-                <Link href='/listview'>
+                <Link href='/map'>
                     <Image 
                     src={subimages[index]} 
                     alt={name} 
