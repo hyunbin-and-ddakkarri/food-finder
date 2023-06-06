@@ -1,0 +1,6 @@
+# ignore meilisearch binary
+meilisearch
+data.ms
+dumps
+
+restaurants.json
