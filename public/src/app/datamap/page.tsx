@@ -2,10 +2,15 @@
 
 import Image from 'next/legacy/image';
 import React, {useState, useEffect, useRef, useLayoutEffect} from "react"
+
 import korean from './Korean.jpg'
 import japanese from './Japanese.jpg'
 import chinese from './Chinese.jpg'
 import italian from './Italian.jpg'
+
+import ramen from './Ramen.jpg'
+import sushi from './Sushi.jpg'
+import donburi from './Donburi.jpg'
 
 //console.log(data().data[0].name)
 
