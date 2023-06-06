@@ -3,7 +3,7 @@
 import Image from 'next/legacy/image';
 import React, {useState, useEffect, useRef, useLayoutEffect} from "react"
 import korean from './Korean.jpg'
-import japanese from './Japanese.png'
+import japanese from './Japanese.jpg'
 import chinese from './Chinese.jpg'
 import italian from './Italian.jpg'
 
