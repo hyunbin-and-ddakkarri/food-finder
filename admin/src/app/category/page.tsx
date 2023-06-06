@@ -17,6 +17,13 @@ export default function CategoryPage() {
     setCategories(currentCats)
   }
 
+  const addCategory = () => {
+    const currentCats = {...categories}
+    currentCats["New category"] = []
+    setCategories(currentCats)
+  }
+  
+
   const handleCellValueChange = (
     c: string,
     newValue: string[]
@@ -34,7 +41,7 @@ export default function CategoryPage() {
         <div className="text-2xl font-bold">Category management</div>
         <div className="ml-auto">
           Add new
-          <FontAwesomeIcon icon={faPlusCircle} size='xl' className='primaryIcon ml-2'/>
+          <FontAwesomeIcon icon={faPlusCircle} size='xl' className='primaryIcon ml-2' onClick={() => {addCategory()}}/>
         </div>
       </div>
       <div className='flex flex-wrap justify-between'>
