@@ -2,10 +2,10 @@ import os
 
 default_env = {
     "RUN_MODE": "dev",
-    "MYSQL_HOST": "localhost",
-    "MYSQL_USER": "test",
-    "MYSQL_PASSWORD": "password123",
-    "MYSQL_DB": "test"
+    "SQL_HOST": "localhost",
+    "SQL_USER": "test",
+    "SQL_PASSWORD": "password123",
+    "SQL_DB": "test"
 }
 
 
