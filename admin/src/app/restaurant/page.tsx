@@ -50,7 +50,7 @@ export default function ScrollableListboxes() {
   };
 
   return (
-    <div className="block w-full justify-center items-center m-8">
+    <div className="block w-full justify-center items-center p-8 text-black">
       <div className="text-2xl font-bold mb-8">Restaurant Information</div>
       <div className="flex w-full">
         <div className="w-1/3 mr-4 overflow-y-scroll">
@@ -91,8 +91,8 @@ export default function ScrollableListboxes() {
             <h2 className="text-lg font-semibold mb-2">Dong</h2>
             <ul className='border border-gray-300 rounded-md h-40 overflow-y-auto'>
             {selectedDistrict.sub.map((subdistrict) => (
-              <li 
-                key={subdistrict} 
+              <li
+                key={subdistrict}
                 className="cursor-pointer p-2 hover:bg-blue-500 hover:text-white"
                 onClick={() => handleDongClick(subdistrict)}
               >

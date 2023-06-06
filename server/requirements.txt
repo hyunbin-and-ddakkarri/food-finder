@@ -1,2 +1,0 @@
-strawberry-graphql[asgi]==0.178
-psycopg2-binary==2.9

@@ -4,7 +4,7 @@ The back-end of the Food Finder app is managed by a single API server. This serv
 
 ## Setup
 
-The server is written in python. Install `Python 3.9>=` and install dependencies using this code. 
+The server is written in python. Install `Python 3.9>=` and install dependencies using this code.
 
 ```zsh
 pip install -r ./server/requirements.txt
@@ -57,4 +57,4 @@ After starting the DB server and meilisearch server, you are now ready to run th
 uvicorn server:app --reload
 ```
 
-This code will run an API server on your `localhost:8000`. You can access the GraphiQL page and try sending GraphQL queries. 
+This code will run an API server on your `localhost:8000`. You can access the GraphiQL page and try sending GraphQL queries.

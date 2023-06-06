@@ -1,6 +1,6 @@
 export default function CategoryPage() {
   return (
-    <div className="block w-full overflow-scroll justify-center items-center m-8">
+    <div className="block w-full overflow-scroll justify-center items-center p-8 text-black">
       <div className="flex w-full justify-between items-center mb-8">
         <div className="text-2xl font-bold">Category management</div>
         <div className="ml-auto">
@@ -33,7 +33,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr> 
+              </tr>
               <tr>
                 <td className="pr-4">
                   <div className="flex">
@@ -51,7 +51,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr>        
+              </tr>
             </tbody>
           </table>
           <button className="mt-2 px-2 py-1 bg-blue-500 text-white rounded-md">Add new sub-category</button>
@@ -84,7 +84,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr> 
+              </tr>
               <tr>
                 <td className="pr-4">
                   <div className="flex">
@@ -102,7 +102,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr>        
+              </tr>
             </tbody>
           </table>
           <button className="mt-2 px-2 py-1 bg-blue-500 text-white rounded-md">Add new sub-category</button>
@@ -135,7 +135,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr> 
+              </tr>
               <tr>
                 <td className="pr-4">
                   <div className="flex">
@@ -153,7 +153,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
                 </td>
-              </tr>        
+              </tr>
             </tbody>
           </table>
           <button className="mt-2 px-2 py-1 bg-blue-500 text-white rounded-md">Add new sub-category</button>
