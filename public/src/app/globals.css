@@ -8,8 +8,8 @@
   --text-rgb: 13, 18, 8;
   --primary: 86, 113, 137;
   --primary-dark: 24, 41, 74;
-  --secondary: 179,188,208;
-  --secondary-dark: 40, 113, 102;
+  --secondary: 179, 188, 208;
+  --secondary-dark: 49, 67, 107;
   --sub: 233, 249, 237;
   --accent: 159, 214, 182;
 }
@@ -35,4 +35,23 @@ body {
 .secondaryButton {
   color: rgb(var(--text-rgb));
   background-color: rgb(var(--secondary));
+  border: 1px solid;
+  border-color: rgb(var(--secondary));
+}
+
+.selectedButton{
+  border: 1px solid;
+  border-color: rgb(var(--secondary-dark));
+}
+
+.hideScrollBar{
+  scrollbar-width: none;
+}
+
+.hideScrollBar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+
+input {
+  accent-color: rgb(var(--primary));
 }

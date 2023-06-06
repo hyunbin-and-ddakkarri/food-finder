@@ -1,11 +1,8 @@
 "use client";
 
-import Image from 'next/legacy/image';
+import Image from 'next/image'
+
 import React, {useState, useEffect, useRef, useLayoutEffect} from "react"
-import korean from './Korean.jpg'
-import japanese from './Japanese.jpg'
-import chinese from './Chinese.jpg'
-import italian from './Italian.jpg'
 
 //console.log(data().data[0].name)
 
@@ -21,7 +18,7 @@ const Datamap2 = () => {
 
     const ref = useRef(null)
   
-    const images = [korean, japanese, chinese, italian]
+    const images = ['img/Korean.jpg', 'img/Japanese.jpg', 'img/Chinese.jpg', 'img/Italian.jpg']
 
     useEffect(() => {
         setHeight(ref.current.clientHeight)
@@ -80,7 +77,7 @@ const Datamap2 = () => {
 
     const [buttonState, clickButton] = useState(-1);
 
-    function hideOtherButtons(e, i, bottom, left){
+    function hideOtherButtons(e: any, i: number, bottom: number, left: number){
         setBaseX(left)
         setBaseY(bottom)
         console.log(baseX, baseY)
@@ -96,7 +93,13 @@ const Datamap2 = () => {
     let restaurantButtons = [];
 
     for (const [index, [x, y, name]] of coords.entries()){
-        buttons.push(<button style={{position: "absolute", width: 0.8*size+"px", height: 0.8*size+"px", bottom: (((y-1/2)*size)+(h/2))+"px", left: (((x-1/2)*size)+(w/2))+"px", borderRadius: "50%", background: "white", borderColor: "black", borderWidth: "5px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size)+(h/2)), (((x-1/2)*size)+(w/2)))}><Image src={images[index]} alt={name} width={0.5*size} height={0.5*size} margin={{}}loader={loaderProp}/></button>)
+        buttons.push(<button style={{position: "absolute", width: 0.8*size+"px", height: 0.8*size+"px", bottom: (((y-1/2)*size)+(h/2))+"px", left: (((x-1/2)*size)+(w/2))+"px", borderRadius: "50%", background: "white", borderColor: "black", borderWidth: "5px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size)+(h/2)), (((x-1/2)*size)+(w/2)))}>
+            <Image 
+            src={images[index]} alt={name} 
+            width={0.5*size} 
+            height={0.5*size} 
+            className='rounded-full'
+            loader={loaderProp}/></button>)
     }
 
     if (buttonState >= 0) {

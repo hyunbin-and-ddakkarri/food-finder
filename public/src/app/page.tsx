@@ -64,10 +64,11 @@ export default function Home() {
     // Handle search functionality here
   };
   const [query, setQuery] = useState("");
+  const filters = ["Price", "Mood", "Rating", "Business Hours"];
 
   //console.log(Region.filter(region=>region.name.toLowerCase().includes("1")))
   return (
-    <div className='flex flex-col h-screen m-2'>
+    <div className='h-full m-2'>
       <div className="flex items-center mb-2">
         <label htmlFor="simple-search" className="sr-only">Search</label>
         <div className="relative w-full">
@@ -77,21 +78,35 @@ export default function Home() {
           <input onChange={(e) => setQuery(e.target.value)} type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required />
         </div>
         <button type="submit" className="p-2.5 primaryButton ml-2 text-sm font-medium rounded-lg">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <svg className="w-5 h-5" fill="none" stroke="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           <span className="sr-only">Search</span>
         </button>
       </div>
 
-      <div className='overflow-x-auto mb-4 ml-1 mr-1'>
-        <div className="flex flex-row mt-1">
-          <div onClick={() => handleFilter("price")} className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit ">
-            Price</div>
-          <div onClick={() => handleFilter("mood")} className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit">
-            Mood</div>
-          <div onClick={() => handleFilter("rating")} className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit">
-            Rating</div>
-          <div onClick={() => handleFilter("businessHours")} className="secondaryButton  font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit">
-            Business Hours</div>
+      <div className='mb-4 ml-1 mr-1'>
+        <div className="flex overflow-x-scroll flex-row mt-1 hideScrollBar">
+          {
+            filters.map((filter, idx) => {
+              const filterKey = Object.keys(options)[idx];
+              if (options[filterKey].length > 0){
+                return (
+                  <div 
+                    onClick={() => handleFilter(filterKey)} 
+                    className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit whitespace-nowrap	selectedButton"
+                    key={idx}>
+                    {filter}
+                  </div>
+                )
+              } else return (
+                <div 
+                  onClick={() => handleFilter(filterKey)} 
+                  className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit whitespace-nowrap	"
+                  key={idx}>
+                  {filter}
+                </div>
+              )
+            })
+          }
         </div>
         <div>
           { displayedFilter !== "none" && (
@@ -114,16 +129,19 @@ export default function Home() {
         </div>
       </div>
       <div className="content flex-1 overflow-y-auto">
-        <div className="flex min-h-screen flex-col justify-between p-4">
+        <div className="flex flex-col justify-between p-4">
             <div className="grid grid-rows-6 grid-flow-col gap-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700"> {/* 6-> list element number */}
               {Region.filter((region)=>region.name.toLowerCase().includes(query)).map((region) => (
                 <div key={region.id}>
                   <div className="flex-1 items-center space-x-0 min-w-0">
-                        <button
-                          type="button"
-                          className="block w-full cursor-pointer rounded-lg py-2 text-left transition duration-500 hover:bg-subButton hover:text-neutral-500 focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0">
-                          {region.name}
-                        </button>
+                    <Link href="/datamap">
+                      <button
+                        type="button"
+                        // transition duration-500 hover:bg-subButton hover:text-neutral-500 text-sm focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0
+                        className="block w-full cursor-pointer rounded-lg py-2 text-left text-sm">
+                        {region.name}
+                      </button>
+                    </Link>
                   </div>
                 </div>
               ))}
