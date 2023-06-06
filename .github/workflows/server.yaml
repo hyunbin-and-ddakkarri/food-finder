@@ -3,13 +3,13 @@ name: server
 on:
   push:
     branches: [ main ]
-  
+
   pull_request:
     branches: [ main ]
 
   merge_group:
       branches: [ main ]
-  
+
 jobs:
   server-build:
     runs-on: ${{ matrix.os }}
@@ -24,19 +24,35 @@ jobs:
     - name: Setup python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
-      
-    - name: Install dependencies
-      working-directory: server
+        python-version: '3.10'
+
+    - name: Install poetry & dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install black
-        pip install -r requirements.txt
+        pip install poetry
+        poetry --version
+        poetry install -vv -C ./server -n
 
-    - name: Lint
-      working-directory: server
-      run: black .
+    - name: Black formatting check
+      run: |
+        poetry run -C ./server black --check --verbose ./server
 
-    # - name: Test
-    #   working-directory: server
-    #   run: strawberry server schema
+    - name: Pylint check
+      run: |
+        poetry run -C ./server pylint $(git ls-files './server/**/*.py')
+
+    - name: Mypy check
+      env:
+        MYPYPATH: ./server
+      run: |
+        echo y | poetry run -C ./server mypy --install-types ./server || true
+        poetry run -C ./server mypy --strict ./server
+
+    - name: Pytest
+      run: |
+        poetry run -C ./server pytest --cov=./server --cov-report=xml ./server
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

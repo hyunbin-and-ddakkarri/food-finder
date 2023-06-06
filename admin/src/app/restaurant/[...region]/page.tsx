@@ -5,6 +5,32 @@ import { columnStyle } from "./style";
 import ClickableCell from "./clickcell";
 import TagCell from "./tagcell";
 import MenuCell from "./menucell";
+// import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { gql, useQuery } from "@apollo/client";
+
+const query = gql`query getData($region: String!) {
+    restaurants(region: $region) {
+      rid
+      name
+      introduction
+      address
+      location
+      region
+      phone
+      price
+      businessHours
+      moods
+      characteristics
+      images
+      menus
+      reviews {
+        username
+        context
+        date
+      }
+      rating
+  }
+}`;
 
 export default function RestaurantPage({
   params,
@@ -18,65 +44,37 @@ export default function RestaurantPage({
     columnIndex: 0,
   });
 
-  const data = Array(60)
-    .fill(0)
-    .map(() => ({
-      name: "Asobu",
-      introduction: "A best place for KAIST students",
-      address: "14, Eoeun-ro 48beon-gil, Yuseong-gu, Daejeon-si",
-      location: [34.21, 66.55],
-      phone: "042-XXX-XXXX",
-      price: 9500,
-      business_hour: {
-        Mon: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-          0,
-        ],
-        Tue: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-          0,
-        ],
-        Wed: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-          0,
-        ],
-        Thu: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-          0,
-        ],
-        Fri: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-          0,
-        ],
-        Sat: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-          0,
-        ],
-        Sun: [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-          0,
-        ],
-      },
-      moods: ["Cozy", "Affordable"],
-      characteristics: ["Sushi", "Donburi"],
-      images: ["path/to/image1"],
-      menus: {
-        "menu A": 9500,
-        "menu B": 11000,
-      },
-      reviews: [
-        {
-          username: "minji",
-          content: "Good",
-        },
-      ],
-      rating: 4.6,
-    }));
-  const dataKeys = Object.keys(data[0]);
-  const detailKeys = new Array("address", "business_hour", "reviews", "images");
+  const { error, data } = useQuery(query, { variables: { "region": params.region[2] } });
+  const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
+  const [dataKeys, setDataKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const dataT = data as {[restaurants: string]: Array<any>};
+      const newData = dataT.restaurants.map((d) => ({
+        name: d.name as string,
+        introduction: d.introduction as string,
+        address: d.address as string,
+        location: [d.location[0] as Number, d.location[1] as Number],
+        phone: d.phone as string,
+        price: d.price as Number,
+        businessHours: d.businessHours as {[key:string]:Array<Number>},
+        moods: d.moods as Array<String>,
+        characteristics: d.characteristics as Array<String>,
+        images: d.images as Array<String>,
+        menus: d.menus as {[key: string]:Number},
+        reviews: d.reviews as Array<{[key:string]:string}>,
+        rating: d.rating as Number,
+      }));
+      setTableData(newData);
+      setDataKeys(Object.keys(newData[0]));
+    }
+  }, [data]);
+
+  const detailKeys = new Array("address", "businessHours", "reviews", "images");
   const tagKeys = new Array("moods", "characteristics");
   const menuKeys = new Array("menus");
-  const [tableData, setTableData] = useState<{ [key: string]: any }[]>(data);
+
 
   const handleCellValueChange = (
     rowIndex: number,
@@ -108,7 +106,7 @@ export default function RestaurantPage({
       return value;
     }
     else if (Array.isArray(value) || typeof value === "object") {
-      // if (key === 'business_hour') {
+      // if (key === 'businessHours') {
       //   const weekdays = Object.keys(value);
       //   return weekdays.map((day) => {
       //     const hours = value[day];
@@ -157,17 +155,17 @@ export default function RestaurantPage({
               {Object.values(row).map((value, columnIndex) => {
                 if(tagKeys.includes(dataKeys[columnIndex])){
                   return (
-                  <TagCell 
-                    key={`${rowIndex}-${columnIndex}`} 
-                    value={value} 
-                    onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
+                  <TagCell
+                    key={`${rowIndex}-${columnIndex}`}
+                    value={value}
+                    onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)}
                   /> );
                 } else if (menuKeys.includes(dataKeys[columnIndex])){
                   return (
-                    <MenuCell 
-                      key={`${rowIndex}-${columnIndex}`} 
-                      value={value} 
-                      onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)} 
+                    <MenuCell
+                      key={`${rowIndex}-${columnIndex}`}
+                      value={value}
+                      onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)}
                     /> );
                 } else {
                   return (
@@ -183,7 +181,7 @@ export default function RestaurantPage({
                       value={detailKeys.includes(dataKeys[columnIndex]) ? 'View' : renderTableCell(dataKeys[columnIndex], value)}
                     />
                   )
-                }  
+                }
               })}
             </tr>
           ))}

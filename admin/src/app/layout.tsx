@@ -2,13 +2,12 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 library.add(fas)
-config.autoAddCss = false; 
+config.autoAddCss = false;
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -35,8 +34,8 @@ export default function AppLayout({ children } : {
               <Link href="/category" className='text-md text-black'>Category Management</Link>
             </div>
             <div>
-              <Link href="/restaurant" className='text-md text-black'>Restaurant Information</Link>            
-            </div> 
+              <Link href="/restaurant" className='text-md text-black'>Restaurant Information</Link>
+            </div>
           </div>
           <div className="grow shrink min-w-0">
             {children}
