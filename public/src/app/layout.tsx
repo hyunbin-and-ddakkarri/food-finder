@@ -6,7 +6,7 @@ const client = new ApolloClient({
   uri: 'http://localhost:8000/graphql',
   cache: new InMemoryCache()
 });
-import { Karla, Open_Sans } from 'next/font/google'
+import { Open_Sans } from 'next/font/google'
 const font = Open_Sans({ subsets: ['latin'] })
 
 export default function AppLayout({ children } : {children: React.ReactNode}) {

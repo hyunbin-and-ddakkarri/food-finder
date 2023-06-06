@@ -1,6 +1,7 @@
 "use client";
 
 import Image from 'next/image'
+import Link from 'next/link';
 
 import React, {useState, useEffect, useRef, useLayoutEffect} from "react"
 
@@ -19,6 +20,7 @@ const Datamap2 = () => {
     const ref = useRef(null)
   
     const images = ['img/Korean.jpg', 'img/Japanese.jpg', 'img/Chinese.jpg', 'img/Italian.jpg']
+    const subimages = ['img/1.jpeg', 'img/2.jpeg', 'img/3.jpeg', 'img/4.jpeg']
 
     useEffect(() => {
         setHeight(ref.current.clientHeight)
@@ -86,20 +88,22 @@ const Datamap2 = () => {
 
 
     //console.log(w, h);
-    var size = Math.min(w, h)/10;
+    var size = Math.min(w, h)/5;
 
     let buttons = [];
     let restaurants = [];
     let restaurantButtons = [];
 
     for (const [index, [x, y, name]] of coords.entries()){
-        buttons.push(<button style={{position: "absolute", width: 0.8*size+"px", height: 0.8*size+"px", bottom: (((y-1/2)*size)+(h/2))+"px", left: (((x-1/2)*size)+(w/2))+"px", borderRadius: "50%", background: "white", borderColor: "black", borderWidth: "5px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size)+(h/2)), (((x-1/2)*size)+(w/2)))}>
+        buttons.push(
             <Image 
             src={images[index]} alt={name} 
-            width={0.5*size} 
-            height={0.5*size} 
+            width={0.8*size} 
+            height={0.8*size} 
+            style={{position: "absolute", width: 1.0*size+"px", height: 1.0*size+"px", bottom: (((y-1/2)*size*1.1)+(h/2))+"px", left: (((x-1/2)*size*1.1)+(w/2))+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size*1.1)+(h/2)), (((x-1/2)*size*1.1)+(w/2)))}
             className='rounded-full'
-            loader={loaderProp}/></button>)
+            loader={loaderProp}/>
+            )
     }
 
     if (buttonState >= 0) {
@@ -108,7 +112,19 @@ const Datamap2 = () => {
         restaurants = categories[buttonState].elements
         for(const [index, restaurant] of restaurants.entries()){
             let [x, y, name] = coords[index+1]
-            restaurantButtons.push(<div style = {{position: "absolute", width: 0.5*size+"px", height: 0.5*size+"px", bottom: (((y+0.15)*size))+baseY+"px", left: (((x+0.15)*size))+baseX+"px", background: "white", borderRadius: "50%", borderColor: "black", borderWidth: "2px", fontSize:"5"}}>{restaurant}</div>)
+            restaurantButtons.push(
+                <Link href='/listview'>
+                    <Image 
+                    src={subimages[index]} 
+                    alt={name} 
+                    width={0.7*size} 
+                    height={0.7*size} 
+                    style={{position: "absolute", width: 0.7*size+"px", height: 0.7*size+"px", bottom: (((y+0.15)*size))+baseY+"px", left: (((x+0.15)*size))+baseX+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size)+(h/2)), (((x-1/2)*size)+(w/2)))}
+                    className='rounded-full'
+                    loader={loaderProp}
+                    />
+                </Link>
+            )
         }
     }
 

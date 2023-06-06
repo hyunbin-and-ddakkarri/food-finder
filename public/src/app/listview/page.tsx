@@ -41,7 +41,7 @@ const Page = () => {
   return (
     //later fix link to "/mapview"
     <div className='flex flex-col h-screen m-2'>
-      <Link href="/">
+      <Link href="/datamap">
         <div className="flex items-center mb-2">
           <label htmlFor="simple-search" className="sr-only">Search</label>
           <div className="relative w-full">
@@ -56,7 +56,7 @@ const Page = () => {
           </button>
         </div>
       </Link>
-      <Link href="/">
+      <Link href="/datamap">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
