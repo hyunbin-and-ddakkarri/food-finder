@@ -1,4 +1,5 @@
-# pylint: disable = fixme, too-few-public-methods, too-many-arguments, unused-argument
+# pylint: disable = fixme, too-few-public-methods, too-many-arguments, unused-argument, invalid-name
+# mypy: ignore-errors =
 # todo: remove unused-argument
 
 """
@@ -6,6 +7,7 @@ todo: write docstring
 """
 
 from typing import List
+import json
 import strawberry
 from strawberry.scalars import JSON
 
@@ -14,7 +16,7 @@ from strawberry.scalars import JSON
 @strawberry.type
 class Review:
     """
-    todo: write docstring
+    Review strawberry type for GraphQL
     """
 
     username: str
@@ -22,12 +24,25 @@ class Review:
     context: str
     date: str
 
+    @staticmethod
+    def from_dict(x: dict[str, str | float]) -> "Review":
+        """
+        Converts dictionary to Review object
+        """
+        r = Review(
+            username=x["username"],
+            rating=x["rating"],
+            context=x["context"],
+            date=x["date"],
+        )
+        return r
+
 
 # Restaurant data type
 @strawberry.type
 class Restaurant:
     """
-    todo: write docstring
+    Restaurant strawberry type for GraphQL
     """
 
     rid: strawberry.ID
@@ -40,17 +55,36 @@ class Restaurant:
     price: int
     businessHours: JSON
     moods: List[str]
-    characteristics: List[str]
-    images: List[str]
+    chars: List[str]
+    imgs: List[str]
     menus: JSON
     reviews: List[Review]
     rating: float
 
+    def to_dict(self) -> dict[str, str | int | float | JSON]:
+        """
+        Converts Restaurant object to dictionary for SQL query
+        """
+        res = self.__dict__
+        res["location"] = ", ".join([str(l) for l in res["location"]])
+        res["businessHours"] = json.dumps(res["businessHours"])
+        res["moods"] = ", ".join(res["moods"])
+        res["chars"] = ", ".join(res["chars"])
+        res["imgs"] = ", ".join(res["imgs"])
+        res["menus"] = json.dumps(res["menus"])
+        res["reviews"] = "; ".join([r.__dict__ for r in res["reviews"]])
+        return res
+
+    def to_json(self) -> str:
+        """
+        Converts Restaurant object to JSON string recursively
+        """
+        return ""
+
 
 # TODO: connect to DB
-# restaurant resolver function
 def get_restaurants(
-    rid: None | int = None,
+    rid: None | strawberry.ID = None,
     name: None | str = None,
     region: None | str = None,
     price: None | int = None,
@@ -60,7 +94,7 @@ def get_restaurants(
     limit: None | int = None,
 ) -> List[Restaurant]:
     """
-    todo: write docstring
+    restaurant resolver function
     """
     return [
         Restaurant(
@@ -72,10 +106,12 @@ def get_restaurants(
             region="test",
             phone="test",
             price=1,
-            businessHours={"test": [1, 1]},
+            businessHours={
+                "monday": ["00:00", "00:00"],
+            },
             moods=["test"],
-            characteristics=["test"],
-            images=["test"],
+            chars=["test"],
+            imgs=["test"],
             menus={"test": 1},
             reviews=[Review(username="test", rating=1.0, context="test", date="test")],
             rating=1.0,
@@ -88,7 +124,7 @@ def get_restaurants(
 @strawberry.type
 class Query:
     """
-    todo: write docstring
+    Query for Restaurant data
     """
 
     restaurants: List[Restaurant] = strawberry.field(resolver=get_restaurants)
@@ -99,7 +135,7 @@ class Query:
 @strawberry.type
 class Mutation:
     """
-    todo: write docstring
+    Mutation for Restaurant data manipulation
     """
 
 
