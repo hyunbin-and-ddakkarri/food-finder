@@ -3,7 +3,7 @@ name: admin
 on:
   push:
     branches: [ main ]
-  
+
   pull_request:
     branches: [ main ]
 
@@ -27,7 +27,7 @@ jobs:
         node-version: '18'
         cache: 'npm'
         cache-dependency-path: admin/package-lock.json
-      
+
     - name: Install modules
       working-directory: admin
       run: npm ci
@@ -40,6 +40,11 @@ jobs:
       working-directory: admin
       run: npm run build
 
-    # - name: Test
-    #   working-directory: admin
-    #   run: npm test
+    - name: Test
+      working-directory: admin
+      run: npm run test:ci
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
