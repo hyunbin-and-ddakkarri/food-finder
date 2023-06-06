@@ -4,8 +4,13 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-rgb: 241, 246, 234;
+  --text-rgb: 13, 18, 8;
+  --primary: 162, 214, 159;
+  --primary-dark: 30, 102, 50;
+  --secondary: 212, 237, 223;
+  --secondary-dark: 40, 113, 102;
+  --accent: 159, 214, 182;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,11 +22,16 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: rgb(var(--text-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+.primaryButton {
+  color: rgb(var(--text-rgb));
+  background-color: rgb(var(--primary));
+}
+
+.secondaryButton {
+  color: rgb(var(--text-rgb));
+  background-color: rgb(var(--secondary));
 }
