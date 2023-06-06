@@ -4,12 +4,13 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-rgb: 241, 246, 234;
+  --background-rgb: 216,219,226;
   --text-rgb: 13, 18, 8;
-  --primary: 162, 214, 159;
-  --primary-dark: 30, 102, 50;
-  --secondary: 212, 237, 223;
+  --primary: 86, 113, 137;
+  --primary-dark: 24, 41, 74;
+  --secondary: 179,188,208;
   --secondary-dark: 40, 113, 102;
+  --sub: 233, 249, 237;
   --accent: 159, 214, 182;
 }
 
