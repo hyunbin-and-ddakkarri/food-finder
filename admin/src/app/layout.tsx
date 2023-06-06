@@ -1,5 +1,5 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Open_Sans } from 'next/font/google'
 import Link from 'next/link'
 import Image from 'next/image'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -11,14 +11,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 library.add(fas)
 config.autoAddCss = false;
 
-const inter = Inter({ subsets: ['latin'] })
+const font = Open_Sans({ subsets: ['latin'] })
 
 export default function AppLayout({ children } : {
   children: React.ReactNode
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={font.className}>
         <div className="flex h-screen w-full">
           <div className="block w-1/6 sideBar">
             
