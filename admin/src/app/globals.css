@@ -4,8 +4,16 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-rgb: #d8dbe2;
+  --text-rgb: #0d1208;
+  --text-white: #f0f0f0;
+  --primary: #a9bcd0;
+  --primary-800: #7082ac;
+  --primary-900: #373f51;
+  --secondary: #58a4b0;
+  --secondary-800: #184e56;
+  --secondary-900: #09363d;
+  --accent: #daa49a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,11 +25,50 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--text-rgb);
+  background: var(--background-rgb);
+}
+
+.primaryButton {
+  color: var(--text-rgb);
+  background-color: var(--primary);
+}
+
+.sideBar{
+  color: var(--text-white);
+  background-color: var(--primary-900);
+}
+
+.category:hover{
+  background-color: var(--primary-800);
+}
+
+.secondaryButton {
+  color: var(--text-rgb);
+  background-color: var(--secondary);
+}
+
+.primaryIcon{
+  color: var(--primary-800);
+}
+
+.secondaryIcon{
+  color: var(--secondary-800);
+}
+
+.accentIcon{
+  color: var(--accent);
+}
+
+.accentButton{
+  color: var(--text-white);
+  background-color: var(--accent);
+}
+
+.bgPrimary{
+  background-color: var(--primary);
+}
+
+.bgPlain:hover{
+  background-color: var(--primary);
 }
