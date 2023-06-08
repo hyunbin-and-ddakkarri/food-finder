@@ -18,7 +18,7 @@ const Datamap2 = () => {
     const [baseY, setBaseY] = useState(0);
 
     const ref = useRef(null)
-  
+
     const images = ['img/Korean.jpg', 'img/Japanese.jpg', 'img/Chinese.jpg', 'img/Italian.jpg']
     const subimages = ['img/1.jpeg', 'img/2.jpeg', 'img/3.jpeg', 'img/4.jpeg']
 
@@ -96,10 +96,10 @@ const Datamap2 = () => {
 
     for (const [index, [x, y, name]] of coords.entries()){
         buttons.push(
-            <Image 
-            src={images[index]} alt={name} 
-            width={0.8*size} 
-            height={0.8*size} 
+            <Image
+            src={images[index]} alt={name}
+            width={0.8*size}
+            height={0.8*size}
             style={{position: "absolute", width: 1.0*size+"px", height: 1.0*size+"px", bottom: (((y-1/2)*size*1.1)+(h/2))+"px", left: (((x-1/2)*size*1.1)+(w/2))+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size*1.1)+(h/2)), (((x-1/2)*size*1.1)+(w/2)))}
             className='rounded-full'
             loader={loaderProp}/>
@@ -114,11 +114,11 @@ const Datamap2 = () => {
             let [x, y, name] = coords[index+1]
             restaurantButtons.push(
                 <Link href='/map'>
-                    <Image 
-                    src={subimages[index]} 
-                    alt={name} 
-                    width={0.7*size} 
-                    height={0.7*size} 
+                    <Image
+                    src={subimages[index]}
+                    alt={name}
+                    width={0.7*size}
+                    height={0.7*size}
                     style={{position: "absolute", width: 0.7*size+"px", height: 0.7*size+"px", bottom: (((y+0.15)*size))+baseY+"px", left: (((x+0.15)*size))+baseX+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size)+(h/2)), (((x-1/2)*size)+(w/2)))}
                     className='rounded-full'
                     loader={loaderProp}

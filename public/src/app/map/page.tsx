@@ -14,7 +14,7 @@ function Map() {
 
         mapScript.async = true;
         mapScript.src = `http://dapi.kakao.com/v2/maps/sdk.js?appkey=4db502f3df145cbe27c3dbc6376ef4e8&autoload=false`;
-    
+
         document.head.appendChild(mapScript);
 
         const onLoadKakaoMap = () => {
@@ -25,7 +25,7 @@ function Map() {
                         level: 2,
                     };
                     var map = new window.kakao.maps.Map(mapContainer, mapOption);
-                    var markerPosition = new window.kakao.maps.LatLng(36.363169, 127.357197); 
+                    var markerPosition = new window.kakao.maps.LatLng(36.363169, 127.357197);
                     var marker = new window.kakao.maps.Marker({
                         position: markerPosition,
                         clickable: true

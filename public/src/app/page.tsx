@@ -90,16 +90,16 @@ export default function Home() {
               const filterKey = Object.keys(options)[idx];
               if (options[filterKey].length > 0){
                 return (
-                  <div 
-                    onClick={() => handleFilter(filterKey)} 
+                  <div
+                    onClick={() => handleFilter(filterKey)}
                     className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit whitespace-nowrap	selectedButton"
                     key={idx}>
                     {filter}
                   </div>
                 )
               } else return (
-                <div 
-                  onClick={() => handleFilter(filterKey)} 
+                <div
+                  onClick={() => handleFilter(filterKey)}
                   className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit whitespace-nowrap	"
                   key={idx}>
                   {filter}
