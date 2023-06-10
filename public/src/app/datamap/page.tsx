@@ -32,7 +32,7 @@ const Datamap2: React.FC = () => {
 
     var lvl = 0;
     var cnt = [];
-    var coords:[number, number, string][] = [];
+    var coords:[number, number][] = [];
 
     var categories:{category: string, elements: string[]}[] = [
         { category: "Korean", elements: ["Bulgogi", "Ddeokbokki", "Bibimbap", "Jokbal"] },
@@ -43,17 +43,17 @@ const Datamap2: React.FC = () => {
 
     var images: string[] = [];
     var subImages: string[][] = [];
+    var n = categories.length;
 
     for(const [i, {category, elements}] of categories.entries()){
         images.push('img/'+category+'.jpg')
-        var menus: string[] = [];
-        for(var index = 0; index < elements.length; index++){
-            menus.push('img/'+category+'/'+elements[index]+'.jpeg')
-        }
-        subImages.push(menus)
-    }
+        n = Math.max(n, elements.length+1);
 
-    var n=categories.length;
+        subImages.push([]);
+        for(var index = 0; index < elements.length; index++){
+            subImages[i].push('img/'+category+'/'+elements[index]+'.jpg')
+        }
+    }
 
     for(var i=1;lvl<n;i++){
         cnt.push(lvl);
@@ -84,7 +84,7 @@ const Datamap2: React.FC = () => {
             k++;
         }
 
-        coords.push([x, y, categories[i].category]);
+        coords.push([x, y]);
         //console.log(x, y);
 
         if(i>=cnt[lvl]){
@@ -98,8 +98,9 @@ const Datamap2: React.FC = () => {
     function hideOtherButtons(e: any, i: number, bottom: number, left: number){
         setBaseX(left)
         setBaseY(bottom)
-        console.log(baseX, baseY)
-        clickButton(i);
+        // console.log(i)
+        if(buttonState==-1) clickButton(i);
+        else clickButton(-1);
     }
 
 
@@ -109,11 +110,15 @@ const Datamap2: React.FC = () => {
     let categoryButtons = [];
     let menuButtons = [];
 
-    for (const [index, [x, y, name]] of coords.entries()){
+
+    for(var i = 0; i < categories.length; i++){
+    // for (const [index, [x, y]] of coords.entries()){
+        const index = i;
+        const [x, y] = coords[index];
         categoryButtons.push(
             <Image
             src={images[index]}
-            alt={name}
+            alt={"categoryName"}
             width={0.8*size}
             height={0.8*size}
             style={{position: "absolute", width: 1.0*size+"px", height: 1.0*size+"px", bottom: (((y-1/2)*size*1.1)+(h/2))+"px", left: (((x-1/2)*size*1.1)+(w/2))+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size*1.1)+(h/2)), (((x-1/2)*size*1.1)+(w/2)))}
@@ -125,13 +130,18 @@ const Datamap2: React.FC = () => {
     if (buttonState >= 0) {
         categoryButtons = [categoryButtons[buttonState]]
         menuButtons = []
+
+        // console.log(buttonState)
+        // console.log(subImages[buttonState].length);
         
-        for(var index = 0; index < subImages[buttonState].length; index++){
-            let [x, y, name] = coords[index+1]
+        for(var i = 0; i < subImages[buttonState].length; i++){
+            const index = i;
+            let [x, y] = coords[index+1]
             menuButtons.push(
                 <Link href='/map'>
                     <Image
-                    src={subImages[buttonState][index]} alt={name}
+                    src={subImages[buttonState][index]}
+                    alt={"menuName"}
                     width={0.7*size}
                     height={0.7*size}
                     style={{position: "absolute", width: 0.7*size+"px", height: 0.7*size+"px", bottom: (((y+0.15)*size))+baseY+"px", left: (((x+0.15)*size))+baseX+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size)+(h/2)), (((x-1/2)*size)+(w/2)))}
