@@ -34,21 +34,21 @@ const Datamap2: React.FC = () => {
     var cnt = [];
     var coords:[number, number, string][] = [];
 
-    var categories:{name: string, elements: string[]}[] = [
-        { name: "Korean", elements: ["Bulgogi", "Ddeokbokki", "Bibimbap", "Jokbal"] },
-        { name: "Japanese", elements: ["Ramen", "Sushi", "Donburi"] },
-        { name: "Chinese", elements: ["Malatang"] },
-        { name: "Italian", elements: ["Pizza", "Spaghetti"] }
+    var categories:{category: string, elements: string[]}[] = [
+        { category: "Korean", elements: ["Bulgogi", "Ddeokbokki", "Bibimbap", "Jokbal"] },
+        { category: "Japanese", elements: ["Ramen", "Sushi", "Donburi"] },
+        { category: "Chinese", elements: ["Malatang"] },
+        { category: "Italian", elements: ["Pizza", "Spaghetti"] }
     ]
 
     var images: string[] = [];
     var subImages: string[][] = [];
 
-    for(const [i, {name, elements}] of categories.entries()){
-        images.push('img/'+name+'.jpg')
+    for(const [i, {category, elements}] of categories.entries()){
+        images.push('img/'+category+'.jpg')
         var menus: string[] = [];
-        for(const [index, menu] of elements.entries()){
-            menus.push('img/'+name+'/'+menu+'.jpeg')
+        for(var index = 0; index < elements.length; index++){
+            menus.push('img/'+category+'/'+elements[index]+'.jpeg')
         }
         subImages.push(menus)
     }
@@ -84,7 +84,7 @@ const Datamap2: React.FC = () => {
             k++;
         }
 
-        coords.push([x, y, categories[i].name]);
+        coords.push([x, y, categories[i].category]);
         //console.log(x, y);
 
         if(i>=cnt[lvl]){
@@ -106,12 +106,11 @@ const Datamap2: React.FC = () => {
     //console.log(w, h);
     var size = Math.min(w, h)/5;
 
-    let buttons = [];
-    let restaurants = [];
-    let restaurantButtons = [];
+    let categoryButtons = [];
+    let menuButtons = [];
 
     for (const [index, [x, y, name]] of coords.entries()){
-        buttons.push(
+        categoryButtons.push(
             <Image
             src={images[index]}
             alt={name}
@@ -124,12 +123,12 @@ const Datamap2: React.FC = () => {
     }
 
     if (buttonState >= 0) {
-        buttons = [buttons[buttonState]]
-
-        restaurants = categories[buttonState].elements
-        for(const [index, restaurant] of restaurants.entries()){
+        categoryButtons = [categoryButtons[buttonState]]
+        menuButtons = []
+        
+        for(var index = 0; index < subImages[buttonState].length; index++){
             let [x, y, name] = coords[index+1]
-            restaurantButtons.push(
+            menuButtons.push(
                 <Link href='/map'>
                     <Image
                     src={subImages[buttonState][index]} alt={name}
@@ -146,8 +145,8 @@ const Datamap2: React.FC = () => {
 
     return(
         <div ref={ref} className="h-screen">
-            <div>{buttons}</div>
-            {restaurantButtons}
+            <div>{categoryButtons}</div>
+            {menuButtons}
         </div>
     )
 };
