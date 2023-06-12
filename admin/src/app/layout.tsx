@@ -21,7 +21,7 @@ export default function AppLayout({ children } : {
       <body className={font.className}>
         <div className="flex h-screen w-full">
           <div className="block w-1/6 sideBar">
-            
+
             <div className='flex justify-center items-center mt-12 mb-2'>
               <Image
                 src="/logo.png"
@@ -33,7 +33,7 @@ export default function AppLayout({ children } : {
               />
             </div>
             <div className='text-xl font-bold text-center mb-4'>Food Finder</div>
-            
+
             <div className='px-4 py-2 flex items-center category'>
               <FontAwesomeIcon icon={faBars} />
               <Link href="/category" className='text-md ml-2'>Category Management</Link>

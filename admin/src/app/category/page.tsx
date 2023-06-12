@@ -22,7 +22,7 @@ export default function CategoryPage() {
     currentCats["New category"] = []
     setCategories(currentCats)
   }
-  
+
 
   const handleCellValueChange = (
     c: string,
@@ -33,7 +33,7 @@ export default function CategoryPage() {
     setCategories(updatedCats);
   };
 
-  
+
 
   return (
     <div className="block w-full h-full overflow-y-scroll justify-center items-center p-8 text-black">
@@ -48,7 +48,7 @@ export default function CategoryPage() {
       {
         Object.keys(categories).map((category, idx) => {
           return (
-            <CategoryCell 
+            <CategoryCell
               key={idx}
               name={category}
               subCategories={categories[category]}

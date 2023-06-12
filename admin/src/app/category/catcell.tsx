@@ -22,7 +22,7 @@ const CategoryCell: React.FC<CategoryCellProps> = ({ name, subCategories, remove
       setNewSub("");
     }
   };
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewSub(e.target.value);
   };
