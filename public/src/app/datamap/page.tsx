@@ -110,41 +110,46 @@ const Datamap2: React.FC = () => {
     let categoryButtons = [];
     let menuButtons = [];
 
+    const minDiameter = 0.6
+    const maxDiameter = 0.85
+    const unit = 0.05
+
 
     for(var i = 0; i < categories.length; i++){
     // for (const [index, [x, y]] of coords.entries()){
         const index = i;
         const [x, y] = coords[index];
+        const diameter = size*(minDiameter+unit*Math.min((maxDiameter-minDiameter)/unit, categories[index].elements.length))
+
         categoryButtons.push(
             <Image
             src={images[index]}
             alt={"categoryName"}
-            width={0.8*size}
-            height={0.8*size}
-            style={{position: "absolute", width: 1.0*size+"px", height: 1.0*size+"px", bottom: (((y-1/2)*size*1.1)+(h/2))+"px", left: (((x-1/2)*size*1.1)+(w/2))+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size*1.1)+(h/2)), (((x-1/2)*size*1.1)+(w/2)))}
+            width={size}
+            height={size}
+            style={{position: "absolute", width: diameter+"px", height: diameter+"px", bottom: y*size-diameter/2+h/2+"px", left: x*size-diameter/2+w/2+"px"}} onClick={e => hideOtherButtons(e, index, y*size+h/2, x*size+w/2)}
             className='rounded-full'
             loader={loaderProp}/>
         )
     }
 
     if (buttonState >= 0) {
-        categoryButtons = [categoryButtons[buttonState]]
-        menuButtons = []
-
-        // console.log(buttonState)
-        // console.log(subImages[buttonState].length);
+        categoryButtons = [categoryButtons[buttonState]];
+        menuButtons = [];
         
         for(var i = 0; i < subImages[buttonState].length; i++){
             const index = i;
-            let [x, y] = coords[index+1]
+            let [x, y] = coords[index+1];
+            const menuSize = 0.5*size;
+            
             menuButtons.push(
                 <Link href='/map'>
                     <Image
                     src={subImages[buttonState][index]}
                     alt={"menuName"}
-                    width={0.7*size}
-                    height={0.7*size}
-                    style={{position: "absolute", width: 0.7*size+"px", height: 0.7*size+"px", bottom: (((y+0.15)*size))+baseY+"px", left: (((x+0.15)*size))+baseX+"px"}} onClick={e => hideOtherButtons(e, index, (((y-1/2)*size)+(h/2)), (((x-1/2)*size)+(w/2)))}
+                    width={menuSize}
+                    height={menuSize}
+                    style={{position: "absolute", width: menuSize+"px", height: menuSize+"px", bottom: baseY+y*size-menuSize/2+"px", left: baseX+x*size-menuSize/2+"px"}}
                     className='rounded-full'
                     loader={loaderProp}
                     />
