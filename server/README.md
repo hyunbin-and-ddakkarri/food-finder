@@ -29,7 +29,7 @@ Check out the [Download](https://www.postgresql.org/download/) page and download
 
 ### Setting up meilisearch
 
-Install meilisearch. 
+Install meilisearch in `server/search` directory. 
 
 **For macOS and Linux users:**
 ```bash
@@ -47,7 +47,15 @@ Check out the [Installation](https://www.meilisearch.com/docs/learn/getting_star
 ### Run DB
 TBA
 ### Run meilisearch server
-TBA
+
+Run the following code to start the meilisearch server. 
+```bash
+(food-finder/server/search)$ ./meilisearch --master-key="aSampleMasterKey"
+```
+
+We now need to link the json files in the `server/search`
+
+
 
 ### Run API server
 
