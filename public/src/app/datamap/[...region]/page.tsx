@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { stringsToRegion, regionToString, region } from "@/app/region";
 const loaderProp = ({ src }: { src: string }) => {
@@ -64,6 +64,12 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
       setDataKeys(Object.keys(newData[0]));
     }
   }, [data]);
+
+  const router = useRouter();
+
+  const handleRegionClick = (region: region) => {
+    router.push(`/map/${region.city}/${region.district}/${region.dong}`);
+  };
 
   const [h, setHeight] = useState(0);
   const [w, setWidth] = useState(0);
@@ -216,23 +222,23 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
       const menuSize = 0.5 * size;
 
       menuButtons.push(
-        <Link href="/map" key={index}>
-          <Image
-            src={subImages[buttonState][index]}
-            alt={"menuName"}
-            width={menuSize}
-            height={menuSize}
-            style={{
-              position: "absolute",
-              width: menuSize + "px",
-              height: menuSize + "px",
-              bottom: baseY + y * size - menuSize / 2 + "px",
-              left: baseX + x * size - menuSize / 2 + "px",
-            }}
-            className="rounded-full"
-            loader={loaderProp}
-          />
-        </Link>
+        <Image
+          key={index}
+          src={subImages[buttonState][index]}
+          alt={"menuName"}
+          width={menuSize}
+          height={menuSize}
+          style={{
+            position: "absolute",
+            width: menuSize + "px",
+            height: menuSize + "px",
+            bottom: baseY + y * size - menuSize / 2 + "px",
+            left: baseX + x * size - menuSize / 2 + "px",
+          }}
+          className="rounded-full"
+          loader={loaderProp}
+          onClick={() => handleRegionClick(stringsToRegion(params.region))}
+        />
       );
     }
   }
@@ -265,7 +271,11 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
         </div>
       </div>
       <div>
-        <div ref={ref} className="h-screen negativeZIndex" onClick={() => clickButton(-1)}>
+        <div
+          ref={ref}
+          className="h-screen negativeZIndex"
+          onClick={() => clickButton(-1)}
+        >
           <div onClick={(e) => e.stopPropagation()}>{categoryButtons}</div>
           {menuButtons}
         </div>
