@@ -1,8 +1,24 @@
-export const Region = [
-    {"id":1, "name":"Daejeon Yuseong-gu Eoeun-dong"},
-    {"id":2, "name":"Daejeon Yuseong-gu Gung-dong"},
-    {"id":3, "name":"Daejeon Yuseong-gu Oncheon-dong"},
-    {"id":4, "name":"Daejeon Daedeok-gu Daejeoncheonbuk"},
-    {"id":5, "name":"Daejeon Yuseong-gu"},
-    {"id":6, "name":"Daejeon"}
-  ];
+export interface region {
+  city: string, 
+  district: string,
+  dong: string
+}
+
+export const Regions: Array<region> = [
+  {city: "Dajeon", district: "Yuseong-gu", dong: "Eoeun-dong"},
+  {city: "Dajeon", district: "Yuseong-gu", dong: "Gung-dong"},
+  {city: "Dajeon", district: "Yuseong-gu", dong: "Bongmyeong-dong"},
+  {city: "Seoul", district: "Seocho-gu", dong: "Seocho-dong"},
+  {city: "Seoul", district: "Gagnam-gu", dong: "Apgujeong-dong"},
+  {city: "Seoul", district: "Gagnam-gu", dong: "Sinsa-dong"},
+  {city: "Seoul", district: "Gagnam-gu", dong: "Yeoksam-dong"},
+];
+
+export const stringsToRegion = (strings: Array<string>) => {
+  const region: region = {city: strings[0], district: strings[1], dong: strings[2]}
+  return region
+}
+
+export const regionToString = (region: region) => {
+  return `${region.city} ${region.district} ${region.dong}`
+}

@@ -1,10 +1,10 @@
 "use client"
-
 import './globals.css'
 import Link from "next/link"
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { gql, useQuery } from "@apollo/client";
-import {Region} from "./region"
+import {Regions, region, regionToString} from "./region"
 const query = gql`query getRegion($region: String!) {
   regions(region: $region) {
     rid
@@ -41,6 +41,12 @@ export default function Home() {
     "rating": [],
     "businessHours": []
   })
+
+  const router = useRouter();
+
+  const handleRegionClick = (region: region) => {
+    router.push(`/datamap/${region.city}/${region.district}/${region.dong}`);
+  };
 
   const handleFilter = (name: string) => {
     if (displayedFilter == name) {
@@ -128,24 +134,20 @@ export default function Home() {
           ) }
         </div>
       </div>
-      <div className="content flex-1 overflow-y-auto">
-        <div className="flex flex-col justify-between p-4">
-            <div className="grid grid-rows-6 grid-flow-col gap-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700"> {/* 6-> list element number */}
-              {Region.filter((region)=>region.name.toLowerCase().includes(query)).map((region) => (
-                <div key={region.id}>
-                  <div className="flex-1 items-center space-x-0 min-w-0">
-                    <Link href="/datamap">
-                      <button
-                        type="button"
-                        // transition duration-500 hover:bg-subButton hover:text-neutral-500 text-sm focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0
-                        className="block w-full cursor-pointer rounded-lg py-2 text-left text-sm">
-                        {region.name}
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+      <div className="content flex-1 overflow-y-scroll hideScrollBar">
+        <div className="grid grid-rows-6 gap-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700"> 
+          {Regions.filter((region)=>regionToString(region).toLowerCase().includes(query.toLowerCase())).map((region) => (
+            <div key={regionToString(region)}>
+              <div className="flex-1 items-center space-x-0 min-w-0">
+                <button
+                  type="button"
+                  onClick={() => handleRegionClick(region)}
+                  className="block w-full cursor-pointer rounded-lg py-2 text-left text-sm">
+                  {regionToString(region)}
+                </button>
+              </div>
             </div>
+          ))}
         </div>
       </div>
     </div>
