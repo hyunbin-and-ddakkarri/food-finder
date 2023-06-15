@@ -72,3 +72,7 @@ body {
 .bgPlain:hover{
   background-color: var(--primary);
 }
+
+.negativeZIndex{
+  z-index: -1;
+}

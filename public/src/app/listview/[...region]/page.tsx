@@ -123,7 +123,6 @@ export default function ListView({ params }: { params: { region: string[] } }) {
       <FontAwesomeIcon icon={faMap} size='lg' onClick={() => handleRegionClick(stringsToRegion(params.region))}/>
       <div className="grid grid-rows-6 grid-flow-col gap-4 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
         {" "}
-        {/* 6-> list element number */}
         {restaurantsList.map((restaurant, index) => (
           <div key={index}>
             <div className="flex items-center space-x-4">
