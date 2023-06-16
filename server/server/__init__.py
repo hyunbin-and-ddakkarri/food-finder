@@ -2,14 +2,38 @@
 The server module implements backend server for the project.
 """
 
-from strawberry.asgi import GraphQL
-from server.schema import schema
-from server.env import get_env
+from fastapi import FastAPI
+from strawberry.fastapi import GraphQLRouter
+
+from .schema import schema
+from .env import get_env
+from .db import Database
 
 
 run_mode = get_env("RUN_MODE")
-app: GraphQL
+graphql_app: GraphQLRouter
 if run_mode == "dev":
-    app = GraphQL(schema)
+    graphql_app = GraphQLRouter(schema)
 elif run_mode == "production":
-    app = GraphQL(schema, graphiql=False)
+    graphql_app = GraphQLRouter(schema, graphiql=False)
+
+
+app = FastAPI()
+app.include_router(graphql_app, prefix="/graphql")
+
+
+
+@app.on_event("startup")
+async def startup():
+    """
+    server startup function
+    """
+    await Database.init()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    """
+    server shutdown function
+    """
+    await Database.deinit()
