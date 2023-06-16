@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { stringsToRegion, regionToString, region } from "@/app/region";
+import { Restaurant } from "@/app/restaurant";
 import { faSearch, faMap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -38,13 +39,28 @@ export default function ListView({ params }: { params: { region: string[] } }) {
   const { error, data } = useQuery(query, {
     variables: { region: params.region[2] },
   });
-  const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
+  const [tableData, setTableData] = useState<Restaurant[]>(Array(5).fill({
+    name: "Asobu",
+    introduction: "Best restaurants for KAIST students",
+    address: "Eueon-dong, Yuseong-gu, Daejeon-si",
+    location: [33.4, 45.5],
+    phone: "042-XXX-XXXX",
+    price: 8500,
+    businessHours: {"Mon": []},
+    moods: ["Cozy", "Affordable"],
+    characteristics: ["Donburi", "Japanese"],
+    images: [],
+    menus: d.menus as { [key: string]: Number },
+    reviews: d.reviews as Array<{ [key: string]: string }>,
+    rating: d.rating as Number,
+  } as Restaurant));
+  // Only for dev, will be replaced when server done
   const [dataKeys, setDataKeys] = useState<string[]>([]);
 
   useEffect(() => {
     if (data) {
       const dataT = data as { [restaurants: string]: Array<any> };
-      const newData = dataT.restaurants.map((d) => ({
+      const newData: Array<Restaurant> = dataT.restaurants.map((d) => ({
         name: d.name as string,
         introduction: d.introduction as string,
         address: d.address as string,
@@ -70,38 +86,6 @@ export default function ListView({ params }: { params: { region: string[] } }) {
     router.push(`/map/${region.city}/${region.district}/${region.dong}`);
   };
 
-  const restaurantsList = [
-    {
-      name: "Restaurant A",
-      rating: 4.8,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant B",
-      rating: 4.5,
-      openStatus: "Close",
-    },
-    {
-      name: "Restaurant C",
-      rating: 3.7,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant D",
-      rating: 3.4,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant D",
-      rating: 3.4,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant D",
-      rating: 3.4,
-      openStatus: "Open",
-    },
-  ];
   return (
     //later fix link to "/mapview"
     <div className="flex flex-col h-screen m-2">
