@@ -4,6 +4,9 @@ const nextConfig = {
     // added in next.js 13
     // this will export the app in the /out folder
     output: "export",
+    images: {
+        unoptimized: true,
+    },
 }
 
 const withPlugins = require("next-compose-plugins");

@@ -8,6 +8,7 @@ import { Regions, region, regionToString } from "./region";
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SearchBar from "./searchbar";
+import { filterOptions, optionsToRoute } from "./filters";
 
 const query = gql`
   query getRegion($region: String!) {
@@ -20,13 +21,15 @@ const query = gql`
 
 interface OptionProps {
   filter: string;
-  currentOptions: Array<string>;
+  currentOptions: Array<Number>;
+  optionIdx: Number;
   option: string;
-  onCheck: (arg0: string, arg1: string) => void;
+  onCheck: (arg0: string, arg1: Number) => void;
 }
 const OptionCell: React.FC<OptionProps> = ({
   filter,
   currentOptions,
+  optionIdx,
   option,
   onCheck,
 }) => {
@@ -34,9 +37,9 @@ const OptionCell: React.FC<OptionProps> = ({
     <label className="inline-flex items-center">
       <input
         type="checkbox"
-        checked={currentOptions.includes(option)}
+        checked={currentOptions.includes(optionIdx)}
         className="form-checkbox h-5 w-5 text-blue-400"
-        onChange={() => onCheck(filter, option)}
+        onChange={() => onCheck(filter, optionIdx)}
       />
       <span className="ml-1 mr-2 text-xs">{option}</span>
     </label>
@@ -45,22 +48,8 @@ const OptionCell: React.FC<OptionProps> = ({
 
 export default function Home() {
   const [displayedFilter, setDisplayedFilter] = useState("none");
-  const filterOptions: { [key: string]: Array<string> } = {
-    price: ["0~5000", "5000~10000", "10000~15000", "15000~"],
-    mood: ["a", "b", "c"],
-    rating: ["~3.5", "3.5~4.0", "4.0~4.5", "4.5~"],
-    businessHours: [
-      "Open now",
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat",
-      "Sun",
-    ],
-  };
-  const [options, setOptions] = useState<{ [key: string]: Array<string> }>({
+  
+  const [options, setOptions] = useState<{ [key: string]: Array<Number> }>({
     price: [],
     mood: [],
     rating: [],
@@ -70,7 +59,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleRegionClick = (region: region) => {
-    router.push(`/datamap/${region.city}/${region.district}/${region.dong}`);
+    router.push(`/datamap/${region.city}/${region.district}/${region.dong}/${optionsToRoute(options)}`);
   };
 
   const handleFilter = (name: string) => {
@@ -81,14 +70,14 @@ export default function Home() {
     }
   };
 
-  const handleOption = (filter: string, option: string) => {
+  const handleOption = (filter: string, optionIdx: Number) => {
     const currentOptions = { ...options };
-    if (options[filter].includes(option)) {
+    if (options[filter].includes(optionIdx)) {
       currentOptions[filter] = currentOptions[filter].filter(
-        (f) => f !== option
+        (f) => f !== optionIdx
       );
     } else {
-      currentOptions[filter].push(option);
+      currentOptions[filter].push(optionIdx);
     }
     setOptions(currentOptions);
   };
@@ -139,6 +128,7 @@ export default function Home() {
                     key={idx}
                     filter={displayedFilter}
                     currentOptions={options[displayedFilter]}
+                    optionIdx={idx}
                     option={option}
                     onCheck={handleOption}
                   />

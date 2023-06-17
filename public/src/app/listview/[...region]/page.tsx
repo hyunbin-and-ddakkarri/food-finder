@@ -4,9 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
+import { ListItem } from '@/app/listview/[...region]/listitem'
 import { stringsToRegion, regionToString, region } from "@/app/region";
+import { Restaurant, resultsToRestaurants } from "@/app/restaurant";
 import { faSearch, faMap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { DetailPage } from '@/app/listview/[...region]/detail'
+import { table } from "console";
 
 const query = gql`
   query getData($region: String!) {
@@ -35,30 +39,33 @@ const query = gql`
 `;
 
 export default function ListView({ params }: { params: { region: string[] } }) {
+  const [detail, setDetail] = useState(-1);
+
   const { error, data } = useQuery(query, {
     variables: { region: params.region[2] },
   });
-  const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
+  const [tableData, setTableData] = useState<Restaurant[]>(Array(10).fill({
+    name: "잇마이타이",
+    introduction: "대전 태국음식점 잇마이타이 입니다. 본점은 봉명동, 분점은 어은동에 위치해 있습니다.",
+    address: "대전 유성구 어은동 112-4 1층 잇마이타이",
+    location: [127.3588931, 36.3636649],
+    phone: '042-335-5466',
+    price: 17882,
+    businessHours: {'토': [11, 21], '일': [11, 21], '월': [11, 21], '화': [11, 21], '수': [11, 21], '목': [11, 21], '금': [11, 21]},
+    moods: ["Cozy", "Affordable"],
+    characteristics: ["Donburi", "Thai"],
+    images: ['https://ldb-phinf.pstatic.net/20220129_229/1643445449356YqHLz_JPEG/F4E7C2F6-E23D-473B-A3D2-34FE3629BD2A.jpeg', 'https://ldb-phinf.pstatic.net/20220129_223/1643445449972ANjAr_JPEG/EB91198E-6E71-4768-856C-2327FCBA6A0B.jpeg', 'https://ldb-phinf.pstatic.net/20220129_238/1643445449839aeKWh_JPEG/827F2745-6F0D-4B85-8336-DE4D8FA1254B.jpeg', 'https://ldb-phinf.pstatic.net/20200210_183/15813306588974vCcd_JPEG/5E0AZu2O5C5vrl40bW1mi9xd.jpeg.jpg'],
+    menus: {'A세트(2인)': 23900, 'A-1세트(2인)': 36500, 'B세트(3인)': 45100, 'C세트(4인)': 58100, '팟타이': 9900, '뿌팟퐁커리': 22900, '꿍팟퐁커리': 9900, '그린커리': 9900, '쌀국수': 9900, '똠양꿍누들': 13900, '카오팟똠양': 9900, '팟카파오무쌉': 9900, '카오팟탈레': 9900, '까이텃': 9900, '카이룩커이': 5000, '모닝글로리': 9500, '쏨땀': 9900},
+    reviews: [{'민지': '맛있어요'}],
+    rating: 4.4
+  } as Restaurant));
+  // Only for dev, will be replaced when server done
   const [dataKeys, setDataKeys] = useState<string[]>([]);
 
   useEffect(() => {
     if (data) {
       const dataT = data as { [restaurants: string]: Array<any> };
-      const newData = dataT.restaurants.map((d) => ({
-        name: d.name as string,
-        introduction: d.introduction as string,
-        address: d.address as string,
-        location: [d.location[0] as Number, d.location[1] as Number],
-        phone: d.phone as string,
-        price: d.price as Number,
-        businessHours: d.businessHours as { [key: string]: Array<Number> },
-        moods: d.moods as Array<String>,
-        characteristics: d.characteristics as Array<String>,
-        images: d.images as Array<String>,
-        menus: d.menus as { [key: string]: Number },
-        reviews: d.reviews as Array<{ [key: string]: string }>,
-        rating: d.rating as Number,
-      }));
+      const newData: Array<Restaurant> = resultsToRestaurants(dataT.restaurants);
       setTableData(newData);
       setDataKeys(Object.keys(newData[0]));
     }
@@ -70,43 +77,11 @@ export default function ListView({ params }: { params: { region: string[] } }) {
     router.push(`/map/${region.city}/${region.district}/${region.dong}`);
   };
 
-  const restaurantsList = [
-    {
-      name: "Restaurant A",
-      rating: 4.8,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant B",
-      rating: 4.5,
-      openStatus: "Close",
-    },
-    {
-      name: "Restaurant C",
-      rating: 3.7,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant D",
-      rating: 3.4,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant D",
-      rating: 3.4,
-      openStatus: "Open",
-    },
-    {
-      name: "Restaurant D",
-      rating: 3.4,
-      openStatus: "Open",
-    },
-  ];
   return (
     //later fix link to "/mapview"
-    <div className="flex flex-col h-screen m-2">
+    <div className="flex flex-col h-screen">
       <Link href='/'>
-        <div className="flex items-center mb-2">
+        <div className="flex items-center m-2">
           <label htmlFor="simple-search" className="sr-only">
             Search
           </label>
@@ -121,60 +96,24 @@ export default function ListView({ params }: { params: { region: string[] } }) {
         </div>
       </Link>
       <FontAwesomeIcon icon={faMap} size='lg' onClick={() => handleRegionClick(stringsToRegion(params.region))}/>
-      <div className="grid grid-rows-6 grid-flow-col gap-4 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
-        {" "}
-        {restaurantsList.map((restaurant, index) => (
-          <div key={index}>
-            <div className="flex items-center space-x-4">
-              <div className="flex-1 min-w-0">
-                <Link href="/detail">
-                  <p className="text-lg font-semibold text-gray-900 truncate dark:text-white">
-                    {restaurant.name}
-                  </p>
-                </Link>
-                <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                  Rating: {restaurant.rating}
-                </p>
-              </div>
-              <div className="text-xs inline-flex items-center text-base text-gray-900 dark:text-white">
-                Open Status: {restaurant.openStatus}
-              </div>
-            </div>
-
-            <div className="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
-              <div className="-m-1 flex flex-wrap md:-m-2">
-                <div className="flex w-1/3 flex-wrap">
-                  <div className="w-full p-1 md:p-2">
-                    <img
-                      alt="gallery"
-                      className="block h-full w-full rounded-lg object-cover object-center"
-                      src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
-                    />
-                  </div>
-                </div>
-                <div className="flex w-1/3 flex-wrap">
-                  <div className="w-full p-1 md:p-2">
-                    <img
-                      alt="gallery"
-                      className="block h-full w-full rounded-lg object-cover object-center"
-                      src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp"
-                    />
-                  </div>
-                </div>
-                <div className="flex w-1/3 flex-wrap">
-                  <div className="w-full p-1 md:p-2">
-                    <img
-                      alt="gallery"
-                      className="block h-full w-full rounded-lg object-cover object-center"
-                      src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {
+        detail >= 0 ?
+        <DetailPage 
+          restaurant={tableData[detail]}
+          onClose={() => setDetail(-1)}
+        /> :
+        <div className="grid overflow-y-scroll hideScrollBar">
+          {tableData.map((restaurant, index) => {
+            return (
+              <ListItem
+                key={index}
+                restaurant={restaurant}
+                onClick={() => setDetail(index)}
+              />
+            )
+          })}
+        </div>
+      }
     </div>
   );
 }
