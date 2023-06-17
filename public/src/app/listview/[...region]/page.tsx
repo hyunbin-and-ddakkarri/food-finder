@@ -9,7 +9,6 @@ import { Restaurant, resultsToRestaurants, isOpenNow } from "@/app/restaurant";
 import { faStar, faMap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import DetailPage from '@/app/listview/[...region]/detail'
-import { table } from "console";
 import SearchBar from "@/app/searchbar";
 
 const query = gql`

@@ -1,10 +1,9 @@
 "use client";
 import { Restaurant, isOpenNow } from '@/app/restaurant';
 import Image from "next/image";
-import { faX, faCaretLeft, faCaretRight, faStar, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useRef } from 'react';
-import { Card, Button, ButtonGroup } from 'react-bootstrap';
 import Sheet, { SheetRef } from 'react-modal-sheet';
 
 interface DetailPageProps {
@@ -120,7 +119,7 @@ export default function DetailPage(props: DetailPageProps) {
       </Sheet.Content>
     </Sheet.Container>
     <Sheet.Backdrop>
-      {/* <div className=" bg-white h-80 flex">
+      <div className=" bg-white h-80 flex">
         <Image
             alt="gallery"
             width={300}
@@ -144,8 +143,8 @@ export default function DetailPage(props: DetailPageProps) {
               src={restaurant.images[2].toString()}
             />
           </div>
-      </div> */}
-      <div className="fixed z-10 top-3 left-3 flex rounded-full bg-transparent w-10 h-10" onClick={onClose}>
+      </div>
+      <div className="fixed z-10 top-3 left-3 flex rounded-full bg-transparent w-10 h-10 pointer-events-auto" onClick={onClose}>
         <FontAwesomeIcon icon={faArrowLeft} style={{margin: "auto",}}/>
       </div>
     </Sheet.Backdrop>
