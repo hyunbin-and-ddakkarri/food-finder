@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { stringsToRegion, regionToString, region } from "@/app/region";
 import Link from "next/link";
 import SearchBar from "@/app/searchbar";
-import { faSearch, faList } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Sheet, { SheetRef } from 'react-modal-sheet';
 
@@ -121,7 +121,6 @@ export default function MapView({ params }: { params: { region: string[] } }) {
 
         window.kakao.maps.event.addListener(marker, "click", () => {
           setOpen(true);
-          snapTo(0);
         });
 
       });
@@ -134,16 +133,38 @@ export default function MapView({ params }: { params: { region: string[] } }) {
       <Link href='/' className="absolute inset-x-0 top-0 z-10">
         <SearchBar text={regionToString(stringsToRegion(params.region))}/>
       </Link>
-      <div className="container absolute z-10 rounded-full bg-secondary bottom-0 left-0 m-5 p-1 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}>
-        <FontAwesomeIcon style={{color: '#ffffff',}} icon={faList} size='lg'/>
+      <div className="flex absolute z-10 rounded-full bg-secondary bottom-0 right-0 m-5 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}>
+        <FontAwesomeIcon style={{color: '#ffffff', margin: "auto",}} icon={faList} size='lg'/>
       </div>
       <div id="map" className="w-screen h-screen z-0"></div>
-      <Sheet isOpen={isOpen} onClose={() => setOpen(false)} snapPoints={snapPoints} initialSnap={0}>
+      <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
         <Sheet.Container>
-          <Sheet.Header/>
-          <Sheet.Content>
-            <div className="container flex flex-col h-full items-start">
-              <h2 className="text-2xl">In My Thai</h2>
+          <Sheet.Header />
+          <Sheet.Content disableDrag>
+            <div className="flex flex-col items-start flex-nowrap h-screen px-6 touch-auto gap-5">
+              <div className="flex justify-between items-end w-full flex-wrap">
+                <h2 className="text-2xl grow font-bold">In My Thai</h2>
+                <div className="flex gap-2 items-center">
+                  <FontAwesomeIcon icon={faStar} />
+                  <div className="text-lg">
+                    4.8
+                  </div>
+                  <div className="text-lg font-medium text-primary">
+                    Open
+                  </div>
+                </div>
+              </div>
+              <p className="text-base w-full">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed metus dui, pretium quis posuere varius, dignissim vitae diam. Proin maximus malesuada pharetra. Integer consequat turpis maximus bibendum mollis. Nulla sed libero pharetra, suscipit orci eu, dignissim urna. Vivamus vestibulum massa sit amet augue feugiat vehicula. In ornare, ipsum at condimentum rhoncus, ex lacus pellentesque est, ac tristique nunc lectus et ex. Suspendisse maximus, eros sit amet pulvinar posuere, libero neque laoreet nunc, congue vulputate tellus mauris non metus. Vivamus mattis tempor egestas.
+              </p>
+              <div className="flex w-full touch-pan-x overflow-x-auto">
+                <div className="box">1</div>
+                <div className="box">2</div>
+                <div className="box">3</div>
+                <div className="box">4</div>
+                <div className="box">5</div>
+                <div className="box">6</div>
+              </div>
             </div>
           </Sheet.Content>
         </Sheet.Container>

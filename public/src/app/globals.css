@@ -63,24 +63,20 @@ body {
 
 .box {
   background-color: var(--box-background);
+  width: 10rem;
+  height: 10rem;
+  flex-shrink: 0;
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
 }
+
 
 .search {
   background-color: var(--box-background);
   border-radius: 5px;
   flex-grow: 1;
 }
-
-.container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-
 
 input {
   accent-color: rgb(var(--primary));

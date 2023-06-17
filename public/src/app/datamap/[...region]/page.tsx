@@ -12,6 +12,7 @@ const loaderProp = ({ src }: { src: string }) => {
   return src;
 };
 import { gql, useQuery } from "@apollo/client";
+import SearchBar from "@/app/searchbar";
 
 const query = gql`
   query getData($region: String!) {
@@ -248,21 +249,9 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
   }
 
   return (
-    <div className="h-full m-2">
+    <div className="h-screen bg-gray">
       <Link href='/'>
-        <div className="flex items-center mb-2">
-          <label htmlFor="simple-search" className="sr-only">
-            Search
-          </label>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <FontAwesomeIcon icon={faSearch} size='lg'/>
-            </div>
-            <p className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              {regionToString(stringsToRegion(params.region))}
-            </p>
-          </div>
-        </div>
+        <SearchBar />
       </Link>
       <div>
         <div
