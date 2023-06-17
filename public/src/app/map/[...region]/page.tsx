@@ -116,9 +116,9 @@ export default function MapView({ params }: { params: { region: string[] } }) {
   }, []);
 
   return (
-    <div className="h-full">
-      <Link href='/'>
-        <div className="flex items-center mb-2">
+    <div className="relative h-full">
+      <Link href='/' className="absolute inset-x-0 top-0 z-10">
+        <div className="flex items-center p-2">
           <label htmlFor="simple-search" className="sr-only">
             Search
           </label>
@@ -132,19 +132,8 @@ export default function MapView({ params }: { params: { region: string[] } }) {
           </div>
         </div>
       </Link>
-      <FontAwesomeIcon icon={faList} size='lg' onClick={() => handleRegionClick(stringsToRegion(params.region))}/>
-      <div className="Map relative">
-        <div
-          id="map"
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "105vh",
-            marginTop: "-75px",
-            zIndex: "-1",
-          }}
-        ></div>
-      </div>
+      <FontAwesomeIcon className="absolute z-10" icon={faList} size='lg' onClick={() => handleRegionClick(stringsToRegion(params.region))}/>
+      <div id="map" className="w-screen h-screen z-0"></div>
     </div>
   );
 }
