@@ -9,6 +9,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: '#58A4B0',
+        secondary: '#373F51',
+        danger: 'DAA49A',
+        neutral: '#A9BCD0',
+        gray: '#F4F4F4',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

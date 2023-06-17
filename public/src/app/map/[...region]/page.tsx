@@ -1,12 +1,14 @@
 "use client";
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from 'next/navigation'
-import { BottomSheet, BottomSheetRef } from 'react-spring-bottom-sheet'
 import { stringsToRegion, regionToString, region } from "@/app/region";
 import Link from "next/link";
+import SearchBar from "@/app/searchbar";
 import { faSearch, faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Sheet, { SheetRef } from 'react-modal-sheet';
+
 
 const query = gql`
   query getData($region: String!) {
@@ -46,6 +48,17 @@ export default function MapView({ params }: { params: { region: string[] } }) {
   });
   const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
   const [dataKeys, setDataKeys] = useState<string[]>([]);
+
+  const [isOpen, setOpen] = useState(false);
+  const snapPoints = [100, 0.8];
+
+  const ref = useRef<SheetRef>();
+  const snapTo = (i: number) => ref.current?.snapTo(i);
+
+  const onSnap = (snapIndex: number) => {
+
+  }
+
 
   useEffect(() => {
     if (data) {
@@ -107,7 +120,8 @@ export default function MapView({ params }: { params: { region: string[] } }) {
         marker.setMap(map);
 
         window.kakao.maps.event.addListener(marker, "click", () => {
-          router.push(`/detail`)
+          setOpen(true);
+          snapTo(0);
         });
 
       });
@@ -118,22 +132,23 @@ export default function MapView({ params }: { params: { region: string[] } }) {
   return (
     <div className="relative h-full">
       <Link href='/' className="absolute inset-x-0 top-0 z-10">
-        <div className="flex items-center p-2">
-          <label htmlFor="simple-search" className="sr-only">
-            Search
-          </label>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <FontAwesomeIcon icon={faSearch} size='lg'/>
-            </div>
-            <p className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              {regionToString(stringsToRegion(params.region))}
-            </p>
-          </div>
-        </div>
+        <SearchBar text={regionToString(stringsToRegion(params.region))}/>
       </Link>
-      <FontAwesomeIcon className="absolute z-10" icon={faList} size='lg' onClick={() => handleRegionClick(stringsToRegion(params.region))}/>
+      <div className="container absolute z-10 rounded-full bg-secondary bottom-0 left-0 m-5 p-1 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}>
+        <FontAwesomeIcon style={{color: '#ffffff',}} icon={faList} size='lg'/>
+      </div>
       <div id="map" className="w-screen h-screen z-0"></div>
+      <Sheet isOpen={isOpen} onClose={() => setOpen(false)} snapPoints={snapPoints} initialSnap={0}>
+        <Sheet.Container>
+          <Sheet.Header/>
+          <Sheet.Content>
+            <div className="container flex flex-col h-full items-start">
+              <h2 className="text-2xl">In My Thai</h2>
+            </div>
+          </Sheet.Content>
+        </Sheet.Container>
+        <Sheet.Backdrop onTap={() => {setOpen(false)}}/>
+      </Sheet>
     </div>
   );
 }
