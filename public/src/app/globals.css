@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
+  --background: #F4F4F4;
   --box-background: #F4F4F4;
   --text-rgb: 13, 18, 8;
   --primary: 86, 113, 137;
@@ -25,7 +25,7 @@
 
 body {
   color: rgb(var(--text-rgb));
-  background: rgb(var(--background-rgb));
+  background: var(--background);
 }
 
 .cleanInput {
@@ -69,6 +69,12 @@ body {
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
+  scroll-snap-align: start;
+}
+
+.full-container {
+  margin: 1rem;
+  width: calc(100% - 2rem);
 }
 
 

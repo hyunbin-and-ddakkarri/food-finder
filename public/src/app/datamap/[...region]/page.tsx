@@ -250,9 +250,7 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
 
   return (
     <div className="h-screen bg-gray">
-      <Link href='/'>
-        <SearchBar />
-      </Link>
+      <SearchBar link/>
       <div>
         <div
           ref={ref}

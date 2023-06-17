@@ -130,9 +130,9 @@ export default function MapView({ params }: { params: { region: string[] } }) {
 
   return (
     <div className="relative h-full">
-      <Link href='/' className="absolute inset-x-0 top-0 z-10">
-        <SearchBar text={regionToString(stringsToRegion(params.region))}/>
-      </Link>
+      <div className="absolute inset-x-0 top-0 z-10">
+        <SearchBar text={regionToString(stringsToRegion(params.region))} link backButton/>
+      </div>
       <div className="flex absolute z-10 rounded-full bg-secondary bottom-0 right-0 m-5 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}>
         <FontAwesomeIcon style={{color: '#ffffff', margin: "auto",}} icon={faList} size='lg'/>
       </div>
@@ -141,12 +141,12 @@ export default function MapView({ params }: { params: { region: string[] } }) {
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content disableDrag>
-            <div className="flex flex-col items-start flex-nowrap h-screen px-6 touch-auto gap-5">
+            <div className="flex flex-col items-start flex-nowrap px-6 touch-auto gap-5">
               <div className="flex justify-between items-end w-full flex-wrap">
-                <h2 className="text-2xl grow font-bold">In My Thai</h2>
+                <h2 className="text-2xl grow font-bold text-secondary">In My Thai</h2>
                 <div className="flex gap-2 items-center">
-                  <FontAwesomeIcon icon={faStar} />
-                  <div className="text-lg">
+                  <FontAwesomeIcon icon={faStar} style={{color: "rgb(var(--primary))",}}/>
+                  <div className="text-lg text-secondary text-secondary">
                     4.8
                   </div>
                   <div className="text-lg font-medium text-primary">
@@ -154,18 +154,25 @@ export default function MapView({ params }: { params: { region: string[] } }) {
                   </div>
                 </div>
               </div>
-              <p className="text-base w-full">
+              <p className="text-base w-full text-secondary">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed metus dui, pretium quis posuere varius, dignissim vitae diam. Proin maximus malesuada pharetra. Integer consequat turpis maximus bibendum mollis. Nulla sed libero pharetra, suscipit orci eu, dignissim urna. Vivamus vestibulum massa sit amet augue feugiat vehicula. In ornare, ipsum at condimentum rhoncus, ex lacus pellentesque est, ac tristique nunc lectus et ex. Suspendisse maximus, eros sit amet pulvinar posuere, libero neque laoreet nunc, congue vulputate tellus mauris non metus. Vivamus mattis tempor egestas.
               </p>
-              <div className="flex w-full touch-pan-x overflow-x-auto">
+              <div className="flex w-full touch-pan-x overflow-x-auto scroll-smooth snap-x">
                 <div className="box">1</div>
                 <div className="box">2</div>
                 <div className="box">3</div>
                 <div className="box">4</div>
                 <div className="box">5</div>
                 <div className="box">6</div>
+                <div className="box">2</div>
+                <div className="box">3</div>
+                <div className="box">4</div>
+                <div className="box">5</div>
+                <div className="box">6</div>
               </div>
+              <h3 className="text-xl font-bold text-secondary">Menu</h3>
             </div>
+
           </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop onTap={() => {setOpen(false)}}/>

@@ -4,13 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { ListItem } from '@/app/listview/[...region]/listitem'
 import { stringsToRegion, regionToString, region } from "@/app/region";
-import { Restaurant, resultsToRestaurants } from "@/app/restaurant";
-import { faSearch, faMap } from '@fortawesome/free-solid-svg-icons'
+import { Restaurant, resultsToRestaurants, isOpenNow } from "@/app/restaurant";
+import { faStar, faMap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DetailPage } from '@/app/listview/[...region]/detail'
 import { table } from "console";
+import SearchBar from "@/app/searchbar";
 
 const query = gql`
   query getData($region: String!) {
@@ -78,42 +78,65 @@ export default function ListView({ params }: { params: { region: string[] } }) {
   };
 
   return (
-    //later fix link to "/mapview"
+    <div>
     <div className="flex flex-col h-screen">
-      <Link href='/'>
-        <div className="flex items-center m-2">
-          <label htmlFor="simple-search" className="sr-only">
-            Search
-          </label>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <FontAwesomeIcon icon={faSearch} size='lg'/>
-            </div>
-            <p className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              {regionToString(stringsToRegion(params.region))}
-            </p>
-          </div>
-        </div>
-      </Link>
-      <FontAwesomeIcon icon={faMap} size='lg' onClick={() => handleRegionClick(stringsToRegion(params.region))}/>
+      <SearchBar text={regionToString(stringsToRegion(params.region))} link backButton/>
+      
+      <div className="mx-6">
       {
         detail >= 0 ?
         <DetailPage 
           restaurant={tableData[detail]}
           onClose={() => setDetail(-1)}
         /> :
-        <div className="grid overflow-y-scroll hideScrollBar">
+        <div className="flex flex-col gap-2 overflow-y-scroll hideScrollBar divide-y divide-secondary">
           {tableData.map((restaurant, index) => {
             return (
-              <ListItem
-                key={index}
-                restaurant={restaurant}
-                onClick={() => setDetail(index)}
-              />
+              // <ListItem
+              //   key={index}
+              //   restaurant={restaurant}
+              //   onClick={() => setDetail(index)}
+              // />
+              <div className="flex flex-col gap-3" onClick={() => setDetail(index)}>
+                <div className="flex justify-between items-end w-full flex-wrap mt-2">
+                  <h2 className="font-bold text-xl text-secondary">
+                    {restaurant.name}
+                  </h2>
+                  <div className="flex gap-2 items-center">
+                    <FontAwesomeIcon icon={faStar} style={{color: "rgb(var(--primary))",}}/>
+                    <div className="text-base text-secondary text-secondary">
+                      {restaurant.rating.toString()}
+                    </div>
+                    <div className="text-base font-medium text-primary">
+                      {isOpenNow(restaurant.businessHours, '일', 15) ? <p>Open</p> : <p>Closed</p>}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                {
+                restaurant.images.slice(0, 3).map((image, index) => {
+                return (
+                  <div className="w-1/4" key={index}>
+                    <Image
+                      alt="gallery"
+                      width={175}
+                      height={175}
+                      className="rounded-md object-cover object-center aspect-square"
+                      src={image.toString()}
+                    />
+                  </div>
+                );})}
+                </div>
+              </div>
             )
           })}
         </div>
       }
+      </div>
+    </div>
+    <div className="flex fixed right-0 bottom-0 z-10 rounded-full bg-secondary m-5 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}>
+      <FontAwesomeIcon style={{color: '#ffffff', margin: "auto",}} icon={faMap} size='lg'/>
+    </div>
     </div>
   );
 }

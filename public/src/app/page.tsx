@@ -91,7 +91,7 @@ export default function Home() {
 
   //console.log(Region.filter(region=>region.name.toLowerCase().includes("1")))
   return (
-    <div className="h-full m-2">
+    <div className="h-screen ">
       <SearchBar setText={setSearchVal}/>
 
       <div className="mb-4 ml-1 mr-1">
