@@ -6,4 +6,20 @@ const nextConfig = {
     output: "export",
 }
 
-module.exports = nextConfig
+const withPlugins = require("next-compose-plugins");
+const withPWA = require("next-pwa");
+
+module.exports = withPlugins(
+    [
+        [
+            withPWA,
+            {
+                pwa: {
+                    dest: "public",
+                    // disable: process.env.NODE_ENV === "development",
+                },
+            },
+        ],
+    ],
+    nextConfig
+);

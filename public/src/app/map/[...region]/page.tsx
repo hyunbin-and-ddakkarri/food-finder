@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from 'next/navigation'
+import { BottomSheet, BottomSheetRef } from 'react-spring-bottom-sheet'
 import { stringsToRegion, regionToString, region } from "@/app/region";
 import Link from "next/link";
 import { faSearch, faList } from '@fortawesome/free-solid-svg-icons'
@@ -91,6 +92,8 @@ export default function MapView({ params }: { params: { region: string[] } }) {
         const mapOption = {
           center: new window.kakao.maps.LatLng(36.3629, 127.3568),
           level: 2,
+          draggable: true,
+          scrollwheel: true,
         };
         var map = new window.kakao.maps.Map(mapContainer, mapOption);
         var markerPosition = new window.kakao.maps.LatLng(
@@ -102,13 +105,18 @@ export default function MapView({ params }: { params: { region: string[] } }) {
           clickable: true,
         });
         marker.setMap(map);
+
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          router.push(`/detail`)
+        });
+
       });
     };
     mapScript.addEventListener("load", onLoadKakaoMap);
   }, []);
 
   return (
-    <div className="h-full m-2">
+    <div className="h-full">
       <Link href='/'>
         <div className="flex items-center mb-2">
           <label htmlFor="simple-search" className="sr-only">
@@ -125,7 +133,7 @@ export default function MapView({ params }: { params: { region: string[] } }) {
         </div>
       </Link>
       <FontAwesomeIcon icon={faList} size='lg' onClick={() => handleRegionClick(stringsToRegion(params.region))}/>
-      <div className="Map h-screen relative">
+      <div className="Map relative">
         <div
           id="map"
           style={{

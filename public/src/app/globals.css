@@ -4,7 +4,8 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-rgb: 216,219,226;
+  --background-rgb: 255, 255, 255;
+  --box-background: #F4F4F4;
   --text-rgb: 13, 18, 8;
   --primary: 86, 113, 137;
   --primary-dark: 24, 41, 74;
@@ -51,6 +52,27 @@ body {
 .hideScrollBar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
 }
+
+.box {
+  background-color: var(--box-background);
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+}
+
+.search {
+  background-color: var(--box-background);
+  border-radius: 5px;
+  flex-grow: 1;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 
 input {
   accent-color: rgb(var(--primary));

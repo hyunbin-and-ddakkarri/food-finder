@@ -7,6 +7,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Regions, region, regionToString } from "./region";
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import SearchBar from "./searchbar";
 
 const query = gql`
   query getRegion($region: String!) {
@@ -101,31 +102,7 @@ export default function Home() {
   //console.log(Region.filter(region=>region.name.toLowerCase().includes("1")))
   return (
     <div className="h-full m-2">
-      <div className="flex items-center mb-2">
-        <label htmlFor="simple-search" className="sr-only">
-          Search
-        </label>
-        <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <FontAwesomeIcon icon={faSearch} size='lg'/>
-          </div>
-          <input
-            onChange={(e) => setQuery(e.target.value)}
-            type="text"
-            id="simple-search"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="p-2.5 primaryButton ml-2 text-sm font-medium rounded-lg"
-        >
-          <FontAwesomeIcon icon={faSearch} size='lg' className="text-white"/>
-          <span className="sr-only">Search</span>
-        </button>
-      </div>
+      <SearchBar/>
 
       <div className="mb-4 ml-1 mr-1">
         <div className="flex overflow-x-scroll flex-row mt-1 hideScrollBar">
