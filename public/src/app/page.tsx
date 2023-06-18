@@ -87,12 +87,11 @@ export default function Home() {
   };
   const [query, setQuery] = useState("");
   const filters = ["Price", "Mood", "Rating", "Business Hours"];
-  const [searchVal, setSearchVal] = useState("");
 
   //console.log(Region.filter(region=>region.name.toLowerCase().includes("1")))
   return (
     <div className="h-screen ">
-      <SearchBar setText={setSearchVal}/>
+      <SearchBar setText={setQuery}/>
 
       <div className="mb-4 ml-1 mr-1">
         <div className="flex overflow-x-scroll flex-row mt-1 hideScrollBar">

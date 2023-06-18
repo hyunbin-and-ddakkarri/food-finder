@@ -62,7 +62,7 @@ export default function DetailPage(props: DetailPageProps) {
   };
 
   return (
-    <Sheet isOpen={true} onClose={() => {}} disableDrag snapPoints={[-300, 1]}>
+    <Sheet isOpen={true} onClose={() => {}} disableDrag snapPoints={[-200, 1]}>
     <Sheet.Container>
       <Sheet.Content disableDrag>
         <div className="flex flex-col items-start flex-nowrap px-6 pt-6 touch-auto gap-5 scroll-smooth snap-y touch-pan-y">
@@ -122,23 +122,23 @@ export default function DetailPage(props: DetailPageProps) {
       <div className=" bg-white h-80 flex">
         <Image
             alt="gallery"
-            width={300}
-            height={300}
+            width={200}
+            height={200}
             className="object-cover object-center aspect-square"
             src={restaurant.images[0].toString()}
           />
           <div className="flex flex-col">
             <Image
               alt="gallery"
-              width={300}
-              height={300}
+              width={200}
+              height={200}
               className="object-cover object-center aspect-square"
               src={restaurant.images[1].toString()}
             />
             <Image
               alt="gallery"
-              width={300}
-              height={300}
+              width={200}
+              height={200}
               className="object-cover object-center aspect-square"
               src={restaurant.images[2].toString()}
             />

@@ -81,11 +81,11 @@ export default function ListView({ params }: { params: { region: string[] } }) {
       {
         detail == -1 ? (
         <>
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen overflow-x-hidden">
         <SearchBar text={regionToString(stringsToRegion(params.region))} link backButton/>
         
         <div className="mx-6">
-          <div className="flex flex-col gap-2 overflow-y-scroll hideScrollBar divide-y divide-secondary">
+          <div className="flex flex-col gap-2 overflow-y-scroll hideScrollBar divide-y divide-secondary overflow-x-hidden">
             {tableData.map((restaurant, index) => {
               return (
                 <div className="flex flex-col gap-3" onClick={() => setDetail(index)}>
