@@ -12,6 +12,7 @@ requests = "^2.31.0"
 asyncio = "^3.4.3"
 fastapi = "^0.97.0"
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
+sqlalchemy = "^2.0.16"
 
 
 [tool.poetry.group.dev.dependencies]

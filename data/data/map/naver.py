@@ -1,4 +1,4 @@
-# pylint: disable = too-many-locals, too-many-branches
+# pylint: disable = too-many-locals, too-many-branches, broad-exception-caught
 
 """
 This is the module for Naver Map
@@ -6,18 +6,18 @@ This is the module for Naver Map
 The default language of this module is Korean
 """
 
+import asyncio
+import base64
+import datetime
 import itertools
 import json
-from typing import AsyncGenerator, List, Dict, Any
 import re
-import base64
-import asyncio
+from typing import Any, AsyncGenerator, Dict, List
 
 from data.db import models
-from data.util import parse_int
 from data.fetch import Fetch
 from data.map import Map, Restaurant
-
+from data.util import parse_int
 
 # regex to find the json data in the html
 regex = re.compile("window.__APOLLO_STATE__ = (.+);\n")
@@ -44,6 +44,7 @@ GRAPHQL_REVIEW_QUERY = """
 query getVisitorReviewPhotosInVisitorReviewTab($input: VisitorReviewsInput) {
     visitorReviews(input: $input) {
         items {
+            id
             rating
             author {
                 nickname
@@ -69,6 +70,7 @@ query getRestaurants(
 """
 
 # limit the max page to 10
+# should be 10's multiple
 REVIEW_MAX_PAGE = 1
 REVIEW_PER_PAGE = 10
 SEARCH_RESULT_PER_PAGE = 10
@@ -91,6 +93,17 @@ async def fetch_graphql(
         return None
 
 
+def parse_date(date: str) -> datetime.date:
+    """
+    This is the function to parse the date
+    """
+    try:
+        split = date.split(".")
+        return datetime.date(datetime.date.today().year, int(split[0]), int(split[1]))
+    except Exception:
+        return datetime.date.today()
+
+
 class NaverRestaurant(Restaurant):
     """
     Naver Restaurant class
@@ -102,11 +115,11 @@ class NaverRestaurant(Restaurant):
         self.place_id = place_id
 
     @property
-    def _id(self) -> int:
+    def _id(self) -> str:
         """
         :return: The id of the restaurant
         """
-        return int(self.place_id)
+        return self.place_id
 
     @property
     def url(self) -> str:
@@ -166,7 +179,7 @@ class NaverRestaurant(Restaurant):
             "x-wtm-graphql": base64.b64encode(json.dumps(data).encode()).decode(),
         }
 
-    async def get_review(self) -> List[models.Review]:
+    async def get_reviews(self) -> List[models.Review]:
         """
         :return: The reviews of the restaurant
         """
@@ -190,12 +203,14 @@ class NaverRestaurant(Restaurant):
             data = res[0]["data"]["visitorReviews"]["items"]
             return [
                 models.Review(
+                    id=review["id"],
                     username=review["author"]["nickname"],
                     context=review["body"],
                     rating=review["rating"]
                     if review["rating"] is not None
                     else -1,  # Naver Map doesn't have rating that much, so we need to handle this
-                    date=review["created"],
+                    date=parse_date(review["created"]),
+                    restaurant_id=self._id,
                 )
                 for review in data
             ]
@@ -206,7 +221,9 @@ class NaverRestaurant(Restaurant):
                 await asyncio.gather(
                     *[
                         get_page(i)
-                        for i in range(1, min(REVIEW_MAX_PAGE, total_review // 10 + 1))
+                        for i in range(
+                            1, min(REVIEW_MAX_PAGE, total_review // 10 + 1) + 1
+                        )
                     ]
                 )
             )
@@ -258,7 +275,7 @@ class NaverRestaurant(Restaurant):
                         ]
                     else:
                         biz_hour[i["day"]] = []
-            except:
+            except Exception:
                 biz_hour = {}
 
         if rest_data["businessStats"]["contexts"] is not None:
@@ -281,7 +298,6 @@ class NaverRestaurant(Restaurant):
             characteristics=str([]),
             images=str([i["url"] for i in data["images"]]),
             menus=str(menus),
-            # reviews=await self.get_review(),
             rating=rest_base["visitorReviewsScore"],
         )
 
@@ -368,7 +384,7 @@ class NaverMap(Map):
 
 
 # sample test code
-# pylint: disable=missing-function-docstring
+# pylint: disable=missing-function-docstring, invalid-name
 if __name__ == "__main__":
     Fetch.init(
         [
@@ -382,6 +398,7 @@ if __name__ == "__main__":
     async def main() -> None:
         naver = NaverMap("어은동 맛집")
         async for i in naver.get_restaurants():
-            print(await i.get())
+            for r in await i.get_reviews():
+                print(r)
 
     asyncio.run(main())

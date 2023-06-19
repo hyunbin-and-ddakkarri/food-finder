@@ -2,10 +2,10 @@
 
 create table review
 (
-    id         serial primary key,
+    id         varchar(255) primary key,
     username   varchar(255) not null,
     rating     int          not null,
     context    text         not null,
     date       date         not null,
-    restaurant serial references restaurant (id)
+    restaurant_id varchar(255) references restaurant (id) not null
 );

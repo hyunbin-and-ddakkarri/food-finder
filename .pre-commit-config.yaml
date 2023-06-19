@@ -19,26 +19,10 @@ repos:
         pass_filenames: false
         always_run: true
 
-      - id: poetry-install-server
-        name: poetry-install-server
-        language: system
-        entry: poetry install -C ./server -n
-        types: [python]
-        pass_filenames: false
-        always_run: true
-
       - id: poetry-lock-data
         name: poetry-lock-data
         language: system
         entry: poetry lock -C ./data -n
-        types: [python]
-        pass_filenames: false
-        always_run: true
-
-      - id: poetry-lock-server
-        name: poetry-lock-server
-        language: system
-        entry: poetry lock -C ./server -n
         types: [python]
         pass_filenames: false
         always_run: true
@@ -51,14 +35,6 @@ repos:
         pass_filenames: false
         always_run: true
 
-      - id: black-server
-        name: black-server
-        language: python
-        types: [python]
-        entry: poetry run -C ./server black --check --verbose ./server
-        pass_filenames: false
-        always_run: true
-
       - id: pylint-data
         name: pylint-data
         language: python
@@ -66,26 +42,11 @@ repos:
         entry: poetry run -C ./data pylint
         files: ^data/.*\.py$
 
-      - id: pylint-server
-        name: pylint-server
-        language: python
-        types: [python]
-        entry: poetry run -C ./server pylint
-        files: ^server/.*\.py$
-
       - id: mypy-data
         name: mypy-data
         language: python
         types: [python]
         entry: ./mypy-data.sh
-        pass_filenames: false
-        always_run: true
-
-      - id: mypy-server
-        name: mypy-server
-        language: python
-        types: [python]
-        entry: poetry run -C ./server mypy --strict ./server
         pass_filenames: false
         always_run: true
 

@@ -2,7 +2,8 @@
 
 diesel::table! {
     restaurant (id) {
-        id -> Int4,
+        #[max_length = 255]
+        id -> Varchar,
         #[max_length = 255]
         name -> Varchar,
         introduction -> Text,
@@ -26,16 +27,18 @@ diesel::table! {
 
 diesel::table! {
     review (id) {
-        id -> Int4,
+        #[max_length = 255]
+        id -> Varchar,
         #[max_length = 255]
         username -> Varchar,
         rating -> Int4,
         context -> Text,
         date -> Date,
-        restaurant -> Int4,
+        #[max_length = 255]
+        restaurant_id -> Varchar,
     }
 }
 
-diesel::joinable!(review -> restaurant (restaurant));
+diesel::joinable!(review -> restaurant (restaurant_id));
 
 diesel::allow_tables_to_appear_in_same_query!(restaurant, review,);

@@ -1,31 +1,45 @@
+# pylint: disable=too-few-public-methods
+
+"""
+This file defines the database models.
+"""
+
 import datetime
-from typing import List, Tuple
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(AsyncAttrs, DeclarativeBase):
-    pass
+    """
+    Base class for all models
+    """
 
 
 class Review(Base):
+    """
+    Review model
+    """
+
     __tablename__ = "review"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     username: Mapped[str]
     rating: Mapped[float]
     context: Mapped[str]
-    date: Mapped[datetime.datetime]
-
-    restaurant_id: Mapped[str] = mapped_column(ForeignKey("Restaurant.rid"))
+    date: Mapped[datetime.date]
+    restaurant_id: Mapped[str] = mapped_column(ForeignKey("restaurant.id"))
 
 
 class Restaurant(Base):
+    """
+    Restaurant model
+    """
+
     __tablename__ = "restaurant"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str]
     introduction: Mapped[str]
     address: Mapped[str]

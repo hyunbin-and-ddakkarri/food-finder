@@ -3,6 +3,7 @@ Test for naver map
 """
 
 import pytest
+
 from data.fetch import Fetch
 from data.map.naver import NaverMap
 
@@ -26,4 +27,5 @@ async def test_naver_simple() -> None:
 
     async for item in NaverMap("어은동 맛집").get_restaurants():
         await item.get()
+        await item.get_reviews()
         break

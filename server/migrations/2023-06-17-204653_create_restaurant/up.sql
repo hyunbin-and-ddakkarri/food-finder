@@ -1,7 +1,7 @@
 -- Your SQL goes here
 create table restaurant
 (
-    id              serial primary key,
+    id              varchar(255) primary key,
     name            varchar(255) not null,
     introduction    text         not null,
     address         varchar(255) not null,
