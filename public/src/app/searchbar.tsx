@@ -1,4 +1,3 @@
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { motion } from "framer-motion"
@@ -86,12 +85,12 @@ export default function SearchBar(props: SearchBarProps) {
                     )
                 }
             </div>
-            <div className="flex text-base gap-2 flex-initial">
+            <div className="flex text-base gap-2 flex-initial overflow-x-scroll noScrollBar">
                 {
                     filters != null && (
                         filters.map((filter, index) => { 
                             return (
-                                <motion.a className="rounded-full bg-neutral px-3 py-1 appearance-none w-auto min-w-0 shrink" onClick={() => {
+                                <motion.a className="rounded-full bg-neutral px-3 py-1 appearance-none w-auto min-w-0 shrink-0" onClick={() => {
                                     if (currentFilter != index) {
                                         setTagOpen(true);
                                     } else {
@@ -112,7 +111,7 @@ export default function SearchBar(props: SearchBarProps) {
                         {
                             filters[currentFilter].options.map((option) => {
                                 return (
-                                    <div className="">
+                                    <div className="shrink-0">
                                         <input type="checkbox" />
                                         <label>{option}</label>
                                     </div>

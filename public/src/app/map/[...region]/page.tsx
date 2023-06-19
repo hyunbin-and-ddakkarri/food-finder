@@ -7,6 +7,9 @@ import SearchBar from "@/app/searchbar";
 import { faStar, faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Sheet, { SheetRef } from 'react-modal-sheet';
+import DetailPage from "../../listview/[...region]/detail";
+import { Restaurant, resultsToRestaurants } from "../../restaurant";
+import { motion, AnimatePresence } from "framer-motion"
 
 
 const query = gql`
@@ -45,18 +48,25 @@ export default function MapView({ params }: { params: { region: string[] } }) {
   const { error, data } = useQuery(query, {
     variables: { region: params.region[2] },
   });
-  const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
+  const [tableData, setTableData] = useState<Restaurant[]>(Array(10).fill({
+    name: "잇마이타이",
+    introduction: "대전 태국음식점 잇마이타이 입니다. 본점은 봉명동, 분점은 어은동에 위치해 있습니다.",
+    address: "대전 유성구 어은동 112-4 1층 잇마이타이",
+    location: [127.3588931, 36.3636649],
+    phone: '042-335-5466',
+    price: 17882,
+    
+    businessHours: {'토': [11, 21], '일': [11, 21], '월': [11, 21], '화': [11, 21], '수': [11, 21], '목': [11, 21], '금': [11, 21]},
+    moods: ["Cozy", "Affordable"],
+    characteristics: ["Donburi", "Thai"],
+    images: ['https://ldb-phinf.pstatic.net/20220129_229/1643445449356YqHLz_JPEG/F4E7C2F6-E23D-473B-A3D2-34FE3629BD2A.jpeg', 'https://ldb-phinf.pstatic.net/20220129_223/1643445449972ANjAr_JPEG/EB91198E-6E71-4768-856C-2327FCBA6A0B.jpeg', 'https://ldb-phinf.pstatic.net/20220129_238/1643445449839aeKWh_JPEG/827F2745-6F0D-4B85-8336-DE4D8FA1254B.jpeg', 'https://ldb-phinf.pstatic.net/20200210_183/15813306588974vCcd_JPEG/5E0AZu2O5C5vrl40bW1mi9xd.jpeg.jpg'],
+    menus: {'A세트(2인)': 23900, 'A-1세트(2인)': 36500, 'B세트(3인)': 45100, 'C세트(4인)': 58100, '팟타이': 9900, '뿌팟퐁커리': 22900, '꿍팟퐁커리': 9900, '그린커리': 9900, '쌀국수': 9900, '똠양꿍누들': 13900, '카오팟똠양': 9900, '팟카파오무쌉': 9900, '카오팟탈레': 9900, '까이텃': 9900, '카이룩커이': 5000, '모닝글로리': 9500, '쏨땀': 9900},
+    reviews: [{'민지': '맛있어요'}],
+    rating: 4.4
+  } as Restaurant));
   const [dataKeys, setDataKeys] = useState<string[]>([]);
 
   const [isOpen, setOpen] = useState(false);
-  const snapPoints = [100, 0.8];
-
-  const ref = useRef<SheetRef>();
-  const snapTo = (i: number) => ref.current?.snapTo(i);
-
-  const onSnap = (snapIndex: number) => {
-
-  }
 
 
   useEffect(() => {
@@ -122,6 +132,10 @@ export default function MapView({ params }: { params: { region: string[] } }) {
           setOpen(true);
         });
 
+        window.kakao.maps.event.addListener(map, "click", () => {
+          setOpen(false);
+        });
+
       });
     };
     mapScript.addEventListener("load", onLoadKakaoMap);
@@ -132,50 +146,19 @@ export default function MapView({ params }: { params: { region: string[] } }) {
       <div className="absolute inset-x-0 top-0 z-10">
         <SearchBar text={regionToString(stringsToRegion(params.region))} link backButton/>
       </div>
-      <div className="flex absolute z-10 rounded-full bg-secondary bottom-0 right-0 m-5 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}>
+      <motion.div className="flex absolute z-10 rounded-full bg-secondary bottom-0 right-0 m-5 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}
+      animate={{bottom: isOpen? 70: 0}}>
         <FontAwesomeIcon style={{color: '#ffffff', margin: "auto",}} icon={faList} size='lg'/>
-      </div>
+      </motion.div>
       <div id="map" className="w-screen h-screen z-0"></div>
-      <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-        <Sheet.Container>
-          <Sheet.Header />
-          <Sheet.Content disableDrag>
-            <div className="flex flex-col items-start flex-nowrap px-6 touch-auto gap-5">
-              <div className="flex justify-between items-end w-full flex-wrap">
-                <h2 className="text-2xl grow font-bold text-secondary">In My Thai</h2>
-                <div className="flex gap-2 items-center">
-                  <FontAwesomeIcon icon={faStar} style={{color: "rgb(var(--primary))",}}/>
-                  <div className="text-lg text-secondary text-secondary">
-                    4.8
-                  </div>
-                  <div className="text-lg font-medium text-primary">
-                    Open
-                  </div>
-                </div>
-              </div>
-              <p className="text-base w-full text-secondary">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed metus dui, pretium quis posuere varius, dignissim vitae diam. Proin maximus malesuada pharetra. Integer consequat turpis maximus bibendum mollis. Nulla sed libero pharetra, suscipit orci eu, dignissim urna. Vivamus vestibulum massa sit amet augue feugiat vehicula. In ornare, ipsum at condimentum rhoncus, ex lacus pellentesque est, ac tristique nunc lectus et ex. Suspendisse maximus, eros sit amet pulvinar posuere, libero neque laoreet nunc, congue vulputate tellus mauris non metus. Vivamus mattis tempor egestas.
-              </p>
-              <div className="flex w-full touch-pan-x overflow-x-auto scroll-smooth snap-x">
-                <div className="box">1</div>
-                <div className="box">2</div>
-                <div className="box">3</div>
-                <div className="box">4</div>
-                <div className="box">5</div>
-                <div className="box">6</div>
-                <div className="box">2</div>
-                <div className="box">3</div>
-                <div className="box">4</div>
-                <div className="box">5</div>
-                <div className="box">6</div>
-              </div>
-              <h3 className="text-xl font-bold text-secondary">Menu</h3>
-            </div>
 
-          </Sheet.Content>
-        </Sheet.Container>
-        <Sheet.Backdrop onTap={() => {setOpen(false)}}/>
-      </Sheet>
+      <AnimatePresence initial={false}>
+        {
+          isOpen && (
+            <DetailPage restaurant={tableData[0]} onClose={() => {}} isMap></DetailPage>
+          )
+        }
+      </AnimatePresence>
     </div>
   );
 }

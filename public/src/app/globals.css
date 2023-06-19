@@ -36,6 +36,15 @@ body {
   color: rgb(var(--text-rgb));
 }
 
+.noScrollBar::-webkit-scrollbar {
+  display: none;
+}
+
+.noScrollBar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+}
+
 .primaryButton {
   color: rgb(var(--text-rgb));
   background-color: rgb(var(--primary));
