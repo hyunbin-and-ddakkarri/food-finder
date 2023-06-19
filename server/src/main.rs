@@ -1,21 +1,21 @@
+use actix_web::middleware::Logger;
 #[cfg(not(feature = "docker"))]
 use actix_web::{get, Responder};
 use actix_web::{
-    App,
-    Error,
-    HttpResponse, HttpServer, route, web::{self, Data},
+    route,
+    web::{self, Data},
+    App, Error, HttpResponse, HttpServer,
 };
-use actix_web::middleware::Logger;
 #[cfg(not(feature = "docker"))]
 use actix_web_lab::respond::Html;
-use diesel::{PgConnection, r2d2};
 use diesel::r2d2::ConnectionManager;
+use diesel::{r2d2, PgConnection};
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 #[cfg(not(feature = "docker"))]
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 
-use crate::db::{Context, create_schema, Schema};
+use crate::db::{create_schema, Context, Schema};
 
 mod db;
 mod schema;
@@ -92,9 +92,9 @@ async fn main() -> std::io::Result<()> {
                 .service(graphql)
                 .wrap(Logger::default())
         })
-            .bind(("0.0.0.0", port.parse().unwrap()))?
-            .run()
-            .await
+        .bind(("0.0.0.0", port.parse().unwrap()))?
+        .run()
+        .await
     }
 
     #[cfg(not(feature = "docker"))]
@@ -108,8 +108,8 @@ async fn main() -> std::io::Result<()> {
                 .service(graphql_playground)
                 .wrap(Logger::default())
         })
-            .bind(("0.0.0.0", port.parse().unwrap()))?
-            .run()
-            .await
+        .bind(("0.0.0.0", port.parse().unwrap()))?
+        .run()
+        .await
     }
 }

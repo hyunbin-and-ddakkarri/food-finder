@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use juniper::{EmptySubscription, FieldResult, graphql_object, GraphQLInputObject, GraphQLObject};
+use juniper::{graphql_object, EmptySubscription, FieldResult, GraphQLInputObject, GraphQLObject};
 use serde::Deserialize;
 
 use crate::Pool;
