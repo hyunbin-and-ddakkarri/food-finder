@@ -5,6 +5,7 @@ import { faStar, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useRef } from 'react';
 import Sheet, { SheetRef } from 'react-modal-sheet';
+import { motion, useScroll } from "framer-motion"
 
 interface DetailPageProps {
   restaurant: Restaurant
@@ -22,57 +23,27 @@ export default function DetailPage(props: DetailPageProps) {
 
   }
 
+  const rootRef = useRef(null)
+  const scrollRef = useRef(null);
 
-
-  const modalStyle = {
-    position: 'fixed' as 'fixed',
-    zIndex: 1000,
-    background: '#fff',
-    width: '100%',
-    height: '100%'
-  };
-  const [view, setView] = useState<'menu' | 'reviews' | 'info'>('menu');
-  const [imageIndex, setImageIndex] = useState(0);
-
-  const onNextImage = () => {
-    setImageIndex((imageIndex + 1) % restaurant.images.length);
-  };
-
-  const onPrevImage = () => {
-    setImageIndex((imageIndex - 1 + restaurant.images.length) % restaurant.images.length);
-  };
-
-  const renderContent = () => {
-    switch (view) {
-      case 'menu':
-        return Object.entries(restaurant.menus).map(([key, value]) => (
-          <div key={key}>{`${key}: ${value}`}</div>
-        ));
-      case 'reviews':
-        return restaurant.reviews.map((review, index) => (
-          <div key={index}>{`${Object.keys(review)[0]}: ${Object.values(review)[0]}`}</div>
-        ));
-      case 'info':
-        return Object.entries(restaurant.businessHours).map(([day, hours]) => (
-          <div key={day}>{`${day}: ${hours[0]} - ${hours[1]}`}</div>
-        ));
-      default:
-        return null;
-    }
-  };
+  const { scrollYProgress } = useScroll({
+    container: rootRef,
+    target: scrollRef,
+    offset: ["end end", "start start"]
+  });
 
   return (
-    <Sheet isOpen={true} onClose={() => {}} disableDrag snapPoints={[-200, 1]}>
+    <Sheet isOpen={true} onClose={() => {}} snapPoints={[-200, 1]}>
     <Sheet.Container>
       <Sheet.Content disableDrag>
-        <div className="flex flex-col items-start flex-nowrap px-6 pt-6 touch-auto gap-5 scroll-smooth snap-y touch-pan-y">
+        <div className="flex flex-col items-start flex-nowrap px-6 pt-6 touch-auto gap-5 scroll-smooth snap-y touch-pan-y" ref={rootRef}>
           <div className="flex justify-between items-end w-full flex-wrap snap-start">
             <h2 className="text-2xl grow font-bold text-secondary">
               {restaurant.name}
             </h2>
             <div className="flex gap-2 items-center">
               <FontAwesomeIcon icon={faStar} style={{color: "rgb(var(--primary))",}}/>
-              <div className="text-lg text-secondary text-secondary">
+              <div className="text-lg text-secondary">
                 {restaurant.rating.toString()}
               </div>
               <div className="text-lg font-medium text-primary">

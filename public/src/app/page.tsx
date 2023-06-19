@@ -92,7 +92,6 @@ export default function Home() {
   return (
     <div className="h-screen ">
       <SearchBar setText={setQuery}/>
-
       <div className="mb-4 ml-1 mr-1">
         <div className="flex overflow-x-scroll flex-row mt-1 hideScrollBar">
           {filters.map((filter, idx) => {
