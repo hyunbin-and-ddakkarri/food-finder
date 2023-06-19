@@ -1,5 +1,5 @@
 # Stage 1: Build the Next.js application
-FROM node:18 AS builder
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY public .
 RUN npm run build
 
 # Stage 2: Serve the Next.js application with NGINX
-FROM nginx:1.23
+FROM nginx:1.23-alpine
 
 # Remove default NGINX configurations
 RUN rm -rf /etc/nginx/conf.d/*

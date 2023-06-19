@@ -370,7 +370,7 @@ if __name__ == "__main__":
     Fetch.init(
         [
             # this needs to be waited a lot
-            (".*pcmap-api\\.place\\.naver\\.com.*", 5000),
+            (".*pcmap-api\\.place\\.naver\\.com.*", 1000),
             (".*map\\.naver\\.com.*", 10),
             (".*pcmap\\.place\\.naver\\.com.*", 10),
         ]
@@ -379,6 +379,6 @@ if __name__ == "__main__":
     async def main() -> None:
         naver = NaverMap("어은동 맛집")
         async for i in naver.get_restaurants():
-            await i.get()
+            print(await i.get())
 
     asyncio.run(main())
