@@ -12,45 +12,79 @@ on:
 
 jobs:
   server-build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: admin
+          POSTGRES_USER: admin
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup python
-      uses: actions/setup-python@v4
+    - name: Setting up rust
+      uses: actions-rs/toolchain@v1
       with:
-        python-version: '3.10'
+        profile: minimal
+        toolchain: nightly
+        override: true
+        components: clippy, rustfmt
+      
+    - name: Set up cargo cache
+      uses: actions/cache@v3
+      continue-on-error: false
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          server/target/            
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-cargo-
 
-    - name: Install poetry & dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install poetry
-        poetry --version
-        poetry install -vv -C ./server -n
+    - name: Install diesel_cli
+      run: cargo install diesel_cli --no-default-features --features postgres || true
 
-    - name: Black formatting check
-      run: |
-        poetry run -C ./server black --check --verbose ./server
-
-    - name: Pylint check
-      run: |
-        poetry run -C ./server pylint $(git ls-files './server/**/*.py')
-
-    - name: Mypy check
+    - name: Run diesel migrations
       env:
-        MYPYPATH: ./server
-      run: |
-        echo y | poetry run -C ./server mypy --install-types ./server || true
-        poetry run -C ./server mypy --strict ./server
+        DATABASE_URL: postgres://admin:admin@localhost:5432/postgres
+      run: cd server && diesel setup --database-url $DATABASE_URL
 
-    - name: Pytest
+    - name: Checking if it builds without errors (default feature)
+      uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+        args: --all-targets --manifest-path server/Cargo.toml -- -D warnings
+
+    - name: Checking if code is formatted
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all --manifest-path server/Cargo.toml -- --check
+    
+    - name: Testing code without errors (default feature)
+      uses: actions-rs/cargo@v1
+      env:
+        DATABASE_URL: postgres://admin:admin@localhost:5432/postgres
+      with:
+        command: test
+        args: --manifest-path server/Cargo.toml
+
+    - name: Generate code coverage
       run: |
-        poetry run -C ./server pytest --cov=./server --cov-report=xml ./server
+        cargo install cargo-tarpaulin || true
+        cargo tarpaulin --manifest-path server/Cargo.toml --verbose --workspace --timeout 120 --out Xml --run-types Tests
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3

@@ -4,10 +4,10 @@
 Map base module
 """
 
-from typing import AsyncGenerator
 from abc import ABCMeta, abstractmethod
+from typing import AsyncGenerator
 
-from server import schema
+from data.db import models
 
 
 class Restaurant(metaclass=ABCMeta):
@@ -23,7 +23,13 @@ class Restaurant(metaclass=ABCMeta):
         """
 
     @abstractmethod
-    async def get(self) -> schema.Restaurant:
+    async def get_reviews(self) -> list[models.Review]:
+        """
+        :return: The reviews of the restaurant
+        """
+
+    @abstractmethod
+    async def get(self) -> models.Restaurant:
         """
         :return: The restaurant data
         """

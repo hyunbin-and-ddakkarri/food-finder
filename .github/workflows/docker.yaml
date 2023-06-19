@@ -30,3 +30,23 @@ jobs:
 
     - name: Build Admin Dockerfile
       run: docker build -f admin.Dockerfile .
+
+  docker-build-data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Build Data Dockerfile
+      run: docker build -f data.Dockerfile .
+
+  docker-build-server:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Build Server Dockerfile
+      run: docker build -f server.Dockerfile .
