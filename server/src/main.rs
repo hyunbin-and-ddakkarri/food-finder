@@ -48,7 +48,17 @@ async fn graphql_playground() -> impl Responder {
 }
 
 fn make_pool() -> Pool {
-    let url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let url = std::env::var("DATABASE_URL").unwrap_or_else(|_| {
+        let db_host = std::env::var("DB_HOST").unwrap_or_else(|_| "localhost".to_string());
+        let db_port = std::env::var("DB_PORT").unwrap_or_else(|_| "5432".to_string());
+        let db_user = std::env::var("DB_USER").unwrap_or_else(|_| "admin".to_string());
+        let db_password = std::env::var("DB_PASSWORD").unwrap_or_else(|_| "admin".to_string());
+        let db_name = std::env::var("DB_NAME").unwrap_or_else(|_| "postgres".to_string());
+        format!(
+            "postgres://{}:{}@{}:{}/{}",
+            db_user, db_password, db_host, db_port, db_name
+        )
+    });
     let manager = ConnectionManager::<PgConnection>::new(url);
     Pool::builder()
         .test_on_check_out(true)
