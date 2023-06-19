@@ -4,10 +4,13 @@ use serde::Deserialize;
 
 use crate::Pool;
 
+/// Simple context for GraphQL schema
 pub struct Context {
     pub db_pool: Pool,
 }
 
+/// Restaurant Schema
+/// This is a schema for both Graphql (Juniper) and Database (Diesel)
 #[derive(Queryable, Selectable, Identifiable, Default, Debug, GraphQLObject)]
 #[diesel(table_name = crate::schema::restaurant)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -29,6 +32,8 @@ pub struct Restaurant {
     pub rating: f64,
 }
 
+/// Restaurant Form
+/// This is a form for GraphQL (Juniper) and Database (Diesel)
 #[derive(Deserialize, Insertable, AsChangeset, GraphQLInputObject)]
 #[diesel(table_name = crate::schema::restaurant)]
 pub struct RestaurantForm {
@@ -49,6 +54,8 @@ pub struct RestaurantForm {
     pub rating: f64,
 }
 
+/// Review Schema
+/// This is a schema for both Graphql (Juniper) and Database (Diesel)
 #[derive(Queryable, Selectable, Identifiable, Associations, Default, Debug, GraphQLObject)]
 #[diesel(table_name = crate::schema::review)]
 #[diesel(belongs_to(Restaurant))]
@@ -65,6 +72,7 @@ pub struct Query {}
 
 #[graphql_object(Context = Context)]
 impl Query {
+    /// List of all restaurants
     #[graphql(description = "List of all restaurants")]
     pub async fn restaurants(context: &Context) -> FieldResult<Vec<Restaurant>> {
         use crate::schema::restaurant::dsl;
@@ -78,7 +86,8 @@ impl Query {
         Ok(restaurants)
     }
 
-    #[graphql(description = "Get a restaurant by ID")]
+    /// Get a restaurant by region
+    #[graphql(description = "Get a restaurant by region")]
     pub async fn restaurant(context: &Context, region: String) -> FieldResult<Restaurant> {
         use crate::schema::restaurant::dsl;
 
@@ -91,6 +100,7 @@ impl Query {
         Ok(res)
     }
 
+    /// List of all reviews from a restaurant
     #[graphql(description = "List of all reviews")]
     pub async fn reviews(context: &Context, restaurant_id: String) -> FieldResult<Vec<Review>> {
         use crate::schema::review::dsl;
@@ -110,6 +120,8 @@ pub struct Mutation {}
 
 #[graphql_object(Context = Context)]
 impl Mutation {
+    /// Create a new restaurant if not exists
+    /// Update a restaurant if exists
     pub fn update_restaurant(
         context: &Context,
         restaurant: RestaurantForm,
