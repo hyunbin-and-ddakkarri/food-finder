@@ -89,8 +89,8 @@ async fn main() -> std::io::Result<()> {
             App::new()
                 .app_data(Data::new(pool.clone()))
                 .app_data(Data::new(create_schema()))
-                .service(graphql)
                 .wrap(Logger::default())
+                .service(graphql)
         })
         .bind(("0.0.0.0", port.parse().unwrap()))?
         .run()
@@ -104,12 +104,130 @@ async fn main() -> std::io::Result<()> {
             App::new()
                 .app_data(Data::new(pool.clone()))
                 .app_data(Data::new(create_schema()))
+                .wrap(Logger::default())
                 .service(graphql)
                 .service(graphql_playground)
-                .wrap(Logger::default())
         })
         .bind(("0.0.0.0", port.parse().unwrap()))?
         .run()
         .await
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use actix_web::{http::header::ContentType, test};
+    use serde_json::json;
+
+    use super::*;
+
+    #[actix_web::test]
+    async fn test_simple() {
+        dotenv::dotenv().ok();
+        let pool = make_pool();
+        run_migrations(&pool);
+
+        let app = test::init_service(
+            App::new()
+                .app_data(Data::new(pool.clone()))
+                .app_data(Data::new(create_schema()))
+                .service(graphql),
+        )
+        .await;
+
+        let req = test::TestRequest::post()
+            .uri("/graphql")
+            .insert_header(ContentType::json())
+            .set_payload(
+                json!(
+                    {
+                        "query": "{restaurants{id}}"
+                    }
+                )
+                .to_string(),
+            )
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+        assert!(resp.status().is_success());
+    }
+
+    #[actix_web::test]
+    async fn test_insert_and_get() {
+        dotenv::dotenv().ok();
+        let pool = make_pool();
+        run_migrations(&pool);
+
+        let app = test::init_service(
+            App::new()
+                .app_data(Data::new(pool.clone()))
+                .app_data(Data::new(create_schema()))
+                .service(graphql),
+        )
+        .await;
+
+        let req = test::TestRequest::post()
+            .uri("/graphql")
+            .insert_header(ContentType::json())
+            .set_payload(json!(
+                {
+                    "query": "mutation updateRestaurant($restaurant: RestaurantForm!) {
+                        updateRestaurant(restaurant: $restaurant) { id }
+                    }",
+                    "variables": {
+                        "restaurant": {
+                            "id": "1",
+                            "name": "test1",
+                            "introduction": "this is a good restaurant",
+                            "address": "seoul, korea",
+                            "locationX": 1.0,
+                            "locationY": 2.0,
+                            "region": "seoul",
+                            "phone": "010-1234-5678",
+                            "price": 10000,
+                            "businessHours": "{'monday': ['11:00', '20:00']}",
+                            "moods": "['good mood']",
+                            "characteristics": "",
+                            "images": "['https://example.com/image1.jpg', 'https://example.com/image2.jpg']",
+                            "menus": "{'kimbap': 10000}",
+                            "rating": 4.5
+                        }
+                    }
+                }).to_string())
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+        assert!(resp.status().is_success());
+
+        let req = test::TestRequest::post()
+            .uri("/graphql")
+            .insert_header(ContentType::json())
+            .set_payload(
+                json!(
+                    {
+                        "query": "{restaurant(region: \"seoul\"){id}}"
+                    }
+                )
+                .to_string(),
+            )
+            .to_request();
+
+        let resp = test::call_service(&app, req).await;
+        let json = test::read_body_json::<serde_json::Value, _>(resp).await;
+        assert_eq!(json["data"]["restaurant"]["id"], "1");
+
+        let req = test::TestRequest::post()
+            .uri("/graphql")
+            .insert_header(ContentType::json())
+            .set_payload(
+                json!(
+                    {
+                        "query": "{restaurant(region: \"daejeon\"){id}}"
+                    }
+                )
+                .to_string(),
+            )
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+        let json = test::read_body_json::<serde_json::Value, _>(resp).await;
+        assert_eq!(json["data"], json!(null));
     }
 }

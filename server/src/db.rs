@@ -73,8 +73,7 @@ impl Query {
 
         let restaurants = dsl::restaurant
             .select(Restaurant::as_select())
-            .get_results(conn)
-            .unwrap();
+            .get_results(conn)?;
 
         Ok(restaurants)
     }
@@ -87,8 +86,7 @@ impl Query {
 
         let res = dsl::restaurant
             .filter(dsl::region.like(format!("%{}%", region)))
-            .first(conn)
-            .unwrap();
+            .first(conn)?;
 
         Ok(res)
     }
@@ -102,8 +100,7 @@ impl Query {
         let reviews = dsl::review
             .filter(dsl::restaurant_id.eq(restaurant_id))
             .select(Review::as_select())
-            .get_results(conn)
-            .unwrap();
+            .get_results(conn)?;
 
         Ok(reviews)
     }
@@ -126,8 +123,7 @@ impl Mutation {
             .on_conflict(dsl::id)
             .do_update()
             .set(&restaurant)
-            .get_result(conn)
-            .unwrap();
+            .get_result(conn)?;
 
         Ok(res)
     }
