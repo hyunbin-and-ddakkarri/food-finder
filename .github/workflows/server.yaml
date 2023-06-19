@@ -21,36 +21,36 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup python
-      uses: actions/setup-python@v4
+    - name: Setting up rust
+      uses: actions-rs/toolchain@v1
       with:
-        python-version: '3.10'
+        profile: minimal
+        toolchain: stable
+        override: true
+        components: clippy, rustfmt
+      
+    - name: Checking if it builds without errors (default feature)
+      uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+        args: --all-targets --manifest-path server/Cargo.toml -- -D warnings
 
-    - name: Install poetry & dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install poetry
-        poetry --version
-        poetry install -vv -C ./server -n
+    - name: Checking if code is formatted
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all --manifest-path server/Cargo.toml -- --check
+    
+    - name: Checking if it builds without errors (default feature)
+      uses: actions-rs/cargo@v1
+      with:
+        command: test
+        args: --manifest-path server/Cargo.toml
 
-    - name: Black formatting check
+    - name: Generate code coverage
       run: |
-        poetry run -C ./server black --check --verbose ./server
-
-    - name: Pylint check
-      run: |
-        poetry run -C ./server pylint $(git ls-files './server/**/*.py')
-
-    - name: Mypy check
-      env:
-        MYPYPATH: ./server
-      run: |
-        echo y | poetry run -C ./server mypy --install-types ./server || true
-        poetry run -C ./server mypy --strict ./server
-
-    - name: Pytest
-      run: |
-        poetry run -C ./server pytest --cov=./server --cov-report=xml ./server
+        cargo install cargo-tarpaulin
+        cargo tarpaulin --manifest-path server/Cargo.toml --verbose --workspace --timeout 120 --out Xml --run-types Tests --run-types Doctests
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
