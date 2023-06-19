@@ -7,7 +7,7 @@ Map base module
 from typing import AsyncGenerator
 from abc import ABCMeta, abstractmethod
 
-from server import schema
+from data.db import models
 
 
 class Restaurant(metaclass=ABCMeta):
@@ -17,13 +17,13 @@ class Restaurant(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def _id(self) -> str:
+    def _id(self) -> int:
         """
         :return: The id of the restaurant
         """
 
     @abstractmethod
-    async def get(self) -> schema.Restaurant:
+    async def get(self) -> models.Restaurant:
         """
         :return: The restaurant data
         """

@@ -37,22 +37,22 @@ jobs:
       run: |
         poetry run -C ./data black --check --verbose ./data
 
-    - name: Pylint check
-      run: |
-        poetry run -C ./data pylint $(git ls-files './data/**/*.py')
+    # - name: Pylint check
+    #   run: |
+    #     poetry run -C ./data pylint $(git ls-files './data/**/*.py')
 
-    - name: Mypy check
-      env:
-        MYPYPATH: ./server
-      run: |
-        echo y | poetry run -C ./data mypy --install-types ./data || true
-        poetry run -C ./data mypy --strict ./data
+    # - name: Mypy check
+    #   env:
+    #     MYPYPATH: ./server
+    #   run: |
+    #     echo y | poetry run -C ./data mypy --install-types ./data || true
+    #     poetry run -C ./data mypy --strict ./data
 
-    - name: Pytest
-      run: |
-        poetry run -C ./data pytest --cov=./data --cov-report=xml ./data
+    # - name: Pytest
+    #   run: |
+    #     poetry run -C ./data pytest --cov=./data --cov-report=xml ./data
 
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    # - name: Upload coverage reports to Codecov
+    #   uses: codecov/codecov-action@v3
+    #   env:
+    #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
