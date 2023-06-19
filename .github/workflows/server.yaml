@@ -83,7 +83,7 @@ jobs:
 
     - name: Generate code coverage
       run: |
-        cargo install cargo-tarpaulin
+        cargo install cargo-tarpaulin || true
         cargo tarpaulin --manifest-path server/Cargo.toml --verbose --workspace --timeout 120 --out Xml --run-types Tests
 
     - name: Upload coverage reports to Codecov
