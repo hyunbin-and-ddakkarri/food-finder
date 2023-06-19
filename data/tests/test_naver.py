@@ -27,4 +27,5 @@ async def test_naver_simple() -> None:
 
     async for item in NaverMap("어은동 맛집").get_restaurants():
         await item.get()
+        await item.get_reviews()
         break

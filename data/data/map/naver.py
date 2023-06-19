@@ -8,6 +8,7 @@ The default language of this module is Korean
 
 import asyncio
 import base64
+import datetime
 import itertools
 import json
 import re
@@ -43,6 +44,7 @@ GRAPHQL_REVIEW_QUERY = """
 query getVisitorReviewPhotosInVisitorReviewTab($input: VisitorReviewsInput) {
     visitorReviews(input: $input) {
         items {
+            id
             rating
             author {
                 nickname
@@ -89,6 +91,17 @@ async def fetch_graphql(
         # if decoding fails, it is probably because of the error
         # most common error is 429 (too many requests)
         return None
+
+
+def parse_date(date: str) -> datetime.date:
+    """
+    This is the function to parse the date
+    """
+    try:
+        split = date.split(".")
+        return datetime.date(datetime.date.today().year, int(split[0]), int(split[1]))
+    except Exception:
+        return datetime.date.today()
 
 
 class NaverRestaurant(Restaurant):
@@ -196,7 +209,7 @@ class NaverRestaurant(Restaurant):
                     rating=review["rating"]
                     if review["rating"] is not None
                     else -1,  # Naver Map doesn't have rating that much, so we need to handle this
-                    date=review["created"],
+                    date=parse_date(review["created"]),
                     restaurant=self._id,
                 )
                 for review in data

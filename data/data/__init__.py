@@ -1,10 +1,11 @@
-# pylint: disable=invalid-name, redefined-builtin, global-statement
+# pylint: disable=invalid-name, redefined-builtin, global-statement, broad-exception-caught
 
 """
 Main server for the data module
 """
 
 import asyncio
+import logging
 from typing import Any
 
 from fastapi import FastAPI
@@ -22,49 +23,59 @@ async def do_search(id: str, query: str, limit: int = 10) -> None:
     Search naver map for the given query
     then, put the data into db
     """
-    Fetch.init(
-        [
-            # this needs to be waited a lot
-            (".*pcmap-api\\.place\\.naver\\.com.*", 5000),
-            (".*map\\.naver\\.com.*", 10),
-            (".*pcmap\\.place\\.naver\\.com.*", 10),
-        ]
-    )
+    try:
+        Fetch.init(
+            [
+                # this needs to be waited a lot
+                (".*pcmap-api\\.place\\.naver\\.com.*", 5000),
+                (".*map\\.naver\\.com.*", 10),
+                (".*pcmap\\.place\\.naver\\.com.*", 10),
+            ]
+        )
 
-    await Database.init()
-    assert Database.async_session is not None
+        await Database.init()
+        assert Database.async_session is not None
 
-    cnt = 0
-    async for i in NaverMap(query).get_restaurants():
-        cnt += 1
-        res = await i.get()
-        rev = await i.get_reviews()
-        async with Database.async_session() as session:
-            stmt = (
-                # func.count is actually callable
-                select(func.count())  # pylint: disable=not-callable
-                .select_from(models.Restaurant)
-                .where(models.Restaurant.id == res.id)
-            )
-            count = (await session.execute(stmt)).scalar()
-            if count == 0:
-                session.add(res)
-
-            for r in rev:
+        cnt = 0
+        async for i in NaverMap(query).get_restaurants():
+            cnt += 1
+            res = await i.get()
+            rev = await i.get_reviews()
+            async with Database.async_session() as session:
                 stmt = (
                     # func.count is actually callable
                     select(func.count())  # pylint: disable=not-callable
-                    .select_from(models.Review)
-                    .where(models.Review.id == r.id)
+                    .select_from(models.Restaurant)
+                    .where(models.Restaurant.id == res.id)
                 )
                 count = (await session.execute(stmt)).scalar()
                 if count == 0:
-                    session.add(r)
+                    session.add(res)
+                await session.commit()
 
-            await session.commit()
-        state[id]["count"] = cnt
-        if cnt >= limit:
-            break
+            async with Database.async_session() as session:
+                for r in rev:
+                    stmt = (
+                        # func.count is actually callable
+                        select(func.count())  # pylint: disable=not-callable
+                        .select_from(models.Review)
+                        .where(models.Review.id == r.id)
+                    )
+                    count = (await session.execute(stmt)).scalar()
+                    if count == 0:
+                        session.add(r)
+                await session.commit()
+            state[id]["count"] = cnt
+            if cnt >= limit:
+                break
+    except asyncio.CancelledError:
+        state[id]["state"] = "cancelled"
+        return
+    except Exception as e:
+        state[id]["state"] = "error"
+        logging.error(e)
+        return
+    state[id]["state"] = "done"
 
 
 id_cnt = 0
@@ -104,7 +115,7 @@ def get_info(id: str) -> dict[str, Any]:
             "limit": state[id]["limit"],
             "query": state[id]["query"],
             "id": state[id]["id"],
-            "finished": state[id]["task"].done(),
+            "state": state[id]["state"],
         }
     return {"status": False}
 
