@@ -1,21 +1,41 @@
-FROM rust:1.70
+FROM rust:1.70 as builder
 
 WORKDIR /app
 
+RUN update-ca-certificates
+
+ENV USER=app
+ENV UID=10001
+
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    "${USER}"
+
+COPY server/Cargo.toml ./Cargo.toml
+COPY server/src ./src
+COPY server/migrations ./migrations 
+COPY server/diesel.toml ./
+
+RUN cargo build --release --features docker
+
+FROM debian:buster-slim
+
 RUN apt-get update && apt-get install -y \
-    libssl-dev \
-    pkg-config \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY server/Cargo.toml server/Cargo.lock ./
-RUN mkdir src && echo "fn main() {println!(\"if you see this, the build broke\")}" > src/main.rs && cargo build --release && rm -rf src
+COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/group /etc/group
 
-COPY server/src ./src
-RUN rm ./target/release/deps/server*
-RUN cargo build --release
+WORKDIR /app
 
-COPY server/.env ./
+COPY --from=builder /app/target/release/server ./
 
-EXPOSE 8080
+USER app:app
 
-CMD ["./target/release/server"]
+CMD ["./server"]

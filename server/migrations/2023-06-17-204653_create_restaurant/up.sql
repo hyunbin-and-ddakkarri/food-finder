@@ -14,6 +14,5 @@ create table restaurant
     characteristics text         not null,
     images          text         not null,
     menus           text         not null,
-    reviews         serial references review (id),
     rating          float        not null
 );

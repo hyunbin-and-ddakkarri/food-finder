@@ -18,7 +18,6 @@ diesel::table! {
         characteristics -> Text,
         images -> Text,
         menus -> Text,
-        reviews -> Int4,
         rating -> Float8,
     }
 }
@@ -31,10 +30,11 @@ diesel::table! {
         rating -> Int4,
         context -> Text,
         date -> Date,
+        restaurant -> Int4,
     }
 }
 
-diesel::joinable!(restaurant -> review (reviews));
+diesel::joinable!(review -> restaurant (restaurant));
 
 diesel::allow_tables_to_appear_in_same_query!(
     restaurant,

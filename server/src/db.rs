@@ -1,7 +1,7 @@
 use diesel::prelude::*;
+use juniper::graphql_object;
 use juniper::EmptySubscription;
 use juniper::FieldResult;
-use juniper::graphql_object;
 use juniper::GraphQLInputObject;
 use juniper::GraphQLObject;
 use serde::Deserialize;
@@ -29,7 +29,6 @@ pub struct Restaurant {
     pub characteristics: String,
     pub images: String,
     pub menus: String,
-    pub reviews: i32,
     pub rating: f64,
 }
 
@@ -58,16 +57,30 @@ pub struct Query {}
 impl Query {
     #[graphql(description = "List of all restaurants")]
     pub async fn restaurants(context: &Context) -> FieldResult<Vec<Restaurant>> {
-        use crate::schema::restaurant::dsl::*;
+        use crate::schema::restaurant::dsl;
 
         let conn = &mut context.db_pool.get().unwrap();
 
-        let restaurants = restaurant
+        let restaurants = dsl::restaurant
             .select(crate::schema::restaurant::all_columns)
             .load::<Restaurant>(conn)
             .unwrap();
 
         Ok(restaurants)
+    }
+
+    #[graphql(description = "Get a restaurant by ID")]
+    pub async fn restaurant(context: &Context, id: i32) -> FieldResult<Restaurant> {
+        use crate::schema::restaurant::dsl;
+
+        let conn = &mut context.db_pool.get().unwrap();
+
+        let res = dsl::restaurant
+            .filter(dsl::id.eq(id))
+            .first::<Restaurant>(conn)
+            .unwrap();
+
+        Ok(res)
     }
 }
 
@@ -75,8 +88,20 @@ pub struct Mutation {}
 
 #[graphql_object(Context = Context)]
 impl Mutation {
-    pub fn create_restaurant(context: &Context) -> FieldResult<String> {
-        Ok("".to_string())
+    pub fn create_restaurant(
+        context: &Context,
+        restaurant: RestaurantForm,
+    ) -> FieldResult<Restaurant> {
+        use crate::schema::restaurant::dsl;
+
+        let conn = &mut context.db_pool.get().unwrap();
+
+        let res = diesel::insert_into(dsl::restaurant)
+            .values(&restaurant)
+            .get_result(conn)
+            .unwrap();
+
+        Ok(res)
     }
 }
 
