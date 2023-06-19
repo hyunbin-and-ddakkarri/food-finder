@@ -35,11 +35,11 @@ diesel::table! {
         context -> Text,
         date -> Date,
         #[max_length = 255]
-        restaurant -> Nullable<Varchar>,
+        restaurant_id -> Varchar,
     }
 }
 
-diesel::joinable!(review -> restaurant (restaurant));
+diesel::joinable!(review -> restaurant (restaurant_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     restaurant,

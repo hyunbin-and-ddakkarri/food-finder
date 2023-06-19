@@ -29,8 +29,7 @@ class Review(Base):
     rating: Mapped[float]
     context: Mapped[str]
     date: Mapped[datetime.date]
-
-    restaurant: Mapped[str] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[str] = mapped_column(ForeignKey("restaurant.id"))
 
 
 class Restaurant(Base):

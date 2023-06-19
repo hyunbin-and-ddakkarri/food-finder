@@ -7,5 +7,5 @@ create table review
     rating     int          not null,
     context    text         not null,
     date       date         not null,
-    restaurant varchar(255) references restaurant (id)
+    restaurant_id varchar(255) references restaurant (id) not null
 );

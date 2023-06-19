@@ -210,7 +210,7 @@ class NaverRestaurant(Restaurant):
                     if review["rating"] is not None
                     else -1,  # Naver Map doesn't have rating that much, so we need to handle this
                     date=parse_date(review["created"]),
-                    restaurant=self._id,
+                    restaurant_id=self._id,
                 )
                 for review in data
             ]
