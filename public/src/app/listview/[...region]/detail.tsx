@@ -29,6 +29,10 @@ export default function DetailPage(props: DetailPageProps) {
   }
 
   const scrollRef = useRef(null);
+  const menuScroll = useRef(null);
+  const reviewScroll = useRef(null);
+  const infoScroll = useRef(null);
+
 
   const [tabHeight, setTabHeight] = useState(40);
 
@@ -68,7 +72,7 @@ export default function DetailPage(props: DetailPageProps) {
               <div className="box">5</div>
               <div className="box">6</div>
             </div>
-            <h3 className="text-xl font-bold text-secondary snap-start">Menu</h3>
+            <h3 className="text-xl font-bold text-secondary snap-start" ref={menuScroll}>Menu</h3>
             <div className="flex flex-col">
             {
               Object.keys(restaurant.menus).map((menu, index) => {
@@ -88,7 +92,7 @@ export default function DetailPage(props: DetailPageProps) {
               })
             }
             </div>
-            <h3 className="text-xl font-bold text-secondary snap-start">Reviews</h3>
+            <h3 className="text-xl font-bold text-secondary snap-start" ref={reviewScroll}>Reviews</h3>
             {
               restaurant.reviews.map((review, i) => {
                 return (
@@ -105,7 +109,12 @@ export default function DetailPage(props: DetailPageProps) {
                 );
               })
             }
-            <h3 className="text-xl font-bold text-secondary snap-start">Information</h3>
+            <h3 className="text-xl font-bold text-secondary snap-start" ref={infoScroll}>Information</h3>
+            <p className="text-base text-secondary">
+              Address: {restaurant.address} <br/>
+              Phone: {restaurant.phone} <br/>
+              Hours: add this please
+            </p>
             <motion.div viewport={{root: scrollRef}} onViewportEnter={() => setTabHeight(-40)} onViewportLeave={() => setTabHeight(40)}></motion.div>
           </div>
         </Sheet.Content>
@@ -144,13 +153,13 @@ export default function DetailPage(props: DetailPageProps) {
     </Sheet>
     <motion.div className="fixed flex left-0 bottom-10 px-10 bg-transparent w-full max-w-xl z-40 justify-between box-border"
     animate={{bottom: tabHeight}}>
-      <div className="rounded-full bg-neutral h-10 px-3 text-secondary font-semibold pt-2 text-base">
+      <div className="rounded-full bg-neutral h-10 px-3 text-secondary font-semibold pt-2 text-base" onClick={() => menuScroll.current?.scrollIntoView()}>
         Menu
       </div>
-      <div className="rounded-full bg-neutral h-10 px-3 text-secondary font-semibold pt-2 text-base">
+      <div className="rounded-full bg-neutral h-10 px-3 text-secondary font-semibold pt-2 text-base" onClick={() => reviewScroll.current?.scrollIntoView()}>
         Reviews
       </div>
-      <div className="rounded-full bg-neutral h-10 px-3 text-secondary font-semibold pt-2 text-base">
+      <div className="rounded-full bg-neutral h-10 px-3 text-secondary font-semibold pt-2 text-base" onClick={() => infoScroll.current?.scrollIntoView()}>
         Info
       </div>
     </motion.div>
