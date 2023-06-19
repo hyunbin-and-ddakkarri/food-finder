@@ -10,7 +10,8 @@ python = "^3.10"
 aiohttp = "^3.8.4"
 requests = "^2.31.0"
 asyncio = "^3.4.3"
-strawberry-graphql = {version = "^0.178", extras = ["debug-server"]}
+fastapi = "^0.97.0"
+uvicorn = {extras = ["standard"], version = "^0.22.0"}
 
 
 [tool.poetry.group.dev.dependencies]

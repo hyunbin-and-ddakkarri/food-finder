@@ -4,6 +4,7 @@ create table restaurant
     id              serial primary key,
     name            varchar(255) not null,
     introduction    text         not null,
+    address         varchar(255) not null,
     location_x      float        not null,
     location_y      float        not null,
     region          varchar(255) not null,

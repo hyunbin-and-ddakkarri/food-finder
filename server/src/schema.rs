@@ -6,6 +6,8 @@ diesel::table! {
         #[max_length = 255]
         name -> Varchar,
         introduction -> Text,
+        #[max_length = 255]
+        address -> Varchar,
         location_x -> Float8,
         location_y -> Float8,
         #[max_length = 255]

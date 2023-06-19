@@ -12,10 +12,8 @@ from typing import AsyncGenerator, List, Dict, Any
 import re
 import base64
 import asyncio
-import strawberry
 
-from server import schema
-
+from data.db import models
 from data.util import parse_int
 from data.fetch import Fetch
 from data.map import Map, Restaurant
@@ -104,11 +102,11 @@ class NaverRestaurant(Restaurant):
         self.place_id = place_id
 
     @property
-    def _id(self) -> str:
+    def _id(self) -> int:
         """
         :return: The id of the restaurant
         """
-        return f"naver:{self.place_id}"
+        return int(self.place_id)
 
     @property
     def url(self) -> str:
@@ -168,7 +166,7 @@ class NaverRestaurant(Restaurant):
             "x-wtm-graphql": base64.b64encode(json.dumps(data).encode()).decode(),
         }
 
-    async def get_review(self) -> List[schema.Review]:
+    async def get_review(self) -> List[models.Review]:
         """
         :return: The reviews of the restaurant
         """
@@ -183,7 +181,7 @@ class NaverRestaurant(Restaurant):
         if total_review == 0:
             return []
 
-        async def get_page(page: int) -> List[schema.Review]:
+        async def get_page(page: int) -> List[models.Review]:
             res = await fetch_graphql(
                 self.graphql_variables(page), GRAPHQL_REVIEW_QUERY, self.get_header()
             )
@@ -191,7 +189,7 @@ class NaverRestaurant(Restaurant):
                 return []
             data = res[0]["data"]["visitorReviews"]["items"]
             return [
-                schema.Review(
+                models.Review(
                     username=review["author"]["nickname"],
                     context=review["body"],
                     rating=review["rating"]
@@ -214,7 +212,7 @@ class NaverRestaurant(Restaurant):
             )
         )
 
-    async def get(self) -> schema.Restaurant:
+    async def get(self) -> models.Restaurant:
         """
         :return: The restaurant data
         """
@@ -249,36 +247,41 @@ class NaverRestaurant(Restaurant):
             introduction = ""
 
         biz_hour = {}
-        for i in rest_data["newBusinessHours"][0]["businessHours"]:
-            # if this is none, it means that the restaurant is closed on that day
-            if i["businessHours"] is not None:
-                biz_hour[i["day"]] = [
-                    i["businessHours"]["start"],
-                    i["businessHours"]["end"],
-                ]
-            else:
-                biz_hour[i["day"]] = []
+        if rest_data["newBusinessHours"] is not None:
+            try:
+                for i in rest_data["newBusinessHours"][0]["businessHours"]:
+                    # if this is none, it means that the restaurant is closed on that day
+                    if i["businessHours"] is not None:
+                        biz_hour[i["day"]] = [
+                            i["businessHours"]["start"],
+                            i["businessHours"]["end"],
+                        ]
+                    else:
+                        biz_hour[i["day"]] = []
+            except:
+                biz_hour = {}
 
         if rest_data["businessStats"]["contexts"] is not None:
             moods = rest_data["businessStats"]["contexts"][0]["keywords"]
         else:
             moods = []
 
-        return schema.Restaurant(
-            rid=strawberry.ID(self._id),
+        return models.Restaurant(
+            id=self._id,
             name=data["name"],
             introduction=introduction,
             address=data["address"],
-            location=[data["x"], data["y"]],
+            location_x=data["x"],
+            location_y=data["y"],
             region=data["addressAbbr"].split(" ")[0],
             phone=data["phone"],
             price=int(price),
-            businessHours=biz_hour,
-            moods=moods,
-            characteristics=[],
-            images=[i["url"] for i in data["images"]],
-            menus=menus,
-            reviews=await self.get_review(),
+            business_hours=str(biz_hour),
+            moods=str(moods),
+            characteristics=str([]),
+            images=str([i["url"] for i in data["images"]]),
+            menus=str(menus),
+            # reviews=await self.get_review(),
             rating=rest_base["visitorReviewsScore"],
         )
 
@@ -370,7 +373,7 @@ if __name__ == "__main__":
     Fetch.init(
         [
             # this needs to be waited a lot
-            (".*pcmap-api\\.place\\.naver\\.com.*", 1000),
+            (".*pcmap-api\\.place\\.naver\\.com.*", 5000),
             (".*map\\.naver\\.com.*", 10),
             (".*pcmap\\.place\\.naver\\.com.*", 10),
         ]
