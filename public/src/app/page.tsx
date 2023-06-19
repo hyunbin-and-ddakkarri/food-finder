@@ -1,12 +1,9 @@
 "use client";
 import "./globals.css";
-import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { gql, useQuery } from "@apollo/client";
 import { Regions, region, regionToString } from "./region";
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SearchBar from "./searchbar";
 import { filterOptions, optionsToRoute } from "./filters";
 
@@ -74,53 +71,22 @@ export default function Home() {
     setOptions(currentOptions);
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Handle search functionality here
-  };
   const [query, setQuery] = useState("");
 
   //console.log(Region.filter(region=>region.name.toLowerCase().includes("1")))
   return (
-    <div className="h-screen ">
+    <>
       <SearchBar setText={setQuery}/>
-      <div className="mb-4 ml-1 mr-1">
-        <div>
-          {displayedFilter !== "none" && (
-            <div className="ml-1 space-y-2">
-              {filterOptions[displayedFilter].map((option, idx) => {
-                return (
-                  <OptionCell
-                    key={idx}
-                    filter={displayedFilter}
-                    currentOptions={options[displayedFilter]}
-                    optionIdx={idx}
-                    option={option}
-                    onCheck={handleOption}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
+      <div className="flex flex-col mx-6 divide-y divide-secondary">
+        {Regions.filter((region) =>
+          regionToString(region).toLowerCase().includes(query.toLowerCase())
+        ).map((region) => (
+          <div className="h-10 pt-1 text-lg font-medium text-secondary"
+          key={regionToString(region)} onClick={() => handleRegionClick(region)}>
+            {regionToString(region)}
+          </div>
+        ))}
       </div>
-      <div className="content flex-1 overflow-y-scroll hideScrollBar">
-        <div className="grid grid-rows-6 gap-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
-          {Regions.filter((region) =>
-            regionToString(region).toLowerCase().includes(query.toLowerCase())
-          ).map((region) => (
-            <div key={regionToString(region)}>
-              <div className="flex-1 items-center space-x-0 min-w-0">
-                <button
-                  type="button"
-                  onClick={() => handleRegionClick(region)}
-                  className="block w-full cursor-pointer rounded-lg py-2 text-left text-sm">
-                  {regionToString(region)}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

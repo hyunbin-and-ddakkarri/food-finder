@@ -63,10 +63,6 @@ body {
   border-color: rgb(var(--secondary-dark));
 }
 
-.hideScrollBar{
-  scrollbar-width: none;
-}
-
 .hideScrollBar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
 }
