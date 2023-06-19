@@ -123,7 +123,6 @@ mod tests {
 
     #[actix_web::test]
     async fn test_simple() {
-        dotenv::dotenv().ok();
         let pool = make_pool();
         run_migrations(&pool);
 
@@ -153,7 +152,6 @@ mod tests {
 
     #[actix_web::test]
     async fn test_insert_and_get() {
-        dotenv::dotenv().ok();
         let pool = make_pool();
         run_migrations(&pool);
 
