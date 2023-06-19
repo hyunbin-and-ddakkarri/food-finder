@@ -95,7 +95,7 @@ export default function ListView({ params }: { params: { region: string[] } }) {
                     </h2>
                     <div className="flex gap-2 items-center">
                       <FontAwesomeIcon icon={faStar} style={{color: "rgb(var(--primary))",}}/>
-                      <div className="text-base text-secondary text-secondary">
+                      <div className="text-base text-secondary">
                         {restaurant.rating.toString()}
                       </div>
                       <div className="text-base font-medium text-primary">

@@ -12,7 +12,7 @@
   --secondary: 179, 188, 208;
   --secondary-dark: 49, 67, 107;
   --sub: 233, 249, 237;
-  --accent: 159, 214, 182;
+  --accent: #DAA49A;
 }
 
 @media (prefers-color-scheme: dark) {

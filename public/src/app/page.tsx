@@ -93,7 +93,7 @@ export default function Home() {
     <div className="h-screen ">
       <SearchBar setText={setQuery}/>
       <div className="mb-4 ml-1 mr-1">
-        <div className="flex overflow-x-scroll flex-row mt-1 hideScrollBar">
+        {/* <div className="flex overflow-x-scroll flex-row mt-1 hideScrollBar">
           {filters.map((filter, idx) => {
             const filterKey = Object.keys(options)[idx];
             if (options[filterKey].length > 0) {
@@ -117,7 +117,7 @@ export default function Home() {
                 </div>
               );
           })}
-        </div>
+        </div> */}
         <div>
           {displayedFilter !== "none" && (
             <div className="ml-1 space-y-2">

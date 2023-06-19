@@ -8,11 +8,18 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 
+export interface Filter {
+    filterName: string;
+    options: Array<string>;
+}
+
+
 interface SearchBarProps {
     setText?: React.Dispatch<React.SetStateAction<string>>;
     link?: boolean;
     backButton?: boolean;
     text?: string;
+    filters?: Array<Filter>;
 }
 
 export default function SearchBar(props: SearchBarProps) {
@@ -28,6 +35,16 @@ export default function SearchBar(props: SearchBarProps) {
     };
 
     var [isOpen, setOpen] = useState(false);
+
+    const filters = [
+        {filterName: 'Price', options: ['$', '$$', '$$$', '$$$$', '$$$$$'],} as Filter, 
+        {filterName: 'Mood', options: ['Casual', 'Formal', 'Romantic', 'Family', 'Business'],} as Filter,
+        {filterName: 'Rating', options: ['1', '2', '3', '4', '5'],} as Filter,
+        {filterName: 'Business Hours', options: ['open now']} as Filter,
+    ]
+
+    var [tagOpen, setTagOpen] = useState(false);
+    var [currentFilter, setCurrentFilter] = useState(0);
     
 
     return (
@@ -69,22 +86,43 @@ export default function SearchBar(props: SearchBarProps) {
                     )
                 }
             </div>
-            
-                <div className="flex text-base gap-2">
-                    <motion.div layout className="rounded-full bg-danger px-3 py-1" onClick={() => {setOpen(!isOpen)}}>
-                        Price
-                    </motion.div>
-                    <div className="rounded-full bg-danger px-3 py-1">
-                        Price
-                    </div>
-                    <div className="rounded-full bg-danger px-3 py-1">
-                        Price
-                    </div>
-                    <div className="rounded-full bg-danger px-3 py-1">
-                        Price
-                    </div>
-                </div>
+            <div className="flex text-base gap-2 flex-initial">
+                {
+                    filters != null && (
+                        filters.map((filter, index) => { 
+                            return (
+                                <motion.a className="rounded-full bg-neutral px-3 py-1 appearance-none w-auto min-w-0 shrink" onClick={() => {
+                                    if (currentFilter != index) {
+                                        setTagOpen(true);
+                                    } else {
+                                        setTagOpen(!tagOpen);
+                                    }
+                                    setCurrentFilter(index);
+                                }} autoFocus={index == currentFilter} whileFocus={{color: "var(--accent)",}}>
+                                {filter.filterName}
+                                </motion.a>
+                            );
+                        }
+                    ))
+                }
             </div>
+            {
+                tagOpen && (
+                    <div className="p-3 rounded-2xl h-10 flex space-x-2 bg-neutral items-center">
+                        {
+                            filters[currentFilter].options.map((option) => {
+                                return (
+                                    <div className="">
+                                        <input type="checkbox" />
+                                        <label>{option}</label>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                )
+            }
+        </div>
         </>
     );
 }
@@ -94,4 +132,5 @@ SearchBar.defaultProps = {
     link: false,
     backButton: false,
     text: null,
+    filters: null,
 };
