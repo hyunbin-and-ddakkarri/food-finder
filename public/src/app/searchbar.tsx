@@ -5,11 +5,12 @@ import { useState } from 'react'
 import './globals.css'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import React from 'react'
 
 
 export interface Filter {
     filterName: string;
-    options: Array<string>;
+    options: {[key: string]: boolean};
 }
 
 
@@ -35,12 +36,12 @@ export default function SearchBar(props: SearchBarProps) {
 
     var [isOpen, setOpen] = useState(false);
 
-    const filters = [
-        {filterName: 'Price', options: ['$', '$$', '$$$', '$$$$', '$$$$$'],} as Filter, 
-        {filterName: 'Mood', options: ['Casual', 'Formal', 'Romantic', 'Family', 'Business'],} as Filter,
-        {filterName: 'Rating', options: ['1', '2', '3', '4', '5'],} as Filter,
-        {filterName: 'Business Hours', options: ['open now']} as Filter,
-    ]
+    const [filters, setFilters] = useState([
+        {filterName: 'Price', options: {'$': false, '$$': false, '$$$': false, '$$$$': false, '$$$$$': false},} as Filter, 
+        {filterName: 'Mood', options: {'Casual': false, 'Formal': false, 'Romantic': false, 'Family': false, 'Business': false},} as Filter,
+        {filterName: 'Rating', options: {'1': false, '2': false, '3': false, '4': false, '5': false},} as Filter,
+        {filterName: 'Business Hours', options: {'open now': false}} as Filter,
+    ] as Array<Filter>);
 
     var [tagOpen, setTagOpen] = useState(false);
     var [currentFilter, setCurrentFilter] = useState(0);
@@ -90,16 +91,16 @@ export default function SearchBar(props: SearchBarProps) {
                     filters != null && (
                         filters.map((filter, index) => { 
                             return (
-                                <motion.a className="rounded-full bg-neutral px-3 py-1 appearance-none w-auto min-w-0 shrink-0" onClick={() => {
+                                <motion.button className="rounded-full bg-neutral px-3 py-1 appearance-none w-auto min-w-0 shrink-0" onClick={() => {
                                     if (currentFilter != index) {
                                         setTagOpen(true);
                                     } else {
                                         setTagOpen(!tagOpen);
                                     }
                                     setCurrentFilter(index);
-                                }} autoFocus={index == currentFilter} whileFocus={{color: "var(--accent)",}}>
+                                }} animate={{backgroundColor: (tagOpen && currentFilter == index) ? "var(--accent)": "var(--neutral)"}}>
                                 {filter.filterName}
-                                </motion.a>
+                                </motion.button>
                             );
                         }
                     ))
@@ -107,13 +108,13 @@ export default function SearchBar(props: SearchBarProps) {
             </div>
             {
                 tagOpen && (
-                    <div className="p-3 rounded-2xl h-10 flex space-x-2 bg-neutral items-center">
+                    <div className="p-3 rounded-xl min-h-10 flex gap-4 bg-danger items-center flex-wrap justify-start space-between">
                         {
-                            filters[currentFilter].options.map((option) => {
+                            Object.keys(filters[currentFilter].options).map((option) => {
                                 return (
-                                    <div className="shrink-0">
-                                        <input type="checkbox" />
-                                        <label>{option}</label>
+                                    <div className="shrink-0 flex gap-2 items-center">
+                                        <input type="checkbox"  checked={filters[currentFilter].options[option]}/>
+                                        <label className='text-base text-secondary font-medium'>{option}</label>
                                     </div>
                                 )
                             })
