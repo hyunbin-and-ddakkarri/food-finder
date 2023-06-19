@@ -55,12 +55,12 @@ export default function ScrollableListboxes() {
       <div className="flex w-full">
         <div className="w-1/3 mr-4 overflow-y-scroll">
             <h2 className="text-lg font-semibold mb-2">City</h2>
-            <ul className='border border-gray-300 rounded-md h-40 overflow-y-auto'>
+            <ul className='border border-gray-200 rounded-md h-40 overflow-y-auto'>
             {data.map((city) => (
               <li
                 key={city.name}
                 className={`cursor-pointer p-2 ${
-                  city === selectedCity ? 'bg-blue-500 text-white' : ''
+                  city === selectedCity ? 'bgPrimary text-white' : ''
                 }`}
                 onClick={() => handleCityChange(city)}
               >
@@ -72,12 +72,12 @@ export default function ScrollableListboxes() {
 
         <div className="w-1/3 mr-4 overflow-y-scroll">
             <h2 className="text-lg font-semibold mb-2">Si/Gun/Gu</h2>
-            <ul className='border border-gray-300 rounded-md h-40 overflow-y-auto'>
+            <ul className='border border-gray-200 rounded-md h-40 overflow-y-auto'>
             {selectedCity.sub.map((district) => (
               <li
                 key={district.name}
                 className={`cursor-pointer p-2 ${
-                  district === selectedDistrict ? 'bg-blue-500 text-white' : ''
+                  district === selectedDistrict ? 'bgPrimary text-white' : ''
                 }`}
                 onClick={() => handleDistrictChange(district)}
               >
@@ -89,11 +89,11 @@ export default function ScrollableListboxes() {
 
         <div className="w-1/3 overflow-y-scroll">
             <h2 className="text-lg font-semibold mb-2">Dong</h2>
-            <ul className='border border-gray-300 rounded-md h-40 overflow-y-auto'>
+            <ul className='border border-gray-200 rounded-md h-40 overflow-y-auto'>
             {selectedDistrict.sub.map((subdistrict) => (
               <li
                 key={subdistrict}
-                className="cursor-pointer p-2 hover:bg-blue-500 hover:text-white"
+                className="cursor-pointer p-2 bgPlain hover:text-white"
                 onClick={() => handleDongClick(subdistrict)}
               >
                 {subdistrict}

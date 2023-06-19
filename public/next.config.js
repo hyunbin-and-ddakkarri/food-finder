@@ -4,6 +4,25 @@ const nextConfig = {
     // added in next.js 13
     // this will export the app in the /out folder
     output: "export",
+    images: {
+        unoptimized: true,
+    },
 }
 
-module.exports = nextConfig
+const withPlugins = require("next-compose-plugins");
+const withPWA = require("next-pwa");
+
+module.exports = withPlugins(
+    [
+        [
+            withPWA,
+            {
+                pwa: {
+                    dest: "public",
+                    // disable: process.env.NODE_ENV === "development",
+                },
+            },
+        ],
+    ],
+    nextConfig
+);

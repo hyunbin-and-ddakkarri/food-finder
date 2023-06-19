@@ -4,8 +4,16 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background: #F4F4F4;
+  --box-background: #F4F4F4;
+  --text-rgb: 13, 18, 8;
+  --primary: 86, 113, 137;
+  --primary-dark: 24, 41, 74;
+  --secondary: 179, 188, 208;
+  --secondary-dark: 49, 67, 107;
+  --sub: 233, 249, 237;
+  --accent: #DAA49A;
+  --neutral: #D8DBE2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,11 +25,71 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: rgb(var(--text-rgb));
+  background: var(--background);
+}
+
+.cleanInput {
+  border: none;
+  outline: none;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  background-color: transparent;
+  color: rgb(var(--text-rgb));
+}
+
+.noScrollBar::-webkit-scrollbar {
+  display: none;
+}
+
+.noScrollBar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.primaryButton {
+  color: rgb(var(--text-rgb));
+  background-color: rgb(var(--primary));
+}
+
+.secondaryButton {
+  color: rgb(var(--text-rgb));
+  background-color: rgb(var(--secondary));
+  border: 1px solid;
+  border-color: rgb(var(--secondary));
+}
+
+.selectedButton{
+  border: 1px solid;
+  border-color: rgb(var(--secondary-dark));
+}
+
+.hideScrollBar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+
+.box {
+  background-color: var(--box-background);
+  width: 8rem;
+  height: 8rem;
+  flex-shrink: 0;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  scroll-snap-align: start;
+}
+
+.full-container {
+  margin: 1rem;
+  width: calc(100% - 2rem);
+}
+
+
+.search {
+  background-color: var(--box-background);
+  border-radius: 5px;
+  flex-grow: 1;
+}
+
+input {
+  accent-color: rgb(var(--primary));
 }
