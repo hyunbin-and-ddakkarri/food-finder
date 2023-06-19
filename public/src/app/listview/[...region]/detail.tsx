@@ -58,7 +58,7 @@ export default function DetailPage(props: DetailPageProps) {
   return (
     <>
       <Sheet isOpen={true} onClose={() => {}} snapPoints={[-52, -200, 80]} initialSnap={isMap ? 2:0} ref={ref} style={{zIndex: 30}} disableDrag 
-      initial={{opacity: 0}} animate={{opacity: [0, 0, 1]}} exit={{ opacity: 0 }}>
+      initial={{opacity: 0}} animate={{opacity: isMap ? [0, 0, 1]: 1, y: isMap ? [500, 500, 0]: 0}} exit={{ opacity: 0 }}>
       <Sheet.Container style={{boxShadow: isOpen?"none":"rgba(0, 0, 0, 0.3) 0px -2px 16px 0px",}}>
         <Sheet.Content disableDrag  ref={scrollRef} animate={{overflowY:fullOpen?"scroll":"hidden"}} initial={false}>
           <div className="flex flex-col items-start flex-nowrap px-6 pt-6 pb-8 touch-auto gap-5 scroll-smooth snap-y touch-pan-y">

@@ -147,7 +147,7 @@ export default function MapView({ params }: { params: { region: string[] } }) {
         <SearchBar text={regionToString(stringsToRegion(params.region))} link backButton/>
       </div>
       <motion.div className="flex absolute z-10 rounded-full bg-secondary bottom-0 right-0 m-5 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}
-      animate={{bottom: isOpen? 70: 0}}>
+      animate={{bottom: isOpen? [0, 0, 70]: 0}}>
         <FontAwesomeIcon style={{color: '#ffffff', margin: "auto",}} icon={faList} size='lg'/>
       </motion.div>
       <div id="map" className="w-screen h-screen z-0"></div>
