@@ -98,7 +98,7 @@ export default function DetailPage(props: DetailPageProps) {
             {
               Object.keys(restaurant.menus).map((menu, index) => {
                 return (
-                  <div className="flex justify-start">
+                  <div className="flex justify-start" key={index}>
                     <div className="box w-2 h-2">image here</div>
                     <div className="flex flex-col m-3">
                       <h4 className="text-lg font-semibold text-secondary">
@@ -117,7 +117,7 @@ export default function DetailPage(props: DetailPageProps) {
             {
               restaurant.reviews.map((review, i) => {
                 return (
-                  <div className="flex">
+                  <div className="flex" key={i}>
                     <div className="flex flex-col m-3">
                       <h4 className="text-lg font-semibold text-secondary">
                         Author

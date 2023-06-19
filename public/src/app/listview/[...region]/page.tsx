@@ -89,7 +89,7 @@ export default function ListView({ params }: { params: { region: string[] } }) {
           <div className="flex flex-col gap-2 overflow-y-scroll hideScrollBar divide-y divide-secondary overflow-x-hidden">
             {tableData.map((restaurant, index) => {
               return (
-                <div className="flex flex-col gap-3" onClick={() => setDetail(index)}>
+                <div className="flex flex-col gap-3" onClick={() => setDetail(index)} key={index}>
                   <div className="flex justify-between items-end w-full flex-wrap mt-2">
                     <h2 className="font-bold text-xl text-secondary">
                       {restaurant.name}

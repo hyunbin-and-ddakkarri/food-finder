@@ -98,7 +98,7 @@ export default function SearchBar(props: SearchBarProps) {
                                         setTagOpen(!tagOpen);
                                     }
                                     setCurrentFilter(index);
-                                }} animate={{backgroundColor: (tagOpen && currentFilter == index) ? "var(--accent)": "var(--neutral)"}}>
+                                }} animate={{backgroundColor: (tagOpen && currentFilter == index) ? "var(--accent)": "var(--neutral)"}} key={index}>
                                 {filter.filterName}
                                 </motion.button>
                             );
@@ -110,9 +110,9 @@ export default function SearchBar(props: SearchBarProps) {
                 tagOpen && (
                     <div className="p-3 rounded-xl min-h-10 flex gap-4 bg-danger items-center flex-wrap justify-start space-between">
                         {
-                            Object.keys(filters[currentFilter].options).map((option) => {
+                            Object.keys(filters[currentFilter].options).map((option, index) => {
                                 return (
-                                    <div className="shrink-0 flex gap-2 items-center">
+                                    <div className="shrink-0 flex gap-2 items-center" key={index}>
                                         <input type="checkbox"  checked={filters[currentFilter].options[option]}/>
                                         <label className='text-base text-secondary font-medium'>{option}</label>
                                     </div>
