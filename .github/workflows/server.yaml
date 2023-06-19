@@ -58,7 +58,7 @@ jobs:
 
     - name: Run diesel migrations
       env:
-        DATABASE_URL: postgres://admin:admin@postgres:5432/postgres
+        DATABASE_URL: postgres://admin:admin@localhost:5432/postgres
       run: cd server && diesel migration run --database-url $DATABASE_URL
 
     - name: Checking if it builds without errors (default feature)
@@ -69,8 +69,6 @@ jobs:
 
     - name: Checking if code is formatted
       uses: actions-rs/cargo@v1
-      env:
-        DATABASE_URL: postgres://admin:admin@postgres:5432/postgres
       with:
         command: fmt
         args: --all --manifest-path server/Cargo.toml -- --check
