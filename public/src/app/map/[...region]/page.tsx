@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from 'next/navigation'
 import { stringsToRegion, regionToString, region } from "@/app/region";
-import Link from "next/link";
 import SearchBar from "@/app/searchbar";
 import { faStar, faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

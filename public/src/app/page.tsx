@@ -62,14 +62,6 @@ export default function Home() {
     router.push(`/datamap/${region.city}/${region.district}/${region.dong}/${optionsToRoute(options)}`);
   };
 
-  const handleFilter = (name: string) => {
-    if (displayedFilter == name) {
-      setDisplayedFilter("none");
-    } else {
-      setDisplayedFilter(name);
-    }
-  };
-
   const handleOption = (filter: string, optionIdx: Number) => {
     const currentOptions = { ...options };
     if (options[filter].includes(optionIdx)) {
@@ -86,38 +78,12 @@ export default function Home() {
     // Handle search functionality here
   };
   const [query, setQuery] = useState("");
-  const filters = ["Price", "Mood", "Rating", "Business Hours"];
 
   //console.log(Region.filter(region=>region.name.toLowerCase().includes("1")))
   return (
     <div className="h-screen ">
       <SearchBar setText={setQuery}/>
       <div className="mb-4 ml-1 mr-1">
-        {/* <div className="flex overflow-x-scroll flex-row mt-1 hideScrollBar">
-          {filters.map((filter, idx) => {
-            const filterKey = Object.keys(options)[idx];
-            if (options[filterKey].length > 0) {
-              return (
-                <div
-                  onClick={() => handleFilter(filterKey)}
-                  className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit whitespace-nowrap	selectedButton"
-                  key={idx}
-                >
-                  {filter}
-                </div>
-              );
-            } else
-              return (
-                <div
-                  onClick={() => handleFilter(filterKey)}
-                  className="secondaryButton font-medium rounded-lg text-sm px-4 py-1 text-center mr-2 mb-2 w-fit h-fit whitespace-nowrap	"
-                  key={idx}
-                >
-                  {filter}
-                </div>
-              );
-          })}
-        </div> */}
         <div>
           {displayedFilter !== "none" && (
             <div className="ml-1 space-y-2">
@@ -147,8 +113,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => handleRegionClick(region)}
-                  className="block w-full cursor-pointer rounded-lg py-2 text-left text-sm"
-                >
+                  className="block w-full cursor-pointer rounded-lg py-2 text-left text-sm">
                   {regionToString(region)}
                 </button>
               </div>

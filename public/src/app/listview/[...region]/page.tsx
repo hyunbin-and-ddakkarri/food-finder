@@ -50,6 +50,7 @@ export default function ListView({ params }: { params: { region: string[] } }) {
     location: [127.3588931, 36.3636649],
     phone: '042-335-5466',
     price: 17882,
+    
     businessHours: {'토': [11, 21], '일': [11, 21], '월': [11, 21], '화': [11, 21], '수': [11, 21], '목': [11, 21], '금': [11, 21]},
     moods: ["Cozy", "Affordable"],
     characteristics: ["Donburi", "Thai"],
