@@ -72,13 +72,13 @@ impl Query {
     }
 
     #[graphql(description = "Get a restaurant by ID")]
-    pub async fn restaurant(context: &Context, id: i32) -> FieldResult<Restaurant> {
+    pub async fn restaurant(context: &Context, region: String) -> FieldResult<Restaurant> {
         use crate::schema::restaurant::dsl;
 
         let conn = &mut context.db_pool.get().unwrap();
 
         let res = dsl::restaurant
-            .filter(dsl::id.eq(id))
+            .filter(dsl::region.like(format!("%{}%", region)))
             .first::<Restaurant>(conn)
             .unwrap();
 
