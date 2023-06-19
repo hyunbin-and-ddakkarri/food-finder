@@ -53,6 +53,14 @@ jobs:
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: ${{ runner.os }}-cargo-
 
+    - name: Install diesel_cli
+      run: cargo install diesel_cli --no-default-features --features postgres
+
+    - name: Run diesel migrations
+      env:
+        DATABASE_URL: postgres://admin:admin@postgres:5432/postgres
+      run: cd server && diesel migration run --database-url $DATABASE_URL
+
     - name: Checking if it builds without errors (default feature)
       uses: actions-rs/cargo@v1
       with:

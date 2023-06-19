@@ -210,7 +210,6 @@ mod tests {
 
         let resp = test::call_service(&app, req).await;
         let json = test::read_body_json::<serde_json::Value, _>(resp).await;
-        println!("{json}");
         assert_eq!(json["data"]["restaurant"]["id"], "1");
 
         let req = test::TestRequest::post()
