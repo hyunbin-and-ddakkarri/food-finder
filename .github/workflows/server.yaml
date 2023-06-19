@@ -54,7 +54,7 @@ jobs:
         restore-keys: ${{ runner.os }}-cargo-
 
     - name: Install diesel_cli
-      run: cargo install diesel_cli --no-default-features --features postgres
+      run: cargo install diesel_cli --no-default-features --features postgres || true
 
     - name: Run diesel migrations
       env:
