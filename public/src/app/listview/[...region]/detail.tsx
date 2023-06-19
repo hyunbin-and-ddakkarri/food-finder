@@ -47,9 +47,9 @@ export default function DetailPage(props: DetailPageProps) {
   }
 
   const scrollRef = useRef(null);
-  const menuScroll = useRef(null);
-  const reviewScroll = useRef(null);
-  const infoScroll = useRef(null);
+  const menuScroll = useRef<null | HTMLDivElement>(null);
+  const reviewScroll = useRef<null | HTMLDivElement>(null);
+  const infoScroll = useRef<null | HTMLDivElement>(null);
 
 
   const [tabHeight, setTabHeight] = useState(isMap ? -40 : 40);
