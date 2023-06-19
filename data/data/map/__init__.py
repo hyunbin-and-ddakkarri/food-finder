@@ -4,8 +4,8 @@
 Map base module
 """
 
-from typing import AsyncGenerator
 from abc import ABCMeta, abstractmethod
+from typing import AsyncGenerator
 
 from data.db import models
 
@@ -17,9 +17,15 @@ class Restaurant(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def _id(self) -> int:
+    def _id(self) -> str:
         """
         :return: The id of the restaurant
+        """
+
+    @abstractmethod
+    async def get_reviews(self) -> list[models.Review]:
+        """
+        :return: The reviews of the restaurant
         """
 
     @abstractmethod

@@ -3,6 +3,7 @@ Test for naver map
 """
 
 import pytest
+
 from data.fetch import Fetch
 from data.map.naver import NaverMap
 

@@ -8,13 +8,13 @@ this would fetch the url by asyncio + aiohttp
 
 import asyncio
 import datetime
+import json
+import random
 import re
 from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
 from re import Pattern
-from typing import List, Tuple, Dict, Optional, Any
-import json
-import random
+from typing import Any, Dict, List, Optional, Tuple
 
 import aiohttp
 import requests

@@ -5,16 +5,19 @@ Main server for the data module
 """
 
 import asyncio
+from typing import Any
+
 from fastapi import FastAPI
-from sqlalchemy import select, func
+from sqlalchemy import func, select
+
 from data.db import Database, models
 from data.fetch import Fetch
 from data.map.naver import NaverMap
 
-state = {}
+state: dict[str, Any] = {}
 
 
-async def do_search(id: str, query: str, limit: int = 10):
+async def do_search(id: str, query: str, limit: int = 10) -> None:
     """
     Search naver map for the given query
     then, put the data into db
@@ -29,16 +32,35 @@ async def do_search(id: str, query: str, limit: int = 10):
     )
 
     await Database.init()
+    assert Database.async_session is not None
 
     cnt = 0
     async for i in NaverMap(query).get_restaurants():
         cnt += 1
         res = await i.get()
+        rev = await i.get_reviews()
         async with Database.async_session() as session:
-            stmt = select(func.count()).select_from(models.Restaurant).where(models.Restaurant.id == res.id)
+            stmt = (
+                # func.count is actually callable
+                select(func.count())  # pylint: disable=not-callable
+                .select_from(models.Restaurant)
+                .where(models.Restaurant.id == res.id)
+            )
             count = (await session.execute(stmt)).scalar()
             if count == 0:
                 session.add(res)
+
+            for r in rev:
+                stmt = (
+                    # func.count is actually callable
+                    select(func.count())  # pylint: disable=not-callable
+                    .select_from(models.Review)
+                    .where(models.Review.id == r.id)
+                )
+                count = (await session.execute(stmt)).scalar()
+                if count == 0:
+                    session.add(r)
+
             await session.commit()
         state[id]["count"] = cnt
         if cnt >= limit:
@@ -51,7 +73,7 @@ app = FastAPI()
 
 
 @app.post("/start")
-async def start(query: str, limit: int = 10):
+async def start(query: str, limit: int = 10) -> dict[str, Any]:
     """
     Start searching for the given query
     """
@@ -71,7 +93,7 @@ async def start(query: str, limit: int = 10):
 
 
 @app.get("/info/{id}")
-def get_info(id: str):
+def get_info(id: str) -> dict[str, Any]:
     """
     Get the information of the given id
     """
@@ -88,7 +110,7 @@ def get_info(id: str):
 
 
 @app.post("/stop/{id}")
-def stop(id: str):
+def stop(id: str) -> dict[str, Any]:
     """
     Stop the task of the given id
     """

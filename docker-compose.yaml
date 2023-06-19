@@ -52,3 +52,8 @@ services:
       POSTGRES_USER: ${FOOD_FINDER_POSTGRES_USER}
       POSTGRES_PASSWORD: ${FOOD_FINDER_POSTGRES_PASSWORD}
       POSTGRES_DB: ${FOOD_FINDER_POSTGRES_DB}
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+
+volumes:
+  postgresql:
