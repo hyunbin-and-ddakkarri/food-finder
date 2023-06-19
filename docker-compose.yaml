@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: admin.Dockerfile
-    
+
   server:
     build:
       context: .
@@ -33,7 +33,7 @@ services:
       DB_NAME: ${FOOD_FINDER_POSTGRES_DB}
     depends_on:
       - postgresql
-  
+
   data:
     build:
       context: .
