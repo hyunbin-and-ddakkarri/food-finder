@@ -88,7 +88,7 @@ export default function MapView({ params }: { params: { region: string[] } }) {
         menus: d.menus as { [key: string]: Number },
         reviews: d.reviews as Array<{ [key: string]: string }>,
         rating: d.rating as Number,
-      }));
+      } as Restaurant));
       setTableData(newData);
       setDataKeys(Object.keys(newData[0]));
     }

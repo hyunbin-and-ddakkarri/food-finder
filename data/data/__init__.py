@@ -35,7 +35,11 @@ async def do_search(id: str, query: str, limit: int = 10):
         cnt += 1
         res = await i.get()
         async with Database.async_session() as session:
-            stmt = select(func.count()).select_from(models.Restaurant).where(models.Restaurant.id == res.id)
+            stmt = (
+                select(func.count())
+                .select_from(models.Restaurant)
+                .where(models.Restaurant.id == res.id)
+            )
             count = (await session.execute(stmt)).scalar()
             if count == 0:
                 session.add(res)
