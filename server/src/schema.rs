@@ -36,7 +36,4 @@ diesel::table! {
 
 diesel::joinable!(review -> restaurant (restaurant));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    restaurant,
-    review,
-);
+diesel::allow_tables_to_appear_in_same_query!(restaurant, review,);
