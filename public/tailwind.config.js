@@ -13,7 +13,7 @@ module.exports = {
         primary: '#58A4B0',
         secondary: '#373F51',
         danger: '#DAA49A',
-        neutral: '#A9BCD0',
+        neutral: '#D8DBE2',
         gray: '#F4F4F4',
       },
       backgroundImage: {
