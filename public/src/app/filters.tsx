@@ -28,7 +28,7 @@ export function optionsToRoute(options: { [key: string]: Array<Number> }) {
 }
 
 export function routeToOptions(route: string) {
-  const fs = route.split('A')
+  const fs = route?.split('A')
   const options: { [key: string]: Array<Number> } = { ...emptyOptions}
   for (const [index, f] of filters.entries()) {
     const os = fs[index]?.split('a')
