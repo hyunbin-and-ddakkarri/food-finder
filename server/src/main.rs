@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::middleware::Logger;
 #[cfg(not(feature = "docker"))]
 use actix_web::{get, Responder};
@@ -90,6 +91,7 @@ async fn main() -> std::io::Result<()> {
             App::new()
                 .app_data(Data::new(pool.clone()))
                 .app_data(Data::new(create_schema()))
+                .wrap(Cors::permissive())
                 .wrap(Logger::default())
                 .service(graphql)
         })
@@ -105,6 +107,7 @@ async fn main() -> std::io::Result<()> {
             App::new()
                 .app_data(Data::new(pool.clone()))
                 .app_data(Data::new(create_schema()))
+                .wrap(Cors::permissive())
                 .wrap(Logger::default())
                 .service(graphql)
                 .service(graphql_playground)
