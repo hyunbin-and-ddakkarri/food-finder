@@ -28,13 +28,17 @@ export function optionsToRoute(options: { [key: string]: Array<Number> }) {
 }
 
 export function routeToOptions(route: string) {
-  const fs = route?.split('A')
-  const options: { [key: string]: Array<Number> } = { ...emptyOptions}
-  for (const [index, f] of filters.entries()) {
-    const os = fs[index]?.split('a')
-    for (const o of os) {
-      options[f].push(Number.parseInt(o))
+  try {
+    const fs = route.split('A')
+    const options: { [key: string]: Array<Number> } = { ...emptyOptions}
+    for (const [index, f] of filters.entries()) {
+      const os = fs[index].split('a')
+      for (const o of os) {
+        options[f].push(Number.parseInt(o))
+      }
     }
+    return options
+  } catch {
+    return emptyOptions
   }
-  return options
 }
