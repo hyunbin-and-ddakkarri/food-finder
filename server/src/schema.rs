@@ -1,6 +1,15 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    category (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        image -> Text,
+    }
+}
+
+diesel::table! {
     restaurant (id) {
         #[max_length = 255]
         id -> Varchar,
@@ -39,6 +48,17 @@ diesel::table! {
     }
 }
 
-diesel::joinable!(review -> restaurant (restaurant_id));
+diesel::table! {
+    subcategory (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        image -> Text,
+        category_id -> Int4,
+    }
+}
 
-diesel::allow_tables_to_appear_in_same_query!(restaurant, review,);
+diesel::joinable!(review -> restaurant (restaurant_id));
+diesel::joinable!(subcategory -> category (category_id));
+
+diesel::allow_tables_to_appear_in_same_query!(category, restaurant, review, subcategory,);

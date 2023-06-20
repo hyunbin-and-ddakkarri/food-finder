@@ -68,6 +68,49 @@ pub struct Review {
     pub restaurant_id: String,
 }
 
+/// Category Schema
+/// This is a schema for both Graphql (Juniper) and Database (Diesel)
+#[derive(Queryable, Selectable, Identifiable, Default, Debug, GraphQLObject)]
+#[diesel(table_name = crate::schema::category)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Category {
+    pub id: i32,
+    pub name: String,
+    pub image: String,
+}
+
+/// Category Form
+/// This is a form for GraphQL (Juniper) and Database (Diesel)
+#[derive(Default, Debug, Deserialize, Insertable, AsChangeset, GraphQLInputObject)]
+#[diesel(table_name = crate::schema::category)]
+pub struct CategoryForm {
+    pub name: String,
+    pub image: String,
+}
+
+/// Subcategory Schema
+/// This is a schema for both Graphql (Juniper) and Database (Diesel)
+#[derive(Queryable, Selectable, Identifiable, Associations, Default, Debug, GraphQLObject)]
+#[diesel(table_name = crate::schema::subcategory)]
+#[diesel(belongs_to(Category))]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Subcategory {
+    pub id: i32,
+    pub name: String,
+    pub image: String,
+    pub category_id: i32,
+}
+
+/// Subcategory Form
+/// This is a form for GraphQL (Juniper) and Database (Diesel)
+#[derive(Deserialize, Insertable, AsChangeset, GraphQLInputObject)]
+#[diesel(table_name = crate::schema::subcategory)]
+pub struct SubcategoryForm {
+    pub name: String,
+    pub image: String,
+    pub category_id: i32,
+}
+
 pub struct Query {}
 
 #[graphql_object(Context = Context)]
@@ -114,6 +157,49 @@ impl Query {
 
         Ok(reviews)
     }
+
+    /// List of all categories
+    #[graphql(description = "List of all categories")]
+    pub async fn categories(context: &Context) -> FieldResult<Vec<Category>> {
+        use crate::schema::category::dsl;
+
+        let conn = &mut context.db_pool.get().unwrap();
+
+        let categories = dsl::category
+            .select(Category::as_select())
+            .get_results(conn)?;
+
+        Ok(categories)
+    }
+
+    /// List of all subcategories
+    #[graphql(description = "List of all subcategories")]
+    pub async fn subcategories(context: &Context) -> FieldResult<Vec<Subcategory>> {
+        use crate::schema::subcategory::dsl;
+
+        let conn = &mut context.db_pool.get().unwrap();
+
+        let subcategories = dsl::subcategory
+            .select(Subcategory::as_select())
+            .get_results(conn)?;
+
+        Ok(subcategories)
+    }
+
+    /// List of all subcategories from a category
+    #[graphql(description = "List of all subcategories from a category")]
+    pub async fn subcategory(context: &Context, category_id: i32) -> FieldResult<Vec<Subcategory>> {
+        use crate::schema::subcategory::dsl;
+
+        let conn = &mut context.db_pool.get().unwrap();
+
+        let subcategories = dsl::subcategory
+            .filter(dsl::category_id.eq(category_id))
+            .select(Subcategory::as_select())
+            .get_results(conn)?;
+
+        Ok(subcategories)
+    }
 }
 
 pub struct Mutation {}
@@ -139,10 +225,85 @@ impl Mutation {
 
         Ok(res)
     }
+
+    /// Create a new category if not exists
+    /// Update a category if exists
+    pub fn update_category(context: &Context, category: CategoryForm) -> FieldResult<Category> {
+        use crate::schema::category::dsl;
+
+        let conn = &mut context.db_pool.get().unwrap();
+
+        let res = diesel::insert_into(dsl::category)
+            .values(&category)
+            .on_conflict(dsl::name)
+            .do_update()
+            .set(&category)
+            .get_result(conn)?;
+
+        Ok(res)
+    }
+
+    /// Create a new subcategory if not exists
+    /// Update a subcategory if exists
+    pub fn update_subcategory(
+        context: &Context,
+        subcategory: SubcategoryForm,
+    ) -> FieldResult<Subcategory> {
+        use crate::schema::subcategory::dsl;
+
+        let conn = &mut context.db_pool.get().unwrap();
+
+        let res = diesel::insert_into(dsl::subcategory)
+            .values(&subcategory)
+            .on_conflict(dsl::name)
+            .do_update()
+            .set(&subcategory)
+            .get_result(conn)?;
+
+        Ok(res)
+    }
 }
 
 pub type Schema = juniper::RootNode<'static, Query, Mutation, EmptySubscription<Context>>;
 
 pub fn create_schema() -> Schema {
     Schema::new(Query {}, Mutation {}, EmptySubscription::new())
+}
+
+const CATEGORY: &str = include_str!("./category.json");
+
+pub fn init_category(pool: &Pool) {
+    use crate::schema::category::dsl as category_dsl;
+    use crate::schema::subcategory::dsl as subcategory_dsl;
+
+    let categories = serde_json::from_str::<serde_json::Value>(CATEGORY).unwrap();
+
+    let conn = &mut pool.get().unwrap();
+
+    for (category, info) in categories.as_object().unwrap() {
+        let cat = CategoryForm {
+            name: category.to_string(),
+            image: info["image"].as_str().unwrap().to_string(),
+        };
+
+        let res = diesel::insert_into(category_dsl::category)
+            .values(&cat)
+            .on_conflict(category_dsl::name)
+            .do_nothing()
+            .get_result::<Category>(conn)
+            .unwrap();
+
+        for (subcategory, info) in info["sub"].as_object().unwrap() {
+            let sub = SubcategoryForm {
+                name: subcategory.to_string(),
+                image: info["image"].as_str().unwrap().to_string(),
+                category_id: res.id,
+            };
+
+            diesel::insert_into(subcategory_dsl::subcategory)
+                .values(&sub)
+                .execute(conn)
+                .unwrap();
+        }
+    }
 }

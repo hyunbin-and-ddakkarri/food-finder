@@ -2,11 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { stringsToRegion, regionToString, region } from "@/app/region";
-import Link from "next/link";
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useState, useEffect, useRef } from "react";
+import { stringsToRegion, region } from "@/app/region";
 
 const loaderProp = ({ src }: { src: string }) => {
   return src;
@@ -14,14 +11,15 @@ const loaderProp = ({ src }: { src: string }) => {
 import { gql, useQuery } from "@apollo/client";
 import SearchBar from "@/app/searchbar";
 
-const query = gql`
+const rest_query = gql`
   query getData($region: String!) {
-    restaurants(region: $region) {
-      rid
+    restaurant(region: $region) {
+      id
       name
       introduction
       address
-      location
+      locationX
+      locationY
       region
       phone
       price
@@ -30,18 +28,24 @@ const query = gql`
       characteristics
       images
       menus
-      reviews {
-        username
-        context
-        date
-      }
       rating
+    }
+  }
+`
+
+const review_query = gql`
+  query getData($rid: String!) {
+    reviews(restaurantId: $rid) {
+      id
+      username
+      rating
+      context
     }
   }
 `;
 
 export default function DataMap({ params }: { params: { region: string[] } }) {
-  const { error, data } = useQuery(query, {
+  const { error, data } = useQuery(rest_query, {
     variables: { region: params.region[2] },
   });
   const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
@@ -189,10 +193,10 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
       size *
       (minDiameter +
         unit *
-          Math.min(
-            (maxDiameter - minDiameter) / unit,
-            categories[index].elements.length
-          ));
+        Math.min(
+          (maxDiameter - minDiameter) / unit,
+          categories[index].elements.length
+        ));
 
     categoryButtons.push(
       <Image
@@ -250,7 +254,7 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
 
   return (
     <div className="h-screen bg-gray">
-      <SearchBar link/>
+      <SearchBar link />
       <div>
         <div
           ref={ref}

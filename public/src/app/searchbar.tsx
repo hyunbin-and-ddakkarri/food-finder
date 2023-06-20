@@ -23,7 +23,6 @@ interface SearchBarProps {
 }
 
 export default function SearchBar(props: SearchBarProps) {
-
     const router = useRouter();
 
     var onChange = () => {
@@ -33,8 +32,6 @@ export default function SearchBar(props: SearchBarProps) {
             props.setText(inp.value);
         }
     };
-
-    var [isOpen, setOpen] = useState(false);
 
     const [filters, setFilters] = useState([
         {filterName: 'Price', options: {'$': false, '$$': false, '$$$': false, '$$$$': false, '$$$$$': false},} as Filter, 
