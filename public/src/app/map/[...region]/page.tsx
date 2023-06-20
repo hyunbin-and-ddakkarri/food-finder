@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import DetailPage from "../../listview/[...region]/detail";
 import { Restaurant } from "../../restaurant";
 import { motion, AnimatePresence } from "framer-motion"
+import { emptyOptions } from "@/app/filters";
 
 
 const query = gql`
@@ -66,6 +67,7 @@ export default function MapView({ params }: { params: { region: string[] } }) {
   const [dataKeys, setDataKeys] = useState<string[]>([]);
 
   const [isOpen, setOpen] = useState(false);
+  const [options, setOptions] = useState<{ [key: string]: Array<Number> }>(emptyOptions);
 
 
   useEffect(() => {
@@ -143,7 +145,7 @@ export default function MapView({ params }: { params: { region: string[] } }) {
   return (
     <div className="relative h-full">
       <div className="absolute inset-x-0 top-0 z-10">
-        <SearchBar text={regionToString(stringsToRegion(params.region))} link backButton/>
+        <SearchBar text={regionToString(stringsToRegion(params.region))} options={options} setOptions={setOptions} link backButton/>
       </div>
       <motion.div className="flex absolute z-10 rounded-full bg-secondary bottom-0 right-0 m-5 w-10 h-10 hover:bg-primary" onClick={() => handleRegionClick(stringsToRegion(params.region))}
       animate={{bottom: isOpen? [0, 0, 70]: 0}}>

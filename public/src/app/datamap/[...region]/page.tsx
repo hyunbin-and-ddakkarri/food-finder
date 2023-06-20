@@ -10,6 +10,7 @@ const loaderProp = ({ src }: { src: string }) => {
 };
 import { gql, useQuery } from "@apollo/client";
 import SearchBar from "@/app/searchbar";
+import { emptyOptions, routeToOptions } from "@/app/filters";
 
 const rest_query = gql`
   query getData($region: String!) {
@@ -50,9 +51,12 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
   });
   const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
   const [dataKeys, setDataKeys] = useState<string[]>([]);
+  const [options, setOptions] = useState<{ [key: string]: Array<Number> }>(routeToOptions(params.region[3]));
 
   useEffect(() => {
+    console.log(data)
     if (data) {
+      console.log(data)
       const dataT = data as { [restaurants: string]: Array<any> };
       const newData = dataT.restaurants.map((d) => ({
         name: d.name as string,
@@ -254,7 +258,7 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
 
   return (
     <div className="h-screen bg-gray">
-      <SearchBar link />
+      <SearchBar options={options} setOptions={setOptions} link/>
       <div>
         <div
           ref={ref}
