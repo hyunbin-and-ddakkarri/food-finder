@@ -15,7 +15,7 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 
-use crate::db::{create_schema, Context, Schema};
+use crate::db::{create_schema, init_category, Context, Schema};
 
 mod db;
 mod schema;
@@ -78,6 +78,7 @@ async fn main() -> std::io::Result<()> {
 
     let pool = make_pool();
     run_migrations(&pool);
+    init_category(&pool);
 
     let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
 
