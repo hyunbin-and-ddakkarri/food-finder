@@ -7,7 +7,7 @@ const nextConfig = {
     // this will export the app in the /out folder
     // output: "export",
     images: { unoptimized: true },
-    basePath: IS_DOCKER ? "/admin" : "/",
+    basePath: IS_DOCKER ? "/admin" : "",
 }
 
 module.exports = nextConfig
