@@ -10,11 +10,12 @@ import { gql, useQuery } from "@apollo/client";
 
 const query = gql`query getData($region: String!) {
     restaurants(region: $region) {
-      rid
+      id
       name
       introduction
       address
-      location
+      locationX
+      locationY
       region
       phone
       price
@@ -23,14 +24,29 @@ const query = gql`query getData($region: String!) {
       characteristics
       images
       menus
-      reviews {
-        username
-        context
-        date
-      }
       rating
   }
 }`;
+
+const mut_query = gql`mutation updateData($res: RestaurantForm!) {
+  updateRestaurant(restaurant: $res) {
+    id
+    name
+    introduction
+    address
+    locationX
+    locationY
+    region
+    phone
+    price
+    businessHours
+    moods
+    characteristics
+    images
+    menus
+    rating
+  }
+}`
 
 export default function RestaurantPage({
   params,
@@ -50,7 +66,7 @@ export default function RestaurantPage({
 
   useEffect(() => {
     if (data) {
-      const dataT = data as {[restaurants: string]: Array<any>};
+      const dataT = data as { [restaurants: string]: Array<any> };
       const newData = dataT.restaurants.map((d) => ({
         name: d.name as string,
         introduction: d.introduction as string,
@@ -58,12 +74,12 @@ export default function RestaurantPage({
         location: [d.location[0] as Number, d.location[1] as Number],
         phone: d.phone as string,
         price: d.price as Number,
-        businessHours: d.businessHours as {[key:string]:Array<Number>},
+        businessHours: d.businessHours as { [key: string]: Array<Number> },
         moods: d.moods as Array<String>,
         characteristics: d.characteristics as Array<String>,
         images: d.images as Array<String>,
-        menus: d.menus as {[key: string]:Number},
-        reviews: d.reviews as Array<{[key:string]:string}>,
+        menus: d.menus as { [key: string]: Number },
+        // reviews: d.reviews as Array<{[key:string]:string}>,
         rating: d.rating as Number,
       }));
       setTableData(newData);
@@ -79,7 +95,7 @@ export default function RestaurantPage({
   const handleCellValueChange = (
     rowIndex: number,
     columnIndex: number,
-    newValue: string | string[] | {[menu: string]: number}
+    newValue: string | string[] | { [menu: string]: number }
   ) => {
     const updatedData = [...tableData];
     updatedData[rowIndex][dataKeys[columnIndex]] = newValue;
@@ -153,20 +169,20 @@ export default function RestaurantPage({
           {tableData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {Object.values(row).map((value, columnIndex) => {
-                if(tagKeys.includes(dataKeys[columnIndex])){
+                if (tagKeys.includes(dataKeys[columnIndex])) {
                   return (
-                  <TagCell
-                    key={`${rowIndex}-${columnIndex}`}
-                    value={value}
-                    onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)}
-                  /> );
-                } else if (menuKeys.includes(dataKeys[columnIndex])){
+                    <TagCell
+                      key={`${rowIndex}-${columnIndex}`}
+                      value={value}
+                      onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)}
+                    />);
+                } else if (menuKeys.includes(dataKeys[columnIndex])) {
                   return (
                     <MenuCell
                       key={`${rowIndex}-${columnIndex}`}
                       value={value}
                       onValueChange={(newValue) => handleCellValueChange(rowIndex, columnIndex, newValue)}
-                    /> );
+                    />);
                 } else {
                   return (
                     <ClickableCell
