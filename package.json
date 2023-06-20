@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@syncfusion/ej2-react-grids": "^21.2.8",
-    "next": "^13.4.4",
-    "tw-elements": "^1.0.0-beta2"
-  }
-}
