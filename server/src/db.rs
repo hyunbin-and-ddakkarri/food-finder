@@ -286,22 +286,30 @@ pub fn init_category(pool: &Pool) {
             image: info["image"].as_str().unwrap().to_string(),
         };
 
-        let res = diesel::insert_into(category_dsl::category)
+        diesel::insert_into(category_dsl::category)
             .values(&cat)
             .on_conflict(category_dsl::name)
             .do_nothing()
-            .get_result::<Category>(conn)
+            .execute(conn)
+            .unwrap();
+
+        let id = category_dsl::category
+            .filter(category_dsl::name.eq(category))
+            .select(category_dsl::id)
+            .first::<i32>(conn)
             .unwrap();
 
         for (subcategory, info) in info["sub"].as_object().unwrap() {
             let sub = SubcategoryForm {
                 name: subcategory.to_string(),
                 image: info["image"].as_str().unwrap().to_string(),
-                category_id: res.id,
+                category_id: id,
             };
 
             diesel::insert_into(subcategory_dsl::subcategory)
                 .values(&sub)
+                .on_conflict((subcategory_dsl::name, subcategory_dsl::category_id))
+                .do_nothing()
                 .execute(conn)
                 .unwrap();
         }
