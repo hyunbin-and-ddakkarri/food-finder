@@ -21,4 +21,4 @@ jobs:
             docker compose down
             git checkout main
             git pull
-            docker compose up -d
+            docker compose up -d --build
