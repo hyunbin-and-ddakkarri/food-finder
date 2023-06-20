@@ -1,0 +1,52 @@
+{
+    "Korean": {
+        "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Korean.jpg",
+        "sub": {
+            "Bibimbap": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Korean/Bibimbap.jpg"
+            },
+            "Bulgogi": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Korean/Bulgogi.jpg"
+            },
+            "Ddeokbokki": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Korean/Ddeokbokki.jpg"
+            },
+            "Jokbal": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Korean/Jokbal.jpg"
+            }
+        }
+    },
+    "Japanese": {
+        "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Japanese.jpg",
+        "sub": {
+            "Donburi": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Japanese/Donburi.jpg"
+            },
+            "Ramen": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Japanese/Ramen.jpg"
+            },
+            "Sushi": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Japanese/Sushi.jpg"
+            }
+        }
+    },
+    "Chinese": {
+        "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Chinese.jpg",
+        "sub": {
+            "Malatang": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Chinese/Malatang.jpg"
+            }
+        }
+    },
+    "Italian": {
+        "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Italian.jpg",
+        "sub": {
+            "Pizza": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Italian/Pizza.jpg"
+            },
+            "Spaghetti": {
+                "image": "https://raw.githubusercontent.com/hyunbin-and-ddakkarri/food-finder/main/public/public/img/Italian/Spaghetti.jpg"
+            }
+        }
+    }
+}

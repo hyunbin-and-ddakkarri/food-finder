@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::middleware::Logger;
 #[cfg(not(feature = "docker"))]
 use actix_web::{get, Responder};
@@ -15,7 +16,7 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 
-use crate::db::{create_schema, Context, Schema};
+use crate::db::{create_schema, init_category, Context, Schema};
 
 mod db;
 mod schema;
@@ -78,6 +79,7 @@ async fn main() -> std::io::Result<()> {
 
     let pool = make_pool();
     run_migrations(&pool);
+    init_category(&pool);
 
     let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
 
@@ -89,6 +91,7 @@ async fn main() -> std::io::Result<()> {
             App::new()
                 .app_data(Data::new(pool.clone()))
                 .app_data(Data::new(create_schema()))
+                .wrap(Cors::permissive())
                 .wrap(Logger::default())
                 .service(graphql)
         })
@@ -104,6 +107,7 @@ async fn main() -> std::io::Result<()> {
             App::new()
                 .app_data(Data::new(pool.clone()))
                 .app_data(Data::new(create_schema()))
+                .wrap(Cors::permissive())
                 .wrap(Logger::default())
                 .service(graphql)
                 .service(graphql_playground)

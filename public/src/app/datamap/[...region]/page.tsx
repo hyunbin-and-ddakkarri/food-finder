@@ -2,11 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { stringsToRegion, regionToString, region } from "@/app/region";
-import Link from "next/link";
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useState, useEffect, useRef } from "react";
+import { stringsToRegion, region } from "@/app/region";
 
 const loaderProp = ({ src }: { src: string }) => {
   return src;
@@ -200,10 +197,10 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
       size *
       (minDiameter +
         unit *
-          Math.min(
-            (maxDiameter - minDiameter) / unit,
-            categories[index].elements.length
-          ));
+        Math.min(
+          (maxDiameter - minDiameter) / unit,
+          categories[index].elements.length
+        ));
 
     categoryButtons.push(
       <Image

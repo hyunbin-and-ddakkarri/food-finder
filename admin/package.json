@@ -11,7 +11,7 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.0-beta.2",
+    "@apollo/client": "^3.8.0-beta.3",
     "@apollo/experimental-nextjs-app-support": "^0.2.1",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
@@ -20,10 +20,10 @@
     "@types/react": "18.2.12",
     "@types/react-dom": "18.2.5",
     "autoprefixer": "10.4.14",
-    "eslint": "8.42.0",
-    "eslint-config-next": "13.4.5",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.6",
     "graphql": "^16.6.0",
-    "next": "13.4.5",
+    "next": "13.4.6",
     "postcss": "8.4.24",
     "preline": "^1.9.0",
     "react": "18.2.0",

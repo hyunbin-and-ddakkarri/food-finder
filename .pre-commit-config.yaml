@@ -46,7 +46,7 @@ repos:
         name: mypy-data
         language: python
         types: [python]
-        entry: ./mypy-data.sh
+        entry: poetry run -C ./data mypy --strict ./data
         pass_filenames: false
         always_run: true
 

@@ -18,7 +18,6 @@ interface SearchBarProps {
 }
 
 export default function SearchBar(props: SearchBarProps) {
-
     const router = useRouter();
 
     var onChange = () => {

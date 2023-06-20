@@ -1,14 +1,13 @@
 "use client";
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from 'next/navigation'
 import { stringsToRegion, regionToString, region } from "@/app/region";
 import SearchBar from "@/app/searchbar";
-import { faStar, faList } from '@fortawesome/free-solid-svg-icons'
+import { faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Sheet, { SheetRef } from 'react-modal-sheet';
 import DetailPage from "../../listview/[...region]/detail";
-import { Restaurant, resultsToRestaurants } from "../../restaurant";
+import { Restaurant } from "../../restaurant";
 import { motion, AnimatePresence } from "framer-motion"
 import { emptyOptions } from "@/app/filters";
 
