@@ -6,20 +6,15 @@ import './globals.css'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-
-
-export interface Filter {
-    filterName: string;
-    options: {[key: string]: boolean};
-}
-
+import { filters, filterOptions } from './filters'
 
 interface SearchBarProps {
     setText?: React.Dispatch<React.SetStateAction<string>>;
     link?: boolean;
     backButton?: boolean;
     text?: string;
-    filters?: Array<Filter>;
+    options: { [key: string]: Array<Number> };
+    setOptions: React.Dispatch<React.SetStateAction<{ [key: string]: Array<Number> }>>;
 }
 
 export default function SearchBar(props: SearchBarProps) {
@@ -34,19 +29,27 @@ export default function SearchBar(props: SearchBarProps) {
         }
     };
 
-    var [isOpen, setOpen] = useState(false);
-
-    const [filters, setFilters] = useState([
-        {filterName: 'Price', options: {'$': false, '$$': false, '$$$': false, '$$$$': false, '$$$$$': false},} as Filter, 
-        {filterName: 'Mood', options: {'Casual': false, 'Formal': false, 'Romantic': false, 'Family': false, 'Business': false},} as Filter,
-        {filterName: 'Rating', options: {'1': false, '2': false, '3': false, '4': false, '5': false},} as Filter,
-        {filterName: 'Business Hours', options: {'open now': false}} as Filter,
-    ] as Array<Filter>);
-
-    var [tagOpen, setTagOpen] = useState(false);
-    var [currentFilter, setCurrentFilter] = useState(0);
+    const [displayedFilter, setDisplayedFilter] = useState(-1);
     
 
+    if (props.options != null) {
+        props.setOptions(props.options)
+    }
+
+    const handleOption = (filter: string, optionIdx: Number) => {
+        const currentOptions = { ...props.options };
+        if (props.options[filter].includes(optionIdx)) {
+          currentOptions[filter] = currentOptions[filter].filter(
+            (f) => f !== optionIdx
+          );
+        } else {
+          currentOptions[filter].push(optionIdx);
+        }
+        props.setOptions(currentOptions);
+      };
+
+    var [tagOpen, setTagOpen] = useState(false);
+    
     return (
         <>
         <div className="sticky top-4 full-container max-w-3xl m-2 flex flex-col gap-2">
@@ -58,7 +61,6 @@ export default function SearchBar(props: SearchBarProps) {
                       </div>
                     )
                 }
-
 
                 {
                     props.link ? (
@@ -88,32 +90,30 @@ export default function SearchBar(props: SearchBarProps) {
             </div>
             <div className="flex text-base gap-2 flex-initial overflow-x-scroll noScrollBar">
                 {
-                    filters != null && (
-                        filters.map((filter, index) => { 
-                            return (
-                                <motion.button className="rounded-full bg-neutral px-3 py-1 appearance-none w-auto min-w-0 shrink-0" onClick={() => {
-                                    if (currentFilter != index) {
-                                        setTagOpen(true);
-                                    } else {
-                                        setTagOpen(!tagOpen);
-                                    }
-                                    setCurrentFilter(index);
-                                }} animate={{backgroundColor: (tagOpen && currentFilter == index) ? "var(--accent)": "var(--neutral)"}} key={index}>
-                                {filter.filterName}
-                                </motion.button>
-                            );
-                        }
-                    ))
+                    filters.map((filter, index) => { 
+                        return (
+                            <motion.button className="rounded-full bg-neutral px-3 py-1 appearance-none w-auto min-w-0 shrink-0" onClick={() => {
+                                if (displayedFilter != index) {
+                                    setTagOpen(true);
+                                } else {
+                                    setTagOpen(!tagOpen);
+                                }
+                                setDisplayedFilter(index);
+                            }} animate={{backgroundColor: (tagOpen && displayedFilter == index) ? "var(--accent)": "var(--neutral)"}} key={index}>
+                            {filters[index]}
+                            </motion.button>
+                        );
+                    })
                 }
             </div>
             {
                 tagOpen && (
                     <div className="p-3 rounded-xl min-h-10 flex gap-4 bg-danger items-center flex-wrap justify-start space-between">
                         {
-                            Object.keys(filters[currentFilter].options).map((option, index) => {
+                            filterOptions[filters[displayedFilter]].map((option, index) => {
                                 return (
                                     <div className="shrink-0 flex gap-2 items-center" key={index}>
-                                        <input type="checkbox"  checked={filters[currentFilter].options[option]}/>
+                                        <input type="checkbox"  checked={props.options[filters[displayedFilter]].includes(index)} onChange={() => handleOption(filters[displayedFilter], index)}/>
                                         <label className='text-base text-secondary font-medium'>{option}</label>
                                     </div>
                                 )
@@ -131,6 +131,5 @@ SearchBar.defaultProps = {
     setText: null,
     link: false,
     backButton: false,
-    text: null,
-    filters: null,
+    text: null
 };

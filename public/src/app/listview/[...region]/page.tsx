@@ -10,6 +10,7 @@ import { faStar, faMap } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import DetailPage from '@/app/listview/[...region]/detail'
 import SearchBar from "@/app/searchbar";
+import { emptyOptions } from "@/app/filters";
 
 const query = gql`
   query getData($region: String!) {
@@ -39,6 +40,7 @@ const query = gql`
 
 export default function ListView({ params }: { params: { region: string[] } }) {
   const [detail, setDetail] = useState(-1);
+  const [options, setOptions] = useState<{ [key: string]: Array<Number> }>(emptyOptions);
 
   const { error, data } = useQuery(query, {
     variables: { region: params.region[2] },
@@ -83,7 +85,7 @@ export default function ListView({ params }: { params: { region: string[] } }) {
         detail == -1 ? (
         <>
         <div className="flex flex-col h-screen overflow-x-hidden">
-        <SearchBar text={regionToString(stringsToRegion(params.region))} link backButton/>
+        <SearchBar text={regionToString(stringsToRegion(params.region))} options={options} setOptions={setOptions} link backButton/>
         
         <div className="mx-6">
           <div className="flex flex-col gap-2 overflow-y-scroll hideScrollBar divide-y divide-secondary overflow-x-hidden">
