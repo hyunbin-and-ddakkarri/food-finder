@@ -297,7 +297,7 @@ pub fn init_category(pool: &Pool) {
             let sub = SubcategoryForm {
                 name: subcategory.to_string(),
                 image: info["image"].as_str().unwrap().to_string(),
-                category_id: res.id as i32,
+                category_id: res.id,
             };
 
             diesel::insert_into(subcategory_dsl::subcategory)

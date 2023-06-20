@@ -61,9 +61,4 @@ diesel::table! {
 diesel::joinable!(review -> restaurant (restaurant_id));
 diesel::joinable!(subcategory -> category (category_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    category,
-    restaurant,
-    review,
-    subcategory,
-);
+diesel::allow_tables_to_appear_in_same_query!(category, restaurant, review, subcategory,);
