@@ -15,14 +15,15 @@ import { gql, useQuery } from "@apollo/client";
 import SearchBar from "@/app/searchbar";
 import { emptyOptions, routeToOptions } from "@/app/filters";
 
-const query = gql`
+const rest_query = gql`
   query getData($region: String!) {
-    restaurants(region: $region) {
-      rid
+    restaurant(region: $region) {
+      id
       name
       introduction
       address
-      location
+      locationX
+      locationY
       region
       phone
       price
@@ -31,18 +32,24 @@ const query = gql`
       characteristics
       images
       menus
-      reviews {
-        username
-        context
-        date
-      }
       rating
+    }
+  }
+`
+
+const review_query = gql`
+  query getData($rid: String!) {
+    reviews(restaurantId: $rid) {
+      id
+      username
+      rating
+      context
     }
   }
 `;
 
 export default function DataMap({ params }: { params: { region: string[] } }) {
-  const { error, data } = useQuery(query, {
+  const { error, data } = useQuery(rest_query, {
     variables: { region: params.region[2] },
   });
   const [tableData, setTableData] = useState<{ [key: string]: any }[]>([{}]);
@@ -50,7 +57,9 @@ export default function DataMap({ params }: { params: { region: string[] } }) {
   const [options, setOptions] = useState<{ [key: string]: Array<Number> }>(routeToOptions(params.region[3]));
 
   useEffect(() => {
+    console.log(data)
     if (data) {
+      console.log(data)
       const dataT = data as { [restaurants: string]: Array<any> };
       const newData = dataT.restaurants.map((d) => ({
         name: d.name as string,

@@ -3,7 +3,7 @@ import './globals.css'
 import React from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 const client = new ApolloClient({
-    uri: 'http://localhost:8000/graphql',
+    uri: 'http://localhost:8080/graphql',
     cache: new InMemoryCache()
 });
 import { Open_Sans } from 'next/font/google'

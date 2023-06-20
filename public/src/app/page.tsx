@@ -2,19 +2,9 @@
 import "./globals.css";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { gql } from "@apollo/client";
 import { Regions, region, regionToString } from "./region";
 import SearchBar from "./searchbar";
 import { optionsToRoute, emptyOptions } from "./filters";
-
-const query = gql`
-  query getRegion($region: String!) {
-    regions(region: $region) {
-      rid
-      name
-    }
-  }
-`;
 
 export default function Home() {
 
