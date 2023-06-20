@@ -1,6 +1,4 @@
 "use client";
-import fetch from 'cross-fetch';
-global.fetch = fetch;
 import "./globals.css";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";

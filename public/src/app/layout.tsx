@@ -1,6 +1,4 @@
 "use client";
-import fetch from 'cross-fetch';
-global.fetch = fetch;
 import './globals.css'
 import React from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
